@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cc.rapidev</groupId>
+    <artifactId>qqbot</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>qqbot-core</module>
+        <module>qqbot-ai</module>
+        <module>qqbot-example</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- project version -->
+        <revision>1.0</revision>
+        <!-- dependencies version -->
+        <vertx.version>5.0.4</vertx.version>
+        <fastjson.version>2.0.54</fastjson.version>
+        <jackson.version>2.18.2</jackson.version>
+        <httpcore5.version>5.3.5</httpcore5.version>
+        <httpclient5.version>5.4.3</httpclient5.version>
+        <bcprov.version>1.79</bcprov.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.12</logback.version>
+        <lombok.version>1.18.36</lombok.version>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- use vert.x as web framework -->
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-web</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <!-- Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- Http Client -->
+            <dependency>
+                <groupId>org.apache.httpcomponents.core5</groupId>
+                <artifactId>httpcore5</artifactId>
+                <version>${httpcore5.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>${httpclient5.version}</version>
+            </dependency>
+            <!-- Ed25519 Crypto -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.rapidev</groupId>
+                <artifactId>qqbot-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.rapidev</groupId>
+                <artifactId>qqbot-ai</artifactId>
+                <version>${revision}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
