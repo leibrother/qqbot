@@ -32,6 +32,8 @@
         <logback.version>1.5.12</logback.version>
         <lombok.version>1.18.36</lombok.version>
         <junit.version>4.13.2</junit.version>
+        <!-- plugins -->
+        <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
     </properties>
 
     <dependencyManagement>
