@@ -1,7 +1,6 @@
 package cc.rapidev.qqbot.message.memory;
 
 import cc.rapidev.qqbot.common.Events;
-import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.interfaces.Converter;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageDispatcher;
@@ -16,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * <ul>
  *     <li>解析{@link cc.rapidev.qqbot.BotPayload payload}中携带的消息为{@link MemoryMessage}</li>
  *     <li>通过{@link MessageRepository}存储消息</li>
- *     <li>将关联消息填充到{@link MessageContext context}</li>
+ *     <li>注册{@link MemoryService}服务到{@link MessageContext}，通过{@link MessageContext#getService}获取此服务</li>
  * </ul>
  *
  * @author leibrother
@@ -61,16 +60,10 @@ public class MemoryMessageHandler implements MessageHandler, MessageHandlerInjec
         Events event = context.getEvent();
         if (event.isMessageCreate()) {
             MemoryMessage message = converter.convert(context);
-            String conversationId = generateConversationId(context);
-            MemoryService service = new MemoryService(repository, conversationId, message);
-            service.forget();
+            MemoryService service = new MemoryService(repository, context.getTopic(), message);
+            service.remember();
             context.addService("memoryService", service);
         }
-    }
-
-    private String generateConversationId(MessageContext context) {
-        Topic topic = context.getTopic();
-        return topic.toString();
     }
 
 }

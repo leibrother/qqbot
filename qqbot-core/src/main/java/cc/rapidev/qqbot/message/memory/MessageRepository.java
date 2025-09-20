@@ -1,5 +1,7 @@
 package cc.rapidev.qqbot.message.memory;
 
+import cc.rapidev.qqbot.common.Topic;
+
 import java.util.List;
 
 /**
@@ -7,14 +9,14 @@ import java.util.List;
  */
 public interface MessageRepository {
 
-    List<MemoryMessage> findByConversationId(String conversationId);
+    List<MemoryMessage> findByTopic(Topic topic);
 
-    void save(String conversationId, MemoryMessage message);
+    void save(Topic topic, MemoryMessage message);
 
-    void save(String conversationId, List<MemoryMessage> messages);
+    void save(Topic topic, List<MemoryMessage> messages);
 
-    void deleteByConversationId(String conversationId);
+    void deleteByTopic(Topic topic);
 
-    void deleteByConversationIdAndMessageId(String conversationId, String messageId);
+    void deleteByTopicAndMessageId(Topic topic, String messageId);
 
 }

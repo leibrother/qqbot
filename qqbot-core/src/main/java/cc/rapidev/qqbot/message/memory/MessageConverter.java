@@ -20,23 +20,20 @@ public class MessageConverter implements Converter<MessageContext, MemoryMessage
     public MemoryMessage convert(MessageContext context) {
         BotPayload payload = context.getPayload();
         JsonNode data = payload.getData();
-        String id = data.get("id").asText();
-        String content = data.get("content").asText();
-        Map<String, Object> metadata = getMetadata(context);
-        return new MemoryMessage(id, content, metadata);
-    }
-
-    private Map<String, Object> getMetadata(MessageContext context) {
-        Map<String, Object> metadata = new HashMap<>();
-        BotPayload payload = context.getPayload();
-        JsonNode data = payload.getData();
         // id
-        metadata.put("id", data.get("id").asText());
+        String id = data.get("id").asText();
+        // text
+        String content = data.get("content").asText();
         // timestamp
         String timestamp = data.get("timestamp").asText();
         LocalDateTime datetime = OffsetDateTime.parse(timestamp, Constant.dateTimeFormatter).toLocalDateTime();
-        metadata.put("timestamp", datetime);
-        return metadata;
+        // metadata
+        Map<String, Object> metadata = getMetadata(context);
+        return new MemoryMessage(id, content, datetime, metadata);
+    }
+
+    private Map<String, Object> getMetadata(MessageContext context) {
+        return new HashMap<>();
     }
 
 }

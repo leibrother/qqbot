@@ -1,9 +1,11 @@
 package cc.rapidev.qqbot.message.memory;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,24 +13,28 @@ import java.util.Map;
  * @author leibrother
  */
 @Getter
-@Setter
-public class MemoryMessage implements Serializable {
+@Setter(AccessLevel.PROTECTED)
+public class MemoryMessage implements Serializable, Comparable<MemoryMessage> {
 
     public MemoryMessage(String id, String text) {
-        this.id = id;
-        this.text = text;
-        this.metadata = new HashMap<>();
+        this(id, text, LocalDateTime.now(), new HashMap<>());
     }
 
-    public MemoryMessage(String id, String text, Map<String, Object> metadata) {
+    public MemoryMessage(String id, String text, LocalDateTime timestamp) {
+        this(id, text, timestamp, new HashMap<>());
+    }
+
+    public MemoryMessage(String id, String text, LocalDateTime timestamp, Map<String, Object> metadata) {
         this.id = id;
         this.text = text;
         this.metadata = metadata;
+        this.timestamp = timestamp;
     }
 
     private String id;
     private Map<String, Object> metadata;
     private String text;
+    private LocalDateTime timestamp;
 
     public void addMetadata(String key, Object value) {
         if (metadata == null) {
@@ -51,6 +57,11 @@ public class MemoryMessage implements Serializable {
         } else {
             throw new ClassCastException("the value of %s cannot be cast to %s".formatted(key, value.getClass()));
         }
+    }
+
+    @Override
+    public int compareTo(MemoryMessage message) {
+        return this.timestamp.compareTo(message.getTimestamp());
     }
 
 }
