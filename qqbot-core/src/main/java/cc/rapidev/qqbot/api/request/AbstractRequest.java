@@ -45,6 +45,16 @@ public abstract class AbstractRequest {
         return getRequestHelper().https(getHost(), path, parameters);
     }
 
+    protected URI uri(String path, String... parameters) {
+        String completedPath = path;
+        if (parameters != null && parameters.length > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                completedPath = completedPath.replace("{" + i + "}", parameters[i]);
+            }
+        }
+        return uri(completedPath);
+    }
+
     protected Map<String, String> emptyMap() {
         return new HashMap<>();
     }
@@ -57,7 +67,7 @@ public abstract class AbstractRequest {
         return headers;
     }
 
-    protected  <T> T responseGet(JsonNode response, Class<T> clazz) {
+    protected <T> T responseGet(JsonNode response, Class<T> clazz) {
         int code = 0;
         if (response.has("code")) {
             code = response.get("code").asInt();
