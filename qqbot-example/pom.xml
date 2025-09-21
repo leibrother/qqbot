@@ -29,6 +29,7 @@
     </dependencies>
 
     <build>
+        <finalName>qqbot-example</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
