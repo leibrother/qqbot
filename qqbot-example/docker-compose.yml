@@ -1,0 +1,10 @@
+services:
+  qqbot:
+    container_name: qqbot
+    image: qqbot:latest
+    build: .
+    ports:
+      - 8080:8080
+    volumes:
+      - /data/qqbot/config:/qqbot/config
+
