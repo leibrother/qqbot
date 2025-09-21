@@ -1,0 +1,34 @@
+package cc.rapidev.qqbot.ai.client;
+
+import cc.rapidev.qqbot.ai.AiConfig;
+import cc.rapidev.qqbot.ai.tools.AiTool;
+import cc.rapidev.qqbot.message.memory.MemoryMessage;
+
+import java.lang.reflect.Constructor;
+import java.util.List;
+
+/**
+ * @author leibrother
+ */
+public interface AiChatClient {
+
+    static AiChatClient create(AiConfig config) {
+        String client = config.getClient();
+        try {
+            Class<?> clazz = Class.forName(client);
+            if (!AiChatClient.class.isAssignableFrom(clazz)) {
+                throw new UnsupportedOperationException(String.format("%s is not a subclass of %s", client, AiChatClient.class));
+            }
+            Constructor<?> constructor = clazz.getDeclaredConstructor(AiConfig.class);
+            constructor.setAccessible(true);
+            return (AiChatClient) constructor.newInstance(config);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    void addTool(AiTool tool);
+
+    String chat(List<MemoryMessage> messages);
+
+}
