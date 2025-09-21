@@ -1,17 +1,16 @@
 package cc.rapidev.qqbot.message.handler;
 
-import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.message.MessageHandler;
-import cc.rapidev.qqbot.message.MessageHandlerInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 打印机器人启动完成日志
+ *
  * @author leibrother
  */
-public class BotStartedHandler implements MessageHandler, MessageHandlerInjector {
+public class BotStartedHandler implements MessageHandler {
 
     private final Logger logger = LoggerFactory.getLogger(BotStartedHandler.class);
 
@@ -23,11 +22,6 @@ public class BotStartedHandler implements MessageHandler, MessageHandlerInjector
     @Override
     public boolean must() {
         return true;
-    }
-
-    @Override
-    public void inject(MessageDispatcher dispatcher) {
-        dispatcher.register(Events.STARTED, this);
     }
 
     @Override

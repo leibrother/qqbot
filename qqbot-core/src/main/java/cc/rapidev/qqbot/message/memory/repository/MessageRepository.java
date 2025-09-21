@@ -1,6 +1,7 @@
-package cc.rapidev.qqbot.message.memory;
+package cc.rapidev.qqbot.message.memory.repository;
 
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.message.memory.MemoryMessage;
 
 import java.util.List;
 

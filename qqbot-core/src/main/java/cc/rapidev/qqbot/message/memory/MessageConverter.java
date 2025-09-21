@@ -29,7 +29,13 @@ public class MessageConverter implements Converter<MessageContext, MemoryMessage
         LocalDateTime datetime = OffsetDateTime.parse(timestamp, Constant.dateTimeFormatter).toLocalDateTime();
         // metadata
         Map<String, Object> metadata = getMetadata(context);
-        return new MemoryMessage(id, content, datetime, metadata);
+        return MemoryMessage.builder()
+                .id(id)
+                .bot(false)
+                .text(content)
+                .metadata(metadata)
+                .timestamp(datetime)
+                .build();
     }
 
     private Map<String, Object> getMetadata(MessageContext context) {

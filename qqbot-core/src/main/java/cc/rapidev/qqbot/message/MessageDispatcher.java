@@ -4,8 +4,6 @@ import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotPayload;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.exception.BotException;
-import cc.rapidev.qqbot.message.handler.BotStartedHandler;
-import cc.rapidev.qqbot.message.memory.MemoryMessageHandler;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +34,11 @@ public class MessageDispatcher {
         this.init();
     }
 
+    /**
+     * 加载所有声明的{@link MessageHandlerInjector}并注入
+     */
     private void init() {
         this.register("_default", new NotImplMessageHandler());
-        this.register(new BotStartedHandler());
-        this.register(new MemoryMessageHandler());
         List<MessageHandlerInjector> injectors = MessageHandlerInjectorLoader.load();
         injectors.forEach(this::register);
     }

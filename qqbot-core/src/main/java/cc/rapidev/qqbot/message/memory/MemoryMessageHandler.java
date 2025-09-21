@@ -1,13 +1,12 @@
 package cc.rapidev.qqbot.message.memory;
 
 import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.interfaces.Converter;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.message.MessageHandler;
-import cc.rapidev.qqbot.message.MessageHandlerInjector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cc.rapidev.qqbot.message.memory.repository.InMemoryMessageRepository;
+import cc.rapidev.qqbot.message.memory.repository.MessageRepository;
 
 /**
  * 记忆消息处理
@@ -20,9 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author leibrother
  */
-public class MemoryMessageHandler implements MessageHandler, MessageHandlerInjector {
-
-    private final Logger logger = LoggerFactory.getLogger(MemoryMessageHandler.class);
+public class MemoryMessageHandler implements MessageHandler {
 
     private final Converter<MessageContext, MemoryMessage> converter;
     private final MessageRepository repository;
@@ -48,22 +45,33 @@ public class MemoryMessageHandler implements MessageHandler, MessageHandlerInjec
     }
 
     @Override
-    public void inject(MessageDispatcher dispatcher) {
-        logger.info("inject message handler: {}", this.getClass().getName());
-        Events.messageCreateEvents.forEach(event -> dispatcher.register(event, this));
-        //现在撤回消息好像没有回调了
-        //Events.messageDeleteEvents.forEach(event -> dispatcher.register(event, this));
-    }
-
-    @Override
     public void handle(MessageContext context) {
         Events event = context.getEvent();
         if (event.isMessageCreate()) {
+            Topic topic = context.getTopic();
             MemoryMessage message = converter.convert(context);
-            MemoryService service = new MemoryService(repository, context.getTopic(), message);
+            MemoryService service = new MemoryService(repository, topic, message);
             service.remember();
             context.addService("memoryService", service);
+            // 注册回复钩子
+            registerReplyHook(context);
         }
+    }
+
+    private void registerReplyHook(MessageContext context) {
+        context.addReplyHook((message, response) -> {
+            if (!message.isText()) {
+                return;
+            }
+            Topic topic = context.getTopic();
+            MemoryMessage memoryMessage = MemoryMessage.builder()
+                    .id(response.getId())
+                    .bot(false)
+                    .text(message.getContent())
+                    .timestamp(response.getTime())
+                    .build();
+            repository.save(topic, memoryMessage);
+        });
     }
 
 }
