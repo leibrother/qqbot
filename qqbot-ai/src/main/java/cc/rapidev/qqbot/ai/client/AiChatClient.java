@@ -13,7 +13,7 @@ import java.util.List;
 public interface AiChatClient {
 
     static AiChatClient create(AiConfig config) {
-        String client = config.getClient();
+        String client = config.getChatClient();
         try {
             Class<?> clazz = Class.forName(client);
             if (!AiChatClient.class.isAssignableFrom(clazz)) {

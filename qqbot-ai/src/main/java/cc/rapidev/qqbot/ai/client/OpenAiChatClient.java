@@ -28,16 +28,16 @@ public class OpenAiChatClient implements AiChatClient {
     public OpenAiChatClient(AiConfig config) {
         this.config = config;
         this.chatModel = OpenAiChatModel.builder()
-                .baseUrl(config.getBaseUrl())
-                .apiKey(config.getApiKey())
-                .modelName(config.getModel())
+                .baseUrl(config.getChatBaseUrl())
+                .apiKey(config.getChatApiKey())
+                .modelName(config.getChatModel())
                 .strictTools(true)
                 .build();
         this.init();
     }
 
     private void init() {
-        String prompt = config.getPrompt();
+        String prompt = config.getChatPrompt();
         if (prompt != null && !prompt.isEmpty()) {
             this.prompt = SystemMessage.from(prompt);
         }

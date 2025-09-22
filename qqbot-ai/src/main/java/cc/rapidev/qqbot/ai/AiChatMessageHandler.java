@@ -25,7 +25,14 @@ public class AiChatMessageHandler implements MessageHandler {
     }
 
     @Override
+    public int order() {
+        // 尽量放在后面执行，因为此处理器来者不拒
+        return Integer.MAX_VALUE - 1000;
+    }
+
+    @Override
     public void handle(MessageContext context) {
+        context.complete();
         if (!getLock(context)) {
             return;
         }
