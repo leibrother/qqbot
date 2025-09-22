@@ -13,6 +13,8 @@ public class MemoryMessageHandlerInjector implements MessageHandlerInjector {
     public void inject(MessageDispatcher dispatcher) {
         MemoryMessageHandler handler = new MemoryMessageHandler();
         Events.messageCreateEvents.forEach(event -> dispatcher.register(event, handler));
+        MemoryRememberHandler rememberHandler = new MemoryRememberHandler();
+        Events.messageCreateEvents.forEach(event -> dispatcher.register(event, rememberHandler));
     }
 
 }

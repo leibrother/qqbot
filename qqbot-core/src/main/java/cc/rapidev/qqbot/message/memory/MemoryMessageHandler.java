@@ -51,7 +51,6 @@ public class MemoryMessageHandler implements MessageHandler {
             Topic topic = context.getTopic();
             MemoryMessage message = converter.convert(context);
             MemoryService service = new MemoryService(repository, topic, message);
-            service.remember();
             context.addService("memoryService", service);
             // 注册回复钩子
             registerReplyHook(context);
@@ -63,14 +62,14 @@ public class MemoryMessageHandler implements MessageHandler {
             if (!message.isText()) {
                 return;
             }
-            Topic topic = context.getTopic();
             MemoryMessage memoryMessage = MemoryMessage.builder()
                     .id(response.getId())
                     .bot(false)
                     .text(message.getContent())
                     .timestamp(response.getTime())
                     .build();
-            repository.save(topic, memoryMessage);
+            MemoryService service = context.getService(MemoryService.class);
+            service.addReply(memoryMessage);
         });
     }
 

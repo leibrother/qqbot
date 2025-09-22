@@ -1,8 +1,10 @@
 package cc.rapidev.qqbot.message.memory;
 
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.utils.ObjectUtils;
 import cc.rapidev.qqbot.message.memory.repository.MessageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +15,8 @@ public class MemoryService {
     private final MessageRepository repository;
     private final Topic topic;
     private final MemoryMessage message;
+    private final List<MemoryMessage> replyMessages = new ArrayList<>();
+    private boolean forgotten = false;
 
     public MemoryService(MessageRepository repository, Topic topic, MemoryMessage message) {
         this.repository = repository;
@@ -20,11 +24,10 @@ public class MemoryService {
         this.message = message;
     }
 
-    /**
-     * 记住当前消息
-     */
-    public void remember() {
-        repository.save(topic, message);
+    public void addReply(MemoryMessage message) {
+        ObjectUtils._assert(message, "message must not be null");
+        ObjectUtils._assert(message.isBot(), "message is not from a bot");
+        replyMessages.add(message);
     }
 
     /**
@@ -46,18 +49,42 @@ public class MemoryService {
     }
 
     /**
+     * 记住当前消息
+     */
+    public void remember() {
+        if (forgotten) {
+            return;
+        }
+        synchronized (this) {
+            repository.save(topic, message);
+            replyMessages.forEach(reply -> repository.save(topic, reply));
+        }
+    }
+
+    /**
      * 遗忘消息到当前消息之前(回滚到之前)
      */
     public void forget() {
-        List<MemoryMessage> forgotten = all().stream().filter(message -> message.compareTo(this.message) >= 0).toList();
-        forgotten.forEach(message -> repository.deleteByTopicAndMessageId(topic, message.getId()));
+        if (forgotten) {
+            return;
+        }
+        synchronized (this) {
+            this.forgotten = true;
+            List<MemoryMessage> forgotten = all().stream().filter(message -> message.compareTo(this.message) >= 0).toList();
+            forgotten.forEach(message -> repository.deleteByTopicAndMessageId(topic, message.getId()));
+        }
     }
 
     /**
      * 遗忘所有消息
      */
     public void forgetAll() {
-        repository.deleteByTopic(topic);
+        if (forgotten) {
+            return;
+        }
+        synchronized (this) {
+            repository.deleteByTopic(topic);
+        }
     }
 
 }
