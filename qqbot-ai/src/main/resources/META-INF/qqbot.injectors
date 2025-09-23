@@ -1,2 +1,1 @@
-cc.rapidev.qqbot.ai.AiChatMessageHandlerInjector
-cc.rapidev.qqbot.ai.AiImageMessageHandlerInjector
+cc.rapidev.qqbot.ai.AiMessageHandlerInjector

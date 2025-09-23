@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.ai.client;
 
 import cc.rapidev.qqbot.ai.AiConfig;
 import cc.rapidev.qqbot.ai.tools.AiTool;
+import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.memory.MemoryMessage;
 
 import java.lang.reflect.Constructor;
@@ -29,6 +30,6 @@ public interface AiChatClient {
 
     void addTool(AiTool tool);
 
-    String chat(List<MemoryMessage> messages);
+    String chat(MessageContext context, List<MemoryMessage> messages);
 
 }

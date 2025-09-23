@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.ai.tools;
 
+import cc.rapidev.qqbot.message.MessageContext;
 import dev.langchain4j.agent.tool.ToolSpecification;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class Today implements AiTool {
     }
 
     @Override
-    public String invoke(String arguments) {
+    public String invoke(MessageContext context, String arguments) {
         LocalDateTime now = LocalDateTime.now();
         return now.format(formatter);
     }
