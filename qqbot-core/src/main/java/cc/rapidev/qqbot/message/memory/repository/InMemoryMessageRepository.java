@@ -34,7 +34,6 @@ public class InMemoryMessageRepository implements MessageRepository {
 
     @Override
     public void save(Topic topic, List<MemoryMessage> messages) {
-        deleteByTopic(topic);
         Map<String, MemoryMessage> topicMessages = storage.computeIfAbsent(topic.toString(), k -> new HashMap<>());
         messages.forEach(message -> topicMessages.put(message.getId(), message));
     }

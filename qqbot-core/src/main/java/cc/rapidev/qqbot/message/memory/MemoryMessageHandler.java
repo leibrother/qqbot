@@ -64,7 +64,7 @@ public class MemoryMessageHandler implements MessageHandler {
             }
             MemoryMessage memoryMessage = MemoryMessage.builder()
                     .id(response.getId())
-                    .bot(false)
+                    .bot(true)
                     .text(message.getContent())
                     .timestamp(response.getTime())
                     .build();

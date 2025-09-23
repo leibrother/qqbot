@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.message.memory;
 
+import cc.rapidev.qqbot.common.utils.ObjectUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author leibrother
@@ -19,11 +21,12 @@ import java.util.Map;
 public class MemoryMessage implements Serializable, Comparable<MemoryMessage> {
 
     public MemoryMessage(Builder builder) {
+        ObjectUtils._assert(builder.id, "message id must not be null");
         this.id = builder.id;
         this.bot = builder.bot;
         this.text = builder.text;
         this.metadata = builder.metadata;
-        this.timestamp = builder.timestamp;
+        this.timestamp = builder.timestamp != null ? builder.timestamp : LocalDateTime.now();
     }
 
     private String id;
@@ -51,6 +54,17 @@ public class MemoryMessage implements Serializable, Comparable<MemoryMessage> {
     @Override
     public int compareTo(MemoryMessage message) {
         return this.timestamp.compareTo(message.getTimestamp());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof MemoryMessage message)) return false;
+        return Objects.equals(id, message.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     public static Builder builder() {

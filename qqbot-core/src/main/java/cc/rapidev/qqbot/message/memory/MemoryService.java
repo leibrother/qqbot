@@ -5,7 +5,9 @@ import cc.rapidev.qqbot.common.utils.ObjectUtils;
 import cc.rapidev.qqbot.message.memory.repository.MessageRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author leibrother
@@ -15,19 +17,21 @@ public class MemoryService {
     private final MessageRepository repository;
     private final Topic topic;
     private final MemoryMessage message;
-    private final List<MemoryMessage> replyMessages = new ArrayList<>();
+    private final List<MemoryMessage> temporary = new ArrayList<>();
+    private final List<MemoryMessage> remembered = new ArrayList<>();
     private boolean forgotten = false;
 
     public MemoryService(MessageRepository repository, Topic topic, MemoryMessage message) {
         this.repository = repository;
         this.topic = topic;
         this.message = message;
+        temporary.add(message);
     }
 
     public void addReply(MemoryMessage message) {
         ObjectUtils._assert(message, "message must not be null");
         ObjectUtils._assert(message.isBot(), "message is not from a bot");
-        replyMessages.add(message);
+        temporary.add(message);
     }
 
     /**
@@ -45,7 +49,11 @@ public class MemoryService {
      * @return 当前上下文{@code topic}的所有消息
      */
     public List<MemoryMessage> all() {
-        return repository.findByTopic(topic);
+        List<MemoryMessage> remembered = repository.findByTopic(topic);
+        return Stream.of(remembered, temporary)
+                .flatMap(Collection::stream)
+                .sorted(MemoryMessage::compareTo)
+                .toList();
     }
 
     /**
@@ -56,8 +64,12 @@ public class MemoryService {
             return;
         }
         synchronized (this) {
-            repository.save(topic, message);
-            replyMessages.forEach(reply -> repository.save(topic, reply));
+            if (!temporary.isEmpty()) {
+                List<MemoryMessage> temp = List.copyOf(temporary);
+                repository.save(topic, temp);
+                remembered.addAll(temporary);
+                temporary.clear();
+            }
         }
     }
 
@@ -70,8 +82,8 @@ public class MemoryService {
         }
         synchronized (this) {
             this.forgotten = true;
-            List<MemoryMessage> forgotten = all().stream().filter(message -> message.compareTo(this.message) >= 0).toList();
-            forgotten.forEach(message -> repository.deleteByTopicAndMessageId(topic, message.getId()));
+            remembered.forEach(msg -> repository.deleteByTopicAndMessageId(topic, msg.getId()));
+            remembered.clear();
         }
     }
 
@@ -84,6 +96,8 @@ public class MemoryService {
         }
         synchronized (this) {
             repository.deleteByTopic(topic);
+            temporary.clear();
+            remembered.clear();
         }
     }
 
