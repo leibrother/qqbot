@@ -2,7 +2,7 @@ services:
   qqbot:
     container_name: qqbot
     image: qqbot:latest
-    build: .
+    restart: unless-stopped
     ports:
       - 8080:8080
     volumes:
