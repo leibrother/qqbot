@@ -6,5 +6,5 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - /data/qqbot/config:/qqbot/config
+      - ./config:/qqbot/config
 
