@@ -20,7 +20,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- project version -->
-        <revision>1.0</revision>
+        <revision>0.0.1</revision>
         <!-- dependencies version -->
         <vertx.version>5.0.4</vertx.version>
         <fastjson.version>2.0.54</fastjson.version>
