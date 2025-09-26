@@ -7,6 +7,9 @@ import cc.rapidev.qqbot.api.response.AccessTokenResponse;
 import lombok.Getter;
 
 /**
+ * 机器人接口管理类
+ * <p>所有的机器人接口都需要在此实例化</p>
+ *
  * @author leibrother
  */
 public class BotApi {

@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * 消息调度器，用于将不同类型的消息分配给不同的执行器执行
+ * 消息调度器，用于将不同类型的消息分配给不同的处理器执行
  *
  * @author leibrother
  */
@@ -65,6 +65,11 @@ public class MessageDispatcher {
         register(event.name(), handler);
     }
 
+    /**
+     * 通过{@link MessageHandlerInjector}注入消息处理器
+     *
+     * @param injector 消息处理器注入器
+     */
     public void register(MessageHandlerInjector injector) {
         if (injector == null) {
             throw new IllegalArgumentException("injector must not be null");
@@ -72,6 +77,12 @@ public class MessageDispatcher {
         injector.inject(this);
     }
 
+    /**
+     * 获取传入参数对应的处理器列表
+     *
+     * @param name 事件名
+     * @return 消息处理器列表
+     */
     private List<MessageHandler> getHandlers(String name) {
         List<MessageHandler> handlers = messageHandlers.get(name);
         if (handlers == null || handlers.isEmpty()) {
@@ -80,10 +91,22 @@ public class MessageDispatcher {
         return handlers;
     }
 
+    /**
+     * 获取传入参数对应的处理器列表
+     *
+     * @param event 事件
+     * @return 消息处理器列表
+     */
     private List<MessageHandler> getHandlers(Events event) {
         return getHandlers(event.name());
     }
 
+    /**
+     * 获取消息上下文
+     *
+     * @param payload 消息内容
+     * @return {@link MessageContext}
+     */
     private MessageContext getContext(BotPayload payload) {
         return new MessageContext(bot, payload);
     }

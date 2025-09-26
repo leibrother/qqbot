@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 消息的来源
+ * 消息的来源（主题）
  * <p>有如下场景：</p>
  * <ul>
  *     <li>单聊消息，此时{@code event}为{@code C2C_MESSAGE_CREATE}，{@code id}为发送消息的用户ID</li>

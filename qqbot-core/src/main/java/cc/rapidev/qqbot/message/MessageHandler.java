@@ -1,6 +1,9 @@
 package cc.rapidev.qqbot.message;
 
 /**
+ * 消息处理器
+ * <p>本框架的核心接口，通过实现此接口可完成对所有事件的处理</p>
+ *
  * @author leibrother
  */
 public interface MessageHandler extends Comparable<MessageHandler> {

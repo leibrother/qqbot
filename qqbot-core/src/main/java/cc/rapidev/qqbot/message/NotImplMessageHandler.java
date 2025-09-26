@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 默认的消息处理器实现
+ *
  * @author leibrother
  */
 public class NotImplMessageHandler implements MessageHandler {

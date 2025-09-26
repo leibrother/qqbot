@@ -138,6 +138,11 @@ public class Bot {
         }
     }
 
+    /**
+     * 消费消息
+     *
+     * @param payload 消息内容
+     */
     public void consume(BotPayload payload) {
         if (payload == null) {
             throw new IllegalArgumentException("payload is must not be null");
@@ -145,6 +150,13 @@ public class Bot {
         this.dispatcher.doDispatch(payload);
     }
 
+    /**
+     * 向指定主题发送消息
+     *
+     * @param topic   主题
+     * @param message 消息内容
+     * @return 响应结果
+     */
     public MessageResponse sendMessage(Topic topic, Message message) {
         MessageRequest request = getApi().getMessageRequest();
         if (topic.isPrivate()) {
@@ -160,6 +172,13 @@ public class Bot {
         }
     }
 
+    /**
+     * 向指定主题发送媒体消息
+     *
+     * @param topic 主题
+     * @param media 媒体消息内容
+     * @return 响应结果
+     */
     public MessageMediaResponse sendMessage(Topic topic, MessageMedia media) {
         MessageRequest request = getApi().getMessageRequest();
         if (topic.isPrivate()) {

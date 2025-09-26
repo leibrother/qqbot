@@ -47,19 +47,40 @@ public final class MessageContext {
         this.payload = payload;
     }
 
+    /**
+     * 将上下文标记为完成状态
+     * <p>当上下文被标记为完成后，非必要的{@link MessageHandler}将会跳过执行</p>
+     */
     public void complete() {
         this.completed = true;
     }
 
+    /**
+     * 获取机器人Api服务
+     * <p>可通过它与调用机器人接口</p>
+     *
+     * @return {@link BotApi}
+     */
     public BotApi getApi() {
         return bot.getApi();
     }
 
+    /**
+     * 获取当前消息事件类型
+     *
+     * @return {@link Events}
+     */
     public Events getEvent() {
         String event = payload.getEvent();
         return Events.valueOf(event);
     }
 
+    /**
+     * 添加一个服务，后续可通过类与名称获取它
+     *
+     * @param name    服务名
+     * @param service 服务实例
+     */
     public void addService(String name, Object service) {
         ObjectUtils._assert(name, "service name must not be null");
         ObjectUtils._assert(service, "service object must not be null");
@@ -71,10 +92,25 @@ public final class MessageContext {
         this.servicesNames.computeIfAbsent(clazz, k -> new ArrayList<>()).add(name);
     }
 
+    /**
+     * 通过类获取一个服务
+     *
+     * @param clazz 服务类
+     * @param <T>   类型
+     * @return 指定类型的服务实例
+     */
     public <T> T getService(Class<T> clazz) {
         return getService(clazz, null);
     }
 
+    /**
+     * 通过类与服务名获取一个服务
+     *
+     * @param clazz 服务类
+     * @param name  服务名
+     * @param <T>   类型
+     * @return 指定类型的服务实例
+     */
     public <T> T getService(Class<T> clazz, String name) {
         ObjectUtils._assert(clazz, "service clazz must not be null");
         List<String> names = servicesNames.get(clazz);
@@ -96,6 +132,11 @@ public final class MessageContext {
         }
     }
 
+    /**
+     * 获取当前消息的Topic
+     *
+     * @return {@link Topic}
+     */
     public Topic getTopic() {
         if (topic == null) {
             synchronized (this) {
@@ -108,6 +149,11 @@ public final class MessageContext {
         return topic;
     }
 
+    /**
+     * 根据消息类型构建Topic
+     *
+     * @return {@link Topic}
+     */
     private Topic generateTopic() {
         Events event = getEvent();
         JsonNode data = payload.getData();
@@ -136,11 +182,22 @@ public final class MessageContext {
         }
     }
 
+    /**
+     * 添加回复消息钩子，此钩子会在调用{@link MessageContext#reply(Message)}时触发
+     *
+     * @param hook 钩子
+     */
     public void addReplyHook(BiConsumer<Message, MessageResponse> hook) {
         ObjectUtils._assert(hook, "hook must not be null");
         replyHooks.add(hook);
     }
 
+    /**
+     * 运行回复消息钩子
+     *
+     * @param message  回复的消息
+     * @param response 回复的结果
+     */
     private void runReplyHooks(Message message, MessageResponse response) {
         synchronized (replyHooks) {
             for (BiConsumer<Message, MessageResponse> hook : replyHooks) {
@@ -149,6 +206,11 @@ public final class MessageContext {
         }
     }
 
+    /**
+     * 回复消息到Topic
+     *
+     * @param message 消息内容
+     */
     public void reply(Message message) {
         Topic topic = getTopic();
         JsonNode data = getPayload().getData();
@@ -158,6 +220,11 @@ public final class MessageContext {
         runReplyHooks(message, response);
     }
 
+    /**
+     * 回复媒体消息到Topic
+     *
+     * @param media 媒体消息
+     */
     public void reply(MessageMedia media) {
         media.srvDontSend();
         Topic topic = getTopic();
