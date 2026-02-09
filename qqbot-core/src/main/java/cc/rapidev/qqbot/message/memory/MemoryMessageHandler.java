@@ -40,7 +40,7 @@ public class MemoryMessageHandler implements MessageHandler {
     }
 
     @Override
-    public boolean must() {
+    public boolean isRequired() {
         return true;
     }
 

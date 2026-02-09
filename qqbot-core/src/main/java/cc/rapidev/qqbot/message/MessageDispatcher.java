@@ -124,7 +124,7 @@ public class MessageDispatcher {
         Runnable runnable = () -> {
             try {
                 for (MessageHandler handler : handlers) {
-                    if (context.isCompleted() && !handler.must()) {
+                    if (context.isCompleted() && !handler.isRequired()) {
                         continue;
                     }
                     handler.handle(context);

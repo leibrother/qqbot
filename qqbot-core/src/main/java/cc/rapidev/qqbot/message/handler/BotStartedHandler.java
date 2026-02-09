@@ -20,7 +20,7 @@ public class BotStartedHandler implements MessageHandler {
     }
 
     @Override
-    public boolean must() {
+    public boolean isRequired() {
         return true;
     }
 

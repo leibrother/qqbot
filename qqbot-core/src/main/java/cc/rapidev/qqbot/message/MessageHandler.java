@@ -21,7 +21,7 @@ public interface MessageHandler extends Comparable<MessageHandler> {
      *
      * @return 如果为true则表示其不受context的
      */
-    default boolean must() {
+    default boolean isRequired() {
         return false;
     }
 
