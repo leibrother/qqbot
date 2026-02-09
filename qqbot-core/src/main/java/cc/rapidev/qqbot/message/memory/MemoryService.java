@@ -17,21 +17,19 @@ public class MemoryService {
     private final MessageRepository repository;
     private final Topic topic;
     private final MemoryMessage message;
-    private final List<MemoryMessage> temporary = new ArrayList<>();
-    private final List<MemoryMessage> remembered = new ArrayList<>();
-    private boolean forgotten = false;
+    private final List<MemoryMessage> cache = new ArrayList<>();
+    private volatile List<MemoryMessage> remembered;
 
     public MemoryService(MessageRepository repository, Topic topic, MemoryMessage message) {
         this.repository = repository;
         this.topic = topic;
         this.message = message;
-        temporary.add(message);
+        this.add(message);
     }
 
-    public void addReply(MemoryMessage message) {
+    public void add(MemoryMessage message) {
         ObjectUtils._assert(message, "message must not be null");
-        ObjectUtils._assert(message.isBot(), "message is not from a bot");
-        temporary.add(message);
+        this.cache.add(message);
     }
 
     /**
@@ -49,8 +47,14 @@ public class MemoryService {
      * @return 当前上下文{@code topic}的所有消息
      */
     public List<MemoryMessage> all() {
-        List<MemoryMessage> remembered = repository.findByTopic(topic);
-        return Stream.of(remembered, temporary)
+        if (this.remembered == null) {
+            synchronized (this) {
+                if (this.remembered == null) {
+                    this.remembered = repository.find(topic);
+                }
+            }
+        }
+        return Stream.of(remembered, cache)
                 .flatMap(Collection::stream)
                 .sorted(MemoryMessage::compareTo)
                 .toList();
@@ -59,46 +63,31 @@ public class MemoryService {
     /**
      * 记住当前消息
      */
-    public void remember() {
-        if (forgotten) {
-            return;
-        }
-        synchronized (this) {
-            if (!temporary.isEmpty()) {
-                List<MemoryMessage> temp = List.copyOf(temporary);
-                repository.save(topic, temp);
-                remembered.addAll(temporary);
-                temporary.clear();
+    public synchronized void remember() {
+        if (!this.cache.isEmpty()) {
+            repository.save(topic, cache);
+            if (this.remembered != null) {
+                this.remembered.addAll(cache);
             }
+            cache.clear();
         }
     }
 
     /**
-     * 遗忘消息到当前消息之前(回滚到之前)
+     * 遗忘未记住的消息
      */
-    public void forget() {
-        if (forgotten) {
-            return;
-        }
-        synchronized (this) {
-            this.forgotten = true;
-            remembered.forEach(msg -> repository.deleteByTopicAndMessageId(topic, msg.getId()));
-            remembered.clear();
+    public synchronized void forget() {
+        if (!this.cache.isEmpty()) {
+            this.cache.clear();
         }
     }
 
     /**
      * 遗忘所有消息
      */
-    public void forgetAll() {
-        if (forgotten) {
-            return;
-        }
-        synchronized (this) {
-            repository.deleteByTopic(topic);
-            temporary.clear();
-            remembered.clear();
-        }
+    public synchronized void forgetAll() {
+        this.forget();
+        this.repository.remove(topic);
     }
 
 }

@@ -18,18 +18,12 @@ public class InMemoryMessageRepository implements MessageRepository {
     private final Map<String, Map<String, MemoryMessage>> storage = new ConcurrentHashMap<>();
 
     @Override
-    public List<MemoryMessage> findByTopic(Topic topic) {
+    public List<MemoryMessage> find(Topic topic) {
         Map<String, MemoryMessage> topicMessages = storage.computeIfAbsent(topic.toString(), k -> new HashMap<>());
         return topicMessages.values()
                 .stream()
                 .sorted(MemoryMessage::compareTo)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void save(Topic topic, MemoryMessage message) {
-        Map<String, MemoryMessage> topicMessages = storage.computeIfAbsent(topic.toString(), k -> new HashMap<>());
-        topicMessages.put(message.getId(), message);
     }
 
     @Override
@@ -39,14 +33,8 @@ public class InMemoryMessageRepository implements MessageRepository {
     }
 
     @Override
-    public void deleteByTopic(Topic topic) {
+    public void remove(Topic topic) {
         storage.remove(topic.toString());
-    }
-
-    @Override
-    public void deleteByTopicAndMessageId(Topic topic, String messageId) {
-        Map<String, MemoryMessage> topicMessages = storage.computeIfAbsent(topic.toString(), k -> new HashMap<>());
-        topicMessages.remove(messageId);
     }
 
 }

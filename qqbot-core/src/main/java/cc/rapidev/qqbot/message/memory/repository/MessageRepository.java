@@ -10,14 +10,10 @@ import java.util.List;
  */
 public interface MessageRepository {
 
-    List<MemoryMessage> findByTopic(Topic topic);
-
-    void save(Topic topic, MemoryMessage message);
+    List<MemoryMessage> find(Topic topic);
 
     void save(Topic topic, List<MemoryMessage> messages);
 
-    void deleteByTopic(Topic topic);
-
-    void deleteByTopicAndMessageId(Topic topic, String messageId);
+    void remove(Topic topic);
 
 }

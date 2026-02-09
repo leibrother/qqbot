@@ -69,7 +69,7 @@ public class MemoryMessageHandler implements MessageHandler {
                     .timestamp(response.getTime())
                     .build();
             MemoryService service = context.getService(MemoryService.class);
-            service.addReply(memoryMessage);
+            service.add(memoryMessage);
         });
     }
 
