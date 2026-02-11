@@ -11,7 +11,7 @@ import cc.rapidev.qqbot.message.memory.MemoryService;
  *
  * @author leibrother
  */
-public class MatcherMessageHandler implements MessageHandler {
+public class MatcherHandler implements MessageHandler {
 
     @Override
     public int order() {

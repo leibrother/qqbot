@@ -19,17 +19,17 @@ import cc.rapidev.qqbot.message.memory.repository.MessageRepository;
  *
  * @author leibrother
  */
-public class MemoryMessageHandler implements MessageHandler {
+public class MemoryHandler implements MessageHandler {
 
     private final Converter<MessageContext, MemoryMessage> converter;
     private final MessageRepository repository;
 
-    public MemoryMessageHandler() {
+    public MemoryHandler() {
         this.converter = new MessageConverter();
         this.repository = new InMemoryMessageRepository();
     }
 
-    public MemoryMessageHandler(MessageRepository messageRepository) {
+    public MemoryHandler(MessageRepository messageRepository) {
         this.converter = new MessageConverter();
         this.repository = messageRepository;
     }
