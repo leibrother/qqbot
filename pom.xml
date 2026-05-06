@@ -11,8 +11,9 @@
 
     <modules>
         <module>qqbot-core</module>
+        <module>qqbot-boot</module>
+        <module>qqbot-plugins</module>
         <module>qqbot-ai</module>
-        <module>qqbot-example</module>
     </modules>
 
     <properties>
@@ -70,6 +71,7 @@
                 <artifactId>bcprov-jdk18on</artifactId>
                 <version>${bcprov.version}</version>
             </dependency>
+            <!-- qqbot framework -->
             <dependency>
                 <groupId>cc.rapidev</groupId>
                 <artifactId>qqbot-core</artifactId>

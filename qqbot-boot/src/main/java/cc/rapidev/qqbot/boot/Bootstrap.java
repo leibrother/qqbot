@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.example;
+package cc.rapidev.qqbot.boot;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotConfig;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * @author leibrother
  */
-public class Main {
+public class Bootstrap {
 
     public static void printWelcome() {
         System.out.println("---------------------------------------");
@@ -48,7 +48,7 @@ public class Main {
         return properties;
     }
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         printWelcome();
         Properties properties = getPropertiesByArgs(args);
         BotConfig config = BotConfig.create();
