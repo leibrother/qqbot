@@ -1,4 +1,4 @@
-FROM openjdk:21
+FROM openjdk:25
 USER root
 WORKDIR /qqbot
 # 载入JAR
