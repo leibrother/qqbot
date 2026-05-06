@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * @author leibrother
@@ -92,7 +93,13 @@ public class Message implements Serializable {
         return new Message(writer.toString());
     }
 
-    public static Message markdown(MessageMarkdown markdown) {
+    public static Message markdown(String content) {
+        MessageMarkdown markdown = new MessageMarkdown(content);
+        return new Message(markdown);
+    }
+
+    public static Message markdown(String templateId, List<MessageMarkdown.MessageMarkdownParam> params) {
+        MessageMarkdown markdown = new MessageMarkdown(templateId, params);
         return new Message(markdown);
     }
 

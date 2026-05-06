@@ -40,7 +40,7 @@ public class AiChatMessageHandler implements MessageHandler {
             MemoryService service = context.getService(MemoryService.class);
             List<MemoryMessage> messages = service.all();
             String result = client.chat(context, messages);
-            context.reply(Message.text(result));
+            context.reply(Message.markdown(result));
         } finally {
             releaseLock(context);
         }
