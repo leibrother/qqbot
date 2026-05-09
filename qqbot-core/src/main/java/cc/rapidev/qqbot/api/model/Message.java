@@ -48,6 +48,8 @@ public class Message implements Serializable {
 
     private MessageMarkdown markdown;
 
+    private MessageKeyboard keyboard;
+
     private MessageArk ark;
 
     private MessageMediaResponse media;
@@ -58,15 +60,16 @@ public class Message implements Serializable {
 
     private Integer msgSeq = 1;
 
+    public void keyboard(MessageKeyboard keyboard) {
+        if (this.msgType != msg_type_markdown){
+            throw new RuntimeException("只有Markdown消息才能设置按钮");
+        }
+        this.keyboard = keyboard;
+    }
+
     public void reply(String msgId, int msgSeq) {
         this.msgId = msgId;
         this.msgSeq = msgSeq;
-    }
-
-    public void contentReplace(String oldChar, String newChar) {
-        if (this.content != null) {
-            this.content = this.content.replace(oldChar, newChar);
-        }
     }
 
     public boolean isText() {
