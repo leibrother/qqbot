@@ -1,11 +1,11 @@
-package cc.rapidev.qqbot.ai;
+package cc.rapidev.qqbot.plugin.aigc;
 
-import cc.rapidev.qqbot.ai.client.AiImageClient;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
 import cc.rapidev.qqbot.message.matcher.MatcherService;
 import cc.rapidev.qqbot.message.memory.MemoryService;
+import cc.rapidev.qqbot.plugin.aigc.client.AiImageClient;
 import dev.langchain4j.data.image.Image;
 
 import java.util.List;

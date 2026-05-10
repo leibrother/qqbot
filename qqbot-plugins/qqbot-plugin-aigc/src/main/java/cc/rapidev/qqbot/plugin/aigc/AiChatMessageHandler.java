@@ -1,6 +1,5 @@
-package cc.rapidev.qqbot.ai;
+package cc.rapidev.qqbot.plugin.aigc;
 
-import cc.rapidev.qqbot.ai.client.AiChatClient;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.User;
 import cc.rapidev.qqbot.common.Topic;
@@ -8,6 +7,7 @@ import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
 import cc.rapidev.qqbot.message.memory.MemoryMessage;
 import cc.rapidev.qqbot.message.memory.MemoryService;
+import cc.rapidev.qqbot.plugin.aigc.client.AiChatClient;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,6 @@
         <module>qqbot-core</module>
         <module>qqbot-boot</module>
         <module>qqbot-plugins</module>
-        <module>qqbot-ai</module>
     </modules>
 
     <properties>
@@ -33,6 +32,9 @@
         <httpclient5.version>5.4.3</httpclient5.version>
         <bcprov.version>1.79</bcprov.version>
         <velocity.version>2.4.1</velocity.version>
+        <sqlite.version>3.44.1.0</sqlite.version>
+        <jdbi.version>3.27.0</jdbi.version>
+        <hikari-cp.version>7.0.2</hikari-cp.version>
         <slf4j.version>2.0.16</slf4j.version>
         <logback.version>1.5.12</logback.version>
         <lombok.version>1.18.40</lombok.version>
@@ -78,15 +80,38 @@
                 <artifactId>velocity-engine-core</artifactId>
                 <version>${velocity.version}</version>
             </dependency>
+            <!-- SQLite -->
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>${sqlite.version}</version>
+            </dependency>
+            <!-- JDBI3 -->
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-core</artifactId>
+                <version>${jdbi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-sqlobject</artifactId>
+                <version>${jdbi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-sqlite</artifactId>
+                <version>${jdbi.version}</version>
+            </dependency>
+            <!-- HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari-cp.version}</version>
+            </dependency>
             <!-- qqbot framework -->
             <dependency>
                 <groupId>cc.rapidev</groupId>
                 <artifactId>qqbot-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>cc.rapidev</groupId>
-                <artifactId>qqbot-ai</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>
@@ -102,6 +127,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

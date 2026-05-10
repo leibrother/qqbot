@@ -1,0 +1,11 @@
+#[[###]]# 已加载插件 $plugins.size() 个
+> 发送 <qqbot-cmd-input text="插件详情" show="插件详情 [名称]"/> 查看插件详情
+> 发送 <qqbot-cmd-input text="启用插件" show="启用插件 [名称]"/> 启用插件
+> 发送 <qqbot-cmd-input text="禁用插件" show="禁用插件 [名称]"/> 禁用插件
+
+| 名称 | 作者 | 版本 | 状态 |
+|------|------|------|------|
+#foreach($plugin in $plugins)
+#set($manifest = $plugin.manifest())
+| <qqbot-cmd-input text="插件详情 $manifest.name()" show="$manifest.name()"/> | $manifest.author() | $manifest.version() | 未启用 |
+#end

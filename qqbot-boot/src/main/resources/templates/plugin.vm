@@ -1,0 +1,14 @@
+#set($manifest = $plugin.manifest())
+#[[##]]# $manifest.name()
+> $manifest.description()
+> 版本: `1.0.0`
+> 作者: `$manifest.author()`
+
+---
+
+#[[###依赖项]]#
+| 名称 | 版本 |
+|------|------|
+#foreach($entry in $manifest.depends().entrySet())
+| $entry.key | $entry.value |
+#end

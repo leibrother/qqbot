@@ -1,9 +1,9 @@
-package cc.rapidev.qqbot.ai;
+package cc.rapidev.qqbot.plugin.aigc;
 
-import cc.rapidev.qqbot.ai.client.OpenAiChatClient;
-import cc.rapidev.qqbot.ai.client.OpenAiImageClient;
 import cc.rapidev.qqbot.common.Config;
 import cc.rapidev.qqbot.common.utils.ObjectUtils;
+import cc.rapidev.qqbot.plugin.aigc.client.OpenAiChatClient;
+import cc.rapidev.qqbot.plugin.aigc.client.OpenAiImageClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;

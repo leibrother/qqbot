@@ -1,10 +1,14 @@
 {
-  "name": "AIGC",
-  "author": "leibrother@foxmail.com",
+  "name": "aigc",
   "description": "提供基本的AIGC能力",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "depends": {
+    "@bot": "^0.0.1"
+  },
   "hooks": {
-    "install": "",
-    "uninstall": ""
+    "enable": "",
+    "disable": ""
   },
   "injectors": [
     "cc.rapidev.qqbot.plugin.aigc.AIGCInjector"

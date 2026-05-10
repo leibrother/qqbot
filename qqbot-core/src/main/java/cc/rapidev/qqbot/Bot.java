@@ -10,6 +10,8 @@ import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.Version;
+import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.exception.BotException;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import lombok.Getter;
@@ -21,14 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class Bot {
 
+    public static final Version version = Version.parse("0.0.1");
     private final Logger log = LoggerFactory.getLogger("[Bot]");
 
     @Getter
     private final BotConfig config;
     private final BotAdapter adapter;
+    @Getter
     private final MessageDispatcher dispatcher;
     @Getter
     private final BotApi api;
+    @Getter
+    private final BotDatabase database;
     @Getter
     private User info;
 
@@ -49,6 +55,7 @@ public class Bot {
         this.adapter = adapter;
         this.dispatcher = new MessageDispatcher(this);
         this.api = new BotApi(this);
+        this.database = new BotDatabase(this);
         init();
     }
 

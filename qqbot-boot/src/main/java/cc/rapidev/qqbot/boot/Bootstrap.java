@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.boot;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotConfig;
+import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.common.Constant;
 
 import java.io.File;
@@ -54,6 +55,7 @@ public class Bootstrap {
         BotConfig config = BotConfig.create();
         config.loadProperties(properties);
         Bot bot = new Bot(config);
+        PluginService.init(bot);
         bot.run(true);
     }
 

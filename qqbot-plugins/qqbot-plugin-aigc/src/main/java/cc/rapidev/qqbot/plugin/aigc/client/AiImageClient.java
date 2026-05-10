@@ -1,6 +1,6 @@
-package cc.rapidev.qqbot.ai.client;
+package cc.rapidev.qqbot.plugin.aigc.client;
 
-import cc.rapidev.qqbot.ai.AiConfig;
+import cc.rapidev.qqbot.plugin.aigc.AiConfig;
 import dev.langchain4j.data.image.Image;
 
 import java.lang.reflect.Constructor;

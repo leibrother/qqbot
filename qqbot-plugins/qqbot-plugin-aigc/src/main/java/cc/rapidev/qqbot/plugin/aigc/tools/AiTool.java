@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.ai.tools;
+package cc.rapidev.qqbot.plugin.aigc.tools;
 
 import cc.rapidev.qqbot.message.MessageContext;
 import dev.langchain4j.agent.tool.ToolSpecification;

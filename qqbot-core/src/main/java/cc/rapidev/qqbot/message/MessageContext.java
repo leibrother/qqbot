@@ -113,8 +113,13 @@ public final class MessageContext {
      */
     public <T> T getService(Class<T> clazz, String name) {
         ObjectUtils._assert(clazz, "service clazz must not be null");
-        List<String> names = servicesNames.get(clazz);
-        if (names == null || names.isEmpty()) {
+        List<String> names = servicesNames.keySet().stream()
+                .filter(clazz::isAssignableFrom)
+                .map(servicesNames::get)
+                .flatMap(List::stream)
+                .toList();
+        // List<String> names = servicesNames.get(clazz);
+        if (names.isEmpty()) {
             throw new BotException("service %s not exists".formatted(clazz.getName()));
         }
         if (name == null) {

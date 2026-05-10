@@ -1,10 +1,10 @@
-package cc.rapidev.qqbot.ai.client;
+package cc.rapidev.qqbot.plugin.aigc.client;
 
-import cc.rapidev.qqbot.ai.AiConfig;
-import cc.rapidev.qqbot.ai.tools.AiTool;
-import cc.rapidev.qqbot.ai.tools.Today;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.memory.MemoryMessage;
+import cc.rapidev.qqbot.plugin.aigc.AiConfig;
+import cc.rapidev.qqbot.plugin.aigc.tools.AiTool;
+import cc.rapidev.qqbot.plugin.aigc.tools.Today;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.*;

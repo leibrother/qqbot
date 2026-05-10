@@ -2,8 +2,9 @@ package cc.rapidev.qqbot.message;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotPayload;
+import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.Events;
-import cc.rapidev.qqbot.exception.BotException;
+import cc.rapidev.qqbot.common.utils.ExceptionUtils;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,18 @@ public class MessageDispatcher {
      */
     public void register(Events event, MessageHandler handler) {
         register(event.name(), handler);
+    }
+
+    /**
+     * 注册消息处理器
+     *
+     * @param event    - 消息事件
+     * @param handlers - 消息处理器列表
+     */
+    public void register(Events event, List<MessageHandler> handlers) {
+        if (handlers != null && !handlers.isEmpty()) {
+            handlers.forEach(handler -> register(event, handler));
+        }
     }
 
     /**
@@ -129,11 +142,30 @@ public class MessageDispatcher {
                     }
                     handler.handle(context);
                 }
-            } catch (BotException e) {
+            } catch (Exception e) {
                 log.error("message handler error", e);
+                if (context.getTopic().isPrivate()) {
+                    Message message = generateStackTraceMessage(e);
+                    context.reply(message);
+                }
             }
         };
         executor.execute(runnable);
+    }
+
+    private Message generateStackTraceMessage(Exception e) {
+        String trace = ExceptionUtils.getStackTrace(e);
+        String template = """
+                ### 机器人发生异常，请联系开发者
+                
+                ---
+                
+                异常堆栈
+                ```java
+                %s
+                ```
+                """;
+        return Message.markdown(template.formatted(trace));
     }
 
 }

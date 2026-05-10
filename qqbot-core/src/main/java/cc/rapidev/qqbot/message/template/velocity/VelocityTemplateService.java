@@ -7,6 +7,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,6 +16,7 @@ import java.util.Map;
 public class VelocityTemplateService implements TemplateService<VelocityTemplate> {
 
     private final VelocityEngine engine;
+    private final Map<String, VelocityTemplate> resources = new HashMap<>();
 
     public VelocityTemplateService() {
         this.engine = new VelocityEngine();
@@ -25,8 +27,13 @@ public class VelocityTemplateService implements TemplateService<VelocityTemplate
 
     @Override
     public VelocityTemplate load(String name) {
+        if (resources.containsKey(name)) {
+            return resources.get(name);
+        }
         Template template = engine.getTemplate(name, StandardCharsets.UTF_8.name());
-        return new VelocityTemplate(template);
+        VelocityTemplate resource = new VelocityTemplate(template);
+        resources.put(name, resource);
+        return resource;
     }
 
     @Override

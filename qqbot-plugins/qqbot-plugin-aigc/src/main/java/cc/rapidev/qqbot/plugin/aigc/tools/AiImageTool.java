@@ -1,9 +1,9 @@
-package cc.rapidev.qqbot.ai.tools;
+package cc.rapidev.qqbot.plugin.aigc.tools;
 
-import cc.rapidev.qqbot.ai.client.AiImageClient;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.common.utils.JsonUtils;
 import cc.rapidev.qqbot.message.MessageContext;
+import cc.rapidev.qqbot.plugin.aigc.client.AiImageClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.image.Image;
