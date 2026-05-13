@@ -30,11 +30,11 @@ public class User implements Serializable {
 
     private boolean bot;
 
-    public String getUsernameEliminateTestTag() {
+    public String getCleanUsername() {
         if (this.username.endsWith("-测试中")) {
             return this.username.substring(0, this.username.length() - 4);
         }
-        return this.username;
+        return getUsername();
     }
 
 }

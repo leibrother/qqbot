@@ -50,7 +50,7 @@ public class AiChatMessageHandler implements MessageHandler {
         Topic topic = context.getTopic();
         if (this.thinkingLock.contains(topic.toString())) {
             User info = context.getBot().getInfo();
-            String name = info.getUsernameEliminateTestTag();
+            String name = info.getCleanUsername();
             context.reply(Message.text("%s正在思考中...".formatted(name)));
             context.getService(MemoryService.class).forget();
             return false;

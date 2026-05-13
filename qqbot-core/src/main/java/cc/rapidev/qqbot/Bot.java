@@ -66,8 +66,10 @@ public class Bot {
         log.info("Bot init...");
         this.adapter.bind(this);
         this.registerShutdownHook();
-        this.info = this.getApi().getAuthRequest().info();
-        log.info("Bot name is {}", info.getUsernameEliminateTestTag());
+        User info = this.getApi().getAuthRequest().info();
+        this.database.parameters().set("bot.name", info.getCleanUsername());
+        this.info = info;
+        log.info("Bot name is {}", info.getCleanUsername());
     }
 
     /**
