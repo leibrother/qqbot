@@ -30,7 +30,7 @@ public class BotPayload {
         this.content.put(Constant.PAYLOAD_OPCODE, opcode);
     }
 
-    public String getId() {
+    public String id() {
         if (this.content.has(Constant.PAYLOAD_ID)) {
             return this.content.get(Constant.PAYLOAD_ID).asText();
         }
@@ -42,7 +42,7 @@ public class BotPayload {
      *
      * @return payload.s
      */
-    public int getSerialNumber() {
+    public int serialNumber() {
         if (this.content.has(Constant.PAYLOAD_SERIAL_NUMBER)) {
             return this.content.get(Constant.PAYLOAD_SERIAL_NUMBER).asInt();
         }
@@ -54,7 +54,7 @@ public class BotPayload {
      *
      * @return payload.op
      */
-    public int getOpCode() {
+    public int opcode() {
         if (this.content.has(Constant.PAYLOAD_OPCODE)) {
             return this.content.get(Constant.PAYLOAD_OPCODE).asInt();
         }
@@ -66,7 +66,7 @@ public class BotPayload {
      *
      * @return payload.t
      */
-    public String getEvent() {
+    public String event() {
         if (this.content.has(Constant.PAYLOAD_EVENT_TYPE)) {
             return this.content.get(Constant.PAYLOAD_EVENT_TYPE).asText();
         }
@@ -79,7 +79,7 @@ public class BotPayload {
      * @param clazz 对应的实体类
      * @return payload.d
      */
-    public <T> T getData(Class<T> clazz) {
+    public <T> T data(Class<T> clazz) {
         if (this.content.has(Constant.PAYLOAD_DATA)) {
             JsonNode node = this.content.get(Constant.PAYLOAD_DATA);
             return JsonUtils.convert(node, clazz);
@@ -87,8 +87,8 @@ public class BotPayload {
         return null;
     }
 
-    public JsonNode getData() {
-        return this.getData(JsonNode.class);
+    public JsonNode data() {
+        return this.data(JsonNode.class);
     }
 
     public String json() {

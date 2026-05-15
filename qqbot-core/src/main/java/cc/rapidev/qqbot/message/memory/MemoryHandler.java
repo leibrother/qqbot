@@ -46,9 +46,9 @@ public class MemoryHandler implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        Events event = context.getEvent();
+        Events event = context.event();
         if (event.isMessageCreate()) {
-            Topic topic = context.getTopic();
+            Topic topic = context.topic();
             MemoryMessage message = converter.convert(context);
             MemoryService service = new MemoryService(repository, topic, message);
             context.addService("memoryService", service);

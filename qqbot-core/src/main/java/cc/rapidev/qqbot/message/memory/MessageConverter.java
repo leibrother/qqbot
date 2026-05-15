@@ -19,7 +19,7 @@ public class MessageConverter implements Converter<MessageContext, MemoryMessage
     @Override
     public MemoryMessage convert(MessageContext context) {
         BotPayload payload = context.getPayload();
-        JsonNode data = payload.getData();
+        JsonNode data = payload.data();
         // id
         String id = data.get("id").asText();
         // text

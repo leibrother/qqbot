@@ -9,7 +9,7 @@ import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.common.utils.ObjectUtils;
+import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.exception.BotException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
@@ -17,9 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
@@ -34,8 +33,7 @@ public final class MessageContext {
     private final Bot bot;
     @Getter
     private final BotPayload payload;
-    private final Map<String, Object> services = new HashMap<>();
-    private final Map<Class<?>, List<String>> servicesNames = new HashMap<>();
+    private final ServiceRegistry serviceRegistry = new ServiceRegistry();
     private final AtomicInteger replySequence = new AtomicInteger(0);
     private final List<BiConsumer<Message, MessageResponse>> replyHooks = new ArrayList<>();
     private volatile Topic topic;
@@ -61,7 +59,7 @@ public final class MessageContext {
      *
      * @return {@link BotApi}
      */
-    public BotApi getApi() {
+    public BotApi api() {
         return bot.getApi();
     }
 
@@ -70,71 +68,58 @@ public final class MessageContext {
      *
      * @return {@link Events}
      */
-    public Events getEvent() {
-        String event = payload.getEvent();
-        return Events.valueOf(event);
+    public Events event() {
+        return Events.valueOf(payload.event());
     }
 
     /**
-     * 添加一个服务，后续可通过类与名称获取它
+     * 添加一个服务
+     *
+     * @param service 服务实例
+     */
+    public void addService(Object service) {
+        serviceRegistry.register(service);
+    }
+
+    /**
+     * 添加一个服务
      *
      * @param name    服务名
      * @param service 服务实例
      */
     public void addService(String name, Object service) {
-        ObjectUtils._assert(name, "service name must not be null");
-        ObjectUtils._assert(service, "service object must not be null");
-        if (this.services.containsKey(name)) {
-            throw new BotException("service %s already exists".formatted(name));
-        }
-        Class<?> clazz = service.getClass();
-        this.services.put(name, service);
-        this.servicesNames.computeIfAbsent(clazz, k -> new ArrayList<>()).add(name);
+        serviceRegistry.register(name, service);
     }
 
     /**
      * 通过类获取一个服务
      *
-     * @param clazz 服务类
+     * @param type 服务类
      * @param <T>   类型
      * @return 指定类型的服务实例
      */
-    public <T> T getService(Class<T> clazz) {
-        return getService(clazz, null);
+    public <T> T getService(Class<T> type) {
+        Optional<T> service = serviceRegistry.get(type);
+        if (service.isEmpty()) {
+            throw new IllegalArgumentException("service %s not exists".formatted(type.getName()));
+        }
+        return service.get();
     }
 
     /**
      * 通过类与服务名获取一个服务
      *
-     * @param clazz 服务类
-     * @param name  服务名
-     * @param <T>   类型
+     * @param name 服务名
+     * @param type 服务类型
+     * @param <T>  类型
      * @return 指定类型的服务实例
      */
-    public <T> T getService(Class<T> clazz, String name) {
-        ObjectUtils._assert(clazz, "service clazz must not be null");
-        List<String> names = servicesNames.keySet().stream()
-                .filter(clazz::isAssignableFrom)
-                .map(servicesNames::get)
-                .flatMap(List::stream)
-                .toList();
-        // List<String> names = servicesNames.get(clazz);
-        if (names.isEmpty()) {
-            throw new BotException("service %s not exists".formatted(clazz.getName()));
+    public <T> T getService(String name, Class<T> type) {
+        Optional<T> service = serviceRegistry.get(name, type);
+        if (service.isEmpty()) {
+            throw new IllegalArgumentException("service %s(%s) not exists".formatted(type.getName(), name));
         }
-        if (name == null) {
-            if (names.size() == 1) {
-                return clazz.cast(services.get(names.getFirst()));
-            } else {
-                throw new BotException("service %s is are multiple, please specify a name".formatted(clazz.getName()));
-            }
-        } else {
-            if (names.contains(name)) {
-                return clazz.cast(services.get(name));
-            } else {
-                throw new BotException("service %s(%s) not exists".formatted(clazz.getName(), name));
-            }
-        }
+        return service.get();
     }
 
     /**
@@ -142,49 +127,24 @@ public final class MessageContext {
      *
      * @return {@link Topic}
      */
-    public Topic getTopic() {
+    public Topic topic() {
         if (topic == null) {
             synchronized (this) {
                 if (topic == null) {
-                    topic = generateTopic();
-                    logger.debug("topic: {}", topic);
+                    Events event = event();
+                    JsonNode data = payload.data();
+                    this.topic = switch (event) {
+                        case MESSAGE_CREATE -> Topic.ofGuild(data.get("channel_id").textValue());
+                        case AT_MESSAGE_CREATE -> Topic.ofGuildAt(data.get("channel_id").textValue());
+                        case C2C_MESSAGE_CREATE -> Topic.ofPrivate(data.path("author").get("id").textValue());
+                        case DIRECT_MESSAGE_CREATE -> Topic.ofDirect(data.get("guild_id").textValue());
+                        case GROUP_AT_MESSAGE_CREATE -> Topic.ofGroupAt(data.get("group_id").textValue());
+                        default -> throw new BotException("current event %s unable to retrieve topic".formatted(event));
+                    };
                 }
             }
         }
         return topic;
-    }
-
-    /**
-     * 根据消息类型构建Topic
-     *
-     * @return {@link Topic}
-     */
-    private Topic generateTopic() {
-        Events event = getEvent();
-        JsonNode data = payload.getData();
-        switch (event) {
-            case C2C_MESSAGE_CREATE -> {
-                String id = data.path("author").get("id").asText();
-                return Topic.ofPrivate(id);
-            }
-            case GROUP_AT_MESSAGE_CREATE -> {
-                String id = data.get("group_id").asText();
-                return Topic.ofGroupAt(id);
-            }
-            case DIRECT_MESSAGE_CREATE -> {
-                String id = data.get("guild_id").asText();
-                return Topic.ofDirect(id);
-            }
-            case MESSAGE_CREATE -> {
-                String id = data.get("channel_id").asText();
-                return Topic.ofGuild(id);
-            }
-            case AT_MESSAGE_CREATE -> {
-                String id = data.get("channel_id").asText();
-                return Topic.ofGuildAt(id);
-            }
-            default -> throw new BotException("current event %s unable to retrieve topic".formatted(event));
-        }
     }
 
     /**
@@ -193,7 +153,7 @@ public final class MessageContext {
      * @param hook 钩子
      */
     public void addReplyHook(BiConsumer<Message, MessageResponse> hook) {
-        ObjectUtils._assert(hook, "hook must not be null");
+        Asserts.notnull(hook, "hook must not be null");
         replyHooks.add(hook);
     }
 
@@ -217,8 +177,8 @@ public final class MessageContext {
      * @param message 消息内容
      */
     public void reply(Message message) {
-        Topic topic = getTopic();
-        JsonNode data = getPayload().getData();
+        Topic topic = topic();
+        JsonNode data = getPayload().data();
         String replyId = data.get("id").asText();
         message.reply(replyId, replySequence.incrementAndGet());
         MessageResponse response = getBot().sendMessage(topic, message);
@@ -232,7 +192,7 @@ public final class MessageContext {
      */
     public void reply(MessageMedia media) {
         media.srvDontSend();
-        Topic topic = getTopic();
+        Topic topic = topic();
         MessageMediaResponse response = getBot().sendMessage(topic, media);
         Message message = Message.media(response);
         reply(message);

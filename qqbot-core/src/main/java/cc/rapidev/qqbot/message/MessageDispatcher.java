@@ -51,7 +51,7 @@ public class MessageDispatcher {
      * @param handler 消息处理器
      */
     public void register(String name, MessageHandler handler) {
-        List<MessageHandler> handlers = messageHandlers.computeIfAbsent(name, k -> new ArrayList<>());
+        List<MessageHandler> handlers = messageHandlers.computeIfAbsent(name, _ -> new ArrayList<>());
         handlers.add(handler);
         handlers.sort(Comparable::compareTo);
     }
@@ -132,7 +132,7 @@ public class MessageDispatcher {
      */
     public void doDispatch(BotPayload payload) {
         MessageContext context = getContext(payload);
-        Events event = context.getEvent();
+        Events event = context.event();
         List<MessageHandler> handlers = getHandlers(event);
         Runnable runnable = () -> {
             try {
@@ -144,7 +144,7 @@ public class MessageDispatcher {
                 }
             } catch (Exception e) {
                 log.error("message handler error", e);
-                if (context.getTopic().isPrivate()) {
+                if (context.topic().isPrivate()) {
                     Message message = generateStackTraceMessage(e);
                     context.reply(message);
                 }

@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.message.memory;
 
 import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.common.utils.ObjectUtils;
+import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.message.memory.repository.MessageRepository;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class MemoryService {
     }
 
     public void add(MemoryMessage message) {
-        ObjectUtils._assert(message, "message must not be null");
+        Asserts.notnull(message, "message must not be null");
         this.cache.add(message);
     }
 

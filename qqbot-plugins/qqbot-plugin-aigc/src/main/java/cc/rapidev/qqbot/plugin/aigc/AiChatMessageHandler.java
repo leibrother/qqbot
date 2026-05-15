@@ -47,7 +47,7 @@ public class AiChatMessageHandler implements MessageHandler {
     }
 
     private boolean getLock(MessageContext context) {
-        Topic topic = context.getTopic();
+        Topic topic = context.topic();
         if (this.thinkingLock.contains(topic.toString())) {
             User info = context.getBot().getInfo();
             String name = info.getCleanUsername();
@@ -59,7 +59,7 @@ public class AiChatMessageHandler implements MessageHandler {
     }
 
     private void releaseLock(MessageContext context) {
-        Topic topic = context.getTopic();
+        Topic topic = context.topic();
         this.thinkingLock.remove(topic.toString());
     }
 

@@ -20,7 +20,7 @@ public class WebhookOpCode13Handler extends WebhookHandler {
     @Override
     public Object handle(Map<String, Object> headers, BotPayload payload) {
         String secret = getConfig().getSecret();
-        JsonNode data = payload.getData(JsonNode.class);
+        JsonNode data = payload.data(JsonNode.class);
         String timestamp = data.get("event_ts").asText();
         String token = data.get("plain_token").asText();
         String signature = RequestVerify.verify(secret, timestamp, token);

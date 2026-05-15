@@ -15,7 +15,7 @@ public class NotImplMessageHandler implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        Events event = context.getEvent();
+        Events event = context.event();
         log.warn("event {} unregistered handler", event);
     }
 

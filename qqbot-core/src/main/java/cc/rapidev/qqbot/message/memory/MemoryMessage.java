@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.message.memory;
 
-import cc.rapidev.qqbot.common.utils.ObjectUtils;
+import cc.rapidev.qqbot.common.utils.Asserts;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Objects;
 public class MemoryMessage implements Serializable, Comparable<MemoryMessage> {
 
     public MemoryMessage(Builder builder) {
-        ObjectUtils._assert(builder.id, "message id must not be null");
+        Asserts.notnull(builder.id, "message id must not be null");
         this.id = builder.id;
         this.bot = builder.bot;
         this.text = builder.text;

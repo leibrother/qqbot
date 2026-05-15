@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.plugin.aigc;
 
 import cc.rapidev.qqbot.common.Config;
-import cc.rapidev.qqbot.common.utils.ObjectUtils;
+import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.plugin.aigc.client.OpenAiChatClient;
 import cc.rapidev.qqbot.plugin.aigc.client.OpenAiImageClient;
 
@@ -46,19 +46,19 @@ public class AiConfig {
 
     public String getChatBaseUrl() {
         String property = config.getProperty(PROPERTY_CHAT_BASEURL);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_CHAT_BASEURL));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_BASEURL));
         return property;
     }
 
     public String getChatApiKey() {
         String property = config.getProperty(PROPERTY_CHAT_APIKEY);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_CHAT_APIKEY));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_APIKEY));
         return property;
     }
 
     public String getChatModel() {
         String property = config.getProperty(PROPERTY_CHAT_MODEL);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_CHAT_MODEL));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_MODEL));
         return property;
     }
 
@@ -76,19 +76,19 @@ public class AiConfig {
 
     public String getImageBaseUrl() {
         String property = config.getProperty(PROPERTY_IMAGE_BASEURL);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_IMAGE_BASEURL));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_BASEURL));
         return property;
     }
 
     public String getImageApiKey() {
         String property = config.getProperty(PROPERTY_IMAGE_APIKEY);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_IMAGE_APIKEY));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_APIKEY));
         return property;
     }
 
     public String getImageModel() {
         String property = config.getProperty(PROPERTY_IMAGE_MODEL);
-        ObjectUtils._assert(property, "please set %s".formatted(PROPERTY_IMAGE_MODEL));
+        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_MODEL));
         return property;
     }
 
