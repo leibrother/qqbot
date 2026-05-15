@@ -2,7 +2,7 @@ FROM openjdk:25
 USER root
 WORKDIR /qqbot
 # 载入JAR
-ADD ./target/qqbot-example.jar ./qqbot-example.jar
+ADD ./target/qqbot-launcher.jar ./qqbot-launcher.jar
 # 载入默认配置
 RUN mkdir ./config
 ADD ./qqbot.properties ./config/qqbot.properties
@@ -12,4 +12,4 @@ RUN echo 'Asia/Shanghai' >/etc/timezone
 # 暴露端口
 EXPOSE 8080
 # 启动JAR
-CMD ["java","-jar","qqbot-example.jar","--config=./config/qqbot.properties"]
+CMD ["java","-jar","qqbot-launcher.jar","--config=./config/qqbot.properties"]

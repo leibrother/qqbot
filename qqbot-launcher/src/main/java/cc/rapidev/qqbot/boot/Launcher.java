@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 /**
  * @author leibrother
  */
-public class Bootstrap {
+public class Launcher {
 
     public static void printWelcome() {
         System.out.println("---------------------------------------");

@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-boot</artifactId>
+    <artifactId>qqbot-launcher</artifactId>
 
     <properties>
         <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
@@ -25,7 +25,7 @@
     </dependencies>
 
     <build>
-        <finalName>qqbot-example</finalName>
+        <finalName>qqbot-launcher</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -40,7 +40,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>cc.rapidev.qqbot.boot.Bootstrap</mainClass>
+                                    <mainClass>cc.rapidev.qqbot.boot.Launcher</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/qqbot.injectors</resource>
