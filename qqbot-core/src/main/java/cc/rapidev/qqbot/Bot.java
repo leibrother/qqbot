@@ -94,7 +94,7 @@ public class Bot {
      * 运行机器人
      */
     public void run() {
-        this.run(false);
+        this.run(true);
     }
 
     /**

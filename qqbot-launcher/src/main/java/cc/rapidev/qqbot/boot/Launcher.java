@@ -56,7 +56,7 @@ public class Launcher {
         config.loadProperties(properties);
         Bot bot = new Bot(config);
         PluginService.init(bot);
-        bot.run(true);
+        bot.run();
     }
 
 }
