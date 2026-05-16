@@ -1,4 +1,6 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.boot.plugin.dependency;
+
+import cc.rapidev.qqbot.boot.plugin.Plugin;
 
 import java.util.LinkedHashSet;
 import java.util.List;

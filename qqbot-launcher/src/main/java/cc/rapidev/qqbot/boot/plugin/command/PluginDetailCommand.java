@@ -6,19 +6,18 @@ import cc.rapidev.qqbot.api.model.MessageKeyboardButton;
 import cc.rapidev.qqbot.boot.plugin.Plugin;
 import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.matcher.MatcherMessageHandler;
-import cc.rapidev.qqbot.message.matcher.MatcherService;
+import cc.rapidev.qqbot.message.command.Command;
+import cc.rapidev.qqbot.message.command.CommandHandler;
 import cc.rapidev.qqbot.message.template.TemplateService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author leibrother
  */
-public class PluginDetailCommand extends MatcherMessageHandler {
+public class PluginDetailCommand implements CommandHandler {
 
     private final PluginService pluginService;
 
@@ -27,19 +26,13 @@ public class PluginDetailCommand extends MatcherMessageHandler {
     }
 
     @Override
-    public List<String> keywords() {
-        return List.of("插件详情");
-    }
-
-    @Override
-    public void process(MessageContext context, MatcherService matcher) {
-        String name = matcher.current().trim();
+    public void handle(MessageContext context, Command command) {
+        String name = command.content().trim();
         Optional<Plugin> optional = pluginService.get(name);
         if (optional.isEmpty()) {
             context.reply(Message.text("未找到插件: " + name));
             return;
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("plugin", optional.get());
         TemplateService<?> service = context.getService(TemplateService.class);

@@ -3,18 +3,17 @@ package cc.rapidev.qqbot.boot.plugin.command;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.matcher.MatcherMessageHandler;
-import cc.rapidev.qqbot.message.matcher.MatcherService;
+import cc.rapidev.qqbot.message.command.Command;
+import cc.rapidev.qqbot.message.command.CommandHandler;
 import cc.rapidev.qqbot.message.template.TemplateService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author leibrother
  */
-public class PluginListCommand extends MatcherMessageHandler {
+public class PluginListCommand implements CommandHandler {
 
     private final PluginService pluginService;
 
@@ -23,12 +22,7 @@ public class PluginListCommand extends MatcherMessageHandler {
     }
 
     @Override
-    public List<String> keywords() {
-        return List.of("插件列表");
-    }
-
-    @Override
-    public void process(MessageContext context, MatcherService matcher) {
+    public void handle(MessageContext context, Command command) {
         TemplateService<?> service = context.getService(TemplateService.class);
         Map<String, Object> params = new HashMap<>();
         params.put("plugins", pluginService.plugins());

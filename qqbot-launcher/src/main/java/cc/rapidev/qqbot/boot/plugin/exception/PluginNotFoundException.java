@@ -5,8 +5,15 @@ package cc.rapidev.qqbot.boot.plugin.exception;
  */
 public class PluginNotFoundException extends PluginException {
 
-    public PluginNotFoundException(String message) {
-        super(message);
+    private final String id;
+
+    public PluginNotFoundException(String id) {
+        super("Not found find plugin: " + id);
+        this.id = id;
+    }
+
+    public String id() {
+        return this.id;
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 public enum Events {
 
     // Framework Event
+    START(IntentValue.BOT),
     STARTED(IntentValue.BOT),
     // QQBot Event
     GUILD_CREATE(IntentValue.GUILDS),// 当机器人加入新guild时

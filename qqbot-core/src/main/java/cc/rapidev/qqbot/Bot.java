@@ -104,7 +104,7 @@ public class Bot {
      */
     public void run(boolean keepLive) {
         if (!adapter.isRunning()) {
-            log.info("Bot startup...");
+            consume(BotPayload.broadcast(Events.START));
             adapter.run();
             consume(BotPayload.broadcast(Events.STARTED));
             if (keepLive) {

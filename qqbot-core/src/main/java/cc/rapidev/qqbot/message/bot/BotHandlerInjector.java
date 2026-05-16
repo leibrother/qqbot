@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.handler;
+package cc.rapidev.qqbot.message.bot;
 
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.message.MessageDispatcher;
@@ -11,7 +11,8 @@ public class BotHandlerInjector implements MessageHandlerInjector {
 
     @Override
     public void inject(MessageDispatcher dispatcher) {
-        BotStartedHandler startedHandler = new BotStartedHandler();
+        StartupListener startedHandler = new StartupListener();
+        dispatcher.register(Events.START, startedHandler);
         dispatcher.register(Events.STARTED, startedHandler);
     }
 
