@@ -21,28 +21,19 @@ import java.util.stream.Stream;
 public class PluginService implements PluginFinder {
 
     private final Bot bot;
-    private final List<Path> paths;
+    private final PluginLoader pluginLoader;
     private final DependencyManager dependencyManager;
     private final Map<String, Plugin> plugins = new HashMap<>();
 
     public PluginService(Bot bot) {
         this.bot = bot;
         this.dependencyManager = new DependencyManager(this);
-        String plugins = bot.getConfig().getProperty("plugins", "./plugins");
-        this.paths = Stream.of(plugins.split(",")).map(Paths::get).toList();
-        scan();
-    }
-
-    public void scan() {
-        Map<String, Plugin> plugins = new HashMap<>();
-        for (Path path : this.paths) {
-            List<Plugin> list = PluginLoader.search(path);
-            for (Plugin plugin : list) {
-                plugins.put(plugin.name().toLowerCase(), plugin);
-            }
+        String directory = bot.getConfig().getProperty("plugins", "./plugins");
+        List<Path> paths = Stream.of(directory.split(",")).map(Paths::get).toList();
+        this.pluginLoader = new PluginLoader(paths);
+        for (Plugin plugin : pluginLoader.plugins()) {
+            plugins.put(plugin.name(), plugin);
         }
-        this.plugins.clear();
-        this.plugins.putAll(plugins);
     }
 
     public List<Plugin> plugins() {
@@ -59,9 +50,6 @@ public class PluginService implements PluginFinder {
         // 构建依赖树
         Dependency dependency = dependencyManager.dependencies(plugin);
         // 启用所有依赖项与本体
-        for (Plugin item : dependency.successively()) {
-            item.enable(bot);
-        }
     }
 
     public static void init(Bot bot) {

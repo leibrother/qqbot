@@ -1,4 +1,5 @@
 {
+  "id": "aigc",
   "name": "aigc",
   "description": "提供基本的AIGC能力",
   "author": "leibrother@foxmail.com",
