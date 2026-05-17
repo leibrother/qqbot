@@ -31,7 +31,6 @@ public final class MessageContext {
 
     @Getter
     private final Bot bot;
-    @Getter
     private final BotPayload payload;
     private final ServiceRegistry serviceRegistry = new ServiceRegistry();
     private final AtomicInteger replySequence = new AtomicInteger(0);
@@ -73,6 +72,15 @@ public final class MessageContext {
     }
 
     /**
+     * 获取有效载荷
+     *
+     * @return payload
+     */
+    public BotPayload payload() {
+        return this.payload;
+    }
+
+    /**
      * 添加一个服务
      *
      * @param service 服务实例
@@ -95,7 +103,7 @@ public final class MessageContext {
      * 通过类获取一个服务
      *
      * @param type 服务类
-     * @param <T>   类型
+     * @param <T>  类型
      * @return 指定类型的服务实例
      */
     public <T> T getService(Class<T> type) {
@@ -178,7 +186,7 @@ public final class MessageContext {
      */
     public void reply(Message message) {
         Topic topic = topic();
-        JsonNode data = getPayload().data();
+        JsonNode data = payload().data();
         String replyId = data.get("id").asText();
         message.reply(replyId, replySequence.incrementAndGet());
         MessageResponse response = getBot().sendMessage(topic, message);
