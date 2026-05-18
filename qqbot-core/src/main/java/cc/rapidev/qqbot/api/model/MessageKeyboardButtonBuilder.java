@@ -21,7 +21,7 @@ public class MessageKeyboardButtonBuilder {
 
     public MessageKeyboardButtonBuilder(int type) {
         if (!List.of(0, 1, 2).contains(type)) {
-            throw new RuntimeException("不支持的按钮类型: " + type);
+            throw new RuntimeException("unsupported button type: " + type);
         }
         this.type = type;
     }

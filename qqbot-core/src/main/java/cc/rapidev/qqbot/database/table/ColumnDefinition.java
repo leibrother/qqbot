@@ -51,7 +51,7 @@ public record ColumnDefinition(
         if (type.isEmpty()) {
             type = mapping.get(field.getType());
             if (type == null) {
-                throw new RuntimeException("类型'%s'不支持自动映射, 请手动指定SQLite类型！");
+                throw new RuntimeException("type '%s' is not supported for auto-mapping, please specify the SQLite type manually".formatted(field.getType().getName()));
             }
         }
         boolean primaryKey = field.isAnnotationPresent(TBPrimaryKey.class);

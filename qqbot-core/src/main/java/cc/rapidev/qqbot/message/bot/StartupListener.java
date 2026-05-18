@@ -31,7 +31,7 @@ public class StartupListener implements MessageHandler {
     public void handle(MessageContext context) {
         if (context.event() == Events.START) {
             startupTimestamp = System.currentTimeMillis();
-            logger.info("Bot startup...");
+            logger.info("Bot starting...");
         } else if (context.event() == Events.STARTED) {
             long startedTimestamp = System.currentTimeMillis();
             logger.info("Bot started in {}ms", startedTimestamp - startupTimestamp);

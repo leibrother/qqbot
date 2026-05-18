@@ -26,7 +26,7 @@ public abstract class KeywordRegister implements MessageHandler, MessageHandlerI
         try {
             register(handler);
         } catch (IllegalArgumentException e) {
-            logger.error("register keyword error", e);
+            logger.error("failed to register keyword", e);
         }
     }
 

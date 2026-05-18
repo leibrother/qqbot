@@ -42,7 +42,7 @@ public class VertxWebhook implements Webhook {
         route.handler(BodyHandler.create());
         route.handler(ctx -> {
             String body = ctx.body().asString();
-            log.debug("receive: {}", body);
+            log.debug("received: {}", body);
             BotPayload payload = new BotPayload(body);
             WebhookHandler handler = this.handlers.get(payload.opcode());
             if (handler != null) {

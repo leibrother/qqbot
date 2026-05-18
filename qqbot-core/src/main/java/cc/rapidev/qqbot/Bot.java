@@ -63,7 +63,7 @@ public class Bot {
      * 初始化
      */
     private void init() {
-        log.info("Bot init...");
+        log.info("Bot initializing...");
         this.adapter.bind(this);
         this.registerShutdownHook();
         User info = this.getApi().getAuthRequest().info();
@@ -118,7 +118,7 @@ public class Bot {
      */
     public void stop() {
         if (adapter.isRunning()) {
-            log.info("Bot stop running...");
+            log.info("Bot stopping...");
             adapter.stop();
         }
     }
@@ -154,7 +154,7 @@ public class Bot {
      */
     public void consume(BotPayload payload) {
         if (payload == null) {
-            throw new IllegalArgumentException("payload is must not be null");
+            throw new IllegalArgumentException("payload must not be null");
         }
         this.dispatcher.doDispatch(payload);
     }
@@ -177,7 +177,7 @@ public class Bot {
         } else if (topic.isDirect()) {
             return request.toDirect(topic.getId(), message);
         } else {
-            throw new BotException("current topic %s unable to send message".formatted(topic));
+            throw new BotException("unable to send message to topic %s".formatted(topic));
         }
     }
 
@@ -195,7 +195,7 @@ public class Bot {
         } else if (topic.isGroupAt()) {
             return request.toGroupMedia(topic.getId(), media);
         } else {
-            throw new BotException("current topic %s unable to send media message".formatted(topic));
+            throw new BotException("unable to send media message to topic %s".formatted(topic));
         }
     }
 

@@ -64,10 +64,10 @@ public record MessageKeyboard(
      */
     public void add(int row, MessageKeyboardButton button) {
         if (this.id != null && this.content == null) {
-            throw new RuntimeException("使用按钮模版时不能再添加新的按钮");
+            throw new RuntimeException("cannot add buttons when using a keyboard template");
         }
         if (row > MAX_SIZE) {
-            throw new RuntimeException("最多只能设置%d行按钮".formatted(MAX_SIZE));
+            throw new RuntimeException("cannot set more than %d rows of buttons".formatted(MAX_SIZE));
         } else if (row <= 0) {
             row = IntStream.range(1, MAX_SIZE)
                     .filter(i -> {
@@ -77,14 +77,14 @@ public record MessageKeyboard(
                         return true;
                     })
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("当前已无空间继续添加按钮"));
+                    .orElseThrow(() -> new RuntimeException("no available space to add more buttons"));
         }
         if (this.content.rows.size() < row) {
             this.content.rows.add(new MessageKeyboardButtons());
         }
         MessageKeyboardButtons rowButtons = this.content.rows.get(row - 1);
         if (rowButtons.buttons.size() >= MAX_SIZE) {
-            throw new RuntimeException("当前行%d已无空间继续添加按钮".formatted(row));
+            throw new RuntimeException("row %d has no available space to add more buttons".formatted(row));
         }
         rowButtons.buttons.add(button);
     }

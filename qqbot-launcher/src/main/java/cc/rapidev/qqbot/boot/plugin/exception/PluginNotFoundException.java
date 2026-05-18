@@ -8,7 +8,7 @@ public class PluginNotFoundException extends PluginException {
     private final String id;
 
     public PluginNotFoundException(String id) {
-        super("not found find plugin: " + id);
+        super("plugin not found: " + id);
         this.id = id;
     }
 

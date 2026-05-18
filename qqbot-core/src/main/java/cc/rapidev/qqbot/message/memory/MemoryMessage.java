@@ -47,7 +47,7 @@ public class MemoryMessage implements Serializable, Comparable<MemoryMessage> {
         if (clazz.isAssignableFrom(value.getClass())) {
             return clazz.cast(value);
         } else {
-            throw new ClassCastException("the value of %s cannot be cast to %s".formatted(key, value.getClass()));
+            throw new ClassCastException("value '%s' cannot be cast to %s".formatted(key, value.getClass().getName()));
         }
     }
 

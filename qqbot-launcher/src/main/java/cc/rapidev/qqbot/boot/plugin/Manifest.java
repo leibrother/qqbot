@@ -75,7 +75,7 @@ public record Manifest(
         List<String> injectors = new ArrayList<>();
         if (json.has("injectors")) {
             if (!json.get("injectors").isArray()) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException("injectors field must be an array");
             }
             json.get("injectors").elements().forEachRemaining(entry -> injectors.add(entry.asText()));
         }

@@ -34,7 +34,7 @@ public class PluginLoader implements PluginFinder {
     public PluginLoader(List<Path> paths) {
         this.tmpdir = new File(System.getProperty("java.io.tmpdir"), "qqbot-plugins@" + IdentityUtils.shortID());
         if (!tmpdir.mkdirs()) {
-            throw new RuntimeException("creating a temp directory failed");
+            throw new RuntimeException("failed to create temp directory");
         }
         this.tmpdir.deleteOnExit();
         logger.debug("plugins temp directory is {}", tmpdir);
@@ -72,7 +72,7 @@ public class PluginLoader implements PluginFinder {
                 try {
                     Manifest manifest = manifest(jarpath);
                     if (!manifest.framework().satisfy(Bot.version)) {
-                        logger.warn("plugin {} dependent framework version does not match bot version {}", manifest, Bot.version);
+                        logger.warn("plugin {} framework version is incompatible with bot version {}", manifest, Bot.version);
                         continue;
                     }
                     Plugin plugin = copyJarAsPlugin(manifest, new File(jarpath.toUri()));
@@ -111,7 +111,7 @@ public class PluginLoader implements PluginFinder {
         try (URLClassLoader loader = new URLClassLoader(new URL[]{jarpath.toUri().toURL()})) {
             InputStream input = loader.getResourceAsStream("plugin.json");
             if (input == null) {
-                throw new NoSuchFileException("jar '%s' not found plugin.json in resources".formatted(jarpath.toString()));
+                throw new NoSuchFileException("plugin.json not found in jar '%s'".formatted(jarpath.toString()));
             }
             String data = new String(input.readAllBytes());
             return Manifest.parse(data);
@@ -129,14 +129,14 @@ public class PluginLoader implements PluginFinder {
     private Plugin copyJarAsPlugin(Manifest manifest, File jar) throws IOException {
         File target = new File(this.tmpdir, manifest.toString());
         if (!target.mkdir()) {
-            throw new IOException("create temp directory '%s' failed".formatted(target.getPath()));
+            throw new IOException("failed to create temp directory '%s'".formatted(target.getPath()));
         }
         File pluginJar = new File(target, "plugin.jar");
         Files.copy(new FileInputStream(jar), pluginJar.toPath());
         File pluginJarLibDir = new File(target, "lib");
         if (!pluginJarLibDir.mkdir()) {
             target.deleteOnExit();
-            throw new IOException("create temp directory '%s' failed".formatted(pluginJarLibDir.getPath()));
+            throw new IOException("failed to create temp directory '%s'".formatted(pluginJarLibDir.getPath()));
         }
         List<File> pluginJarLibs = extractLibs(pluginJar, pluginJarLibDir);
         return new Plugin(manifest, pluginJar, pluginJarLibs);

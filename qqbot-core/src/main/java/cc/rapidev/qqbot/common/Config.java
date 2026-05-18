@@ -27,7 +27,7 @@ public class Config {
                 properties.load(input);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load config file: " + filename, e);
+            throw new RuntimeException("failed to load config file: " + filename, e);
         }
     }
 

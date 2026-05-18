@@ -49,11 +49,11 @@ public class WebhookBotAdapter implements BotAdapter {
         if (!isRunning()) {
             synchronized (this) {
                 if (!isRunning()) {
-                    log.info("Webhook startup...");
+                    log.info("Webhook starting...");
                     int port = getPort();
                     this.webhook.open(port);
                     this.running = true;
-                    log.info("Webhook started. port: {}", port);
+                    log.info("Webhook started on port {}", port);
                 }
             }
         }
@@ -64,7 +64,7 @@ public class WebhookBotAdapter implements BotAdapter {
         if (isRunning()) {
             synchronized (this) {
                 if (isRunning()) {
-                    log.info("Bot webhook stoping...");
+                    log.info("Bot webhook stopping...");
                     this.webhook.close();
                     this.running = false;
                 }

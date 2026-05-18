@@ -18,7 +18,7 @@ public class IncompatibleException extends PluginException {
         this.plugin = plugin;
         this.dependency = dependency;
         this.expected = expected;
-        super("plugin %s is not compatible with the version of %s, expected version: %s".formatted(plugin, dependency, expected));
+        super("plugin %s is incompatible with %s, expected version: %s".formatted(plugin, dependency, expected));
     }
 
 }

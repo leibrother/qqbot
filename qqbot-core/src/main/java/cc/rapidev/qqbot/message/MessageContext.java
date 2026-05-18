@@ -109,7 +109,7 @@ public final class MessageContext {
     public <T> T getService(Class<T> type) {
         Optional<T> service = serviceRegistry.get(type);
         if (service.isEmpty()) {
-            throw new IllegalArgumentException("service %s not exists".formatted(type.getName()));
+            throw new IllegalArgumentException("service %s does not exist".formatted(type.getName()));
         }
         return service.get();
     }
@@ -125,7 +125,7 @@ public final class MessageContext {
     public <T> T getService(String name, Class<T> type) {
         Optional<T> service = serviceRegistry.get(name, type);
         if (service.isEmpty()) {
-            throw new IllegalArgumentException("service %s(%s) not exists".formatted(type.getName(), name));
+            throw new IllegalArgumentException("service %s(%s) does not exist".formatted(type.getName(), name));
         }
         return service.get();
     }
@@ -147,7 +147,7 @@ public final class MessageContext {
                         case C2C_MESSAGE_CREATE -> Topic.ofPrivate(data.path("author").get("id").textValue());
                         case DIRECT_MESSAGE_CREATE -> Topic.ofDirect(data.get("guild_id").textValue());
                         case GROUP_AT_MESSAGE_CREATE -> Topic.ofGroupAt(data.get("group_id").textValue());
-                        default -> throw new BotException("current event %s unable to retrieve topic".formatted(event));
+                        default -> throw new BotException("unable to retrieve topic for event %s".formatted(event));
                     };
                 }
             }

@@ -62,7 +62,7 @@ public class Message implements Serializable {
 
     public void keyboard(MessageKeyboard keyboard) {
         if (this.msgType != msg_type_markdown){
-            throw new RuntimeException("只有Markdown消息才能设置按钮");
+            throw new RuntimeException("keyboard can only be set on markdown messages");
         }
         this.keyboard = keyboard;
     }

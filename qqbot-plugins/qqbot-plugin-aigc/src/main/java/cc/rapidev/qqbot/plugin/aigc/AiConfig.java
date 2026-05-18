@@ -46,19 +46,19 @@ public class AiConfig {
 
     public String getChatBaseUrl() {
         String property = config.getProperty(PROPERTY_CHAT_BASEURL);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_BASEURL));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_CHAT_BASEURL));
         return property;
     }
 
     public String getChatApiKey() {
         String property = config.getProperty(PROPERTY_CHAT_APIKEY);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_APIKEY));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_CHAT_APIKEY));
         return property;
     }
 
     public String getChatModel() {
         String property = config.getProperty(PROPERTY_CHAT_MODEL);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_CHAT_MODEL));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_CHAT_MODEL));
         return property;
     }
 
@@ -76,19 +76,19 @@ public class AiConfig {
 
     public String getImageBaseUrl() {
         String property = config.getProperty(PROPERTY_IMAGE_BASEURL);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_BASEURL));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_IMAGE_BASEURL));
         return property;
     }
 
     public String getImageApiKey() {
         String property = config.getProperty(PROPERTY_IMAGE_APIKEY);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_APIKEY));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_IMAGE_APIKEY));
         return property;
     }
 
     public String getImageModel() {
         String property = config.getProperty(PROPERTY_IMAGE_MODEL);
-        Asserts.notnull(property, "please set %s".formatted(PROPERTY_IMAGE_MODEL));
+        Asserts.notnull(property, "property %s is required".formatted(PROPERTY_IMAGE_MODEL));
         return property;
     }
 

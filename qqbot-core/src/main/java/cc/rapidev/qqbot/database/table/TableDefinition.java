@@ -30,7 +30,7 @@ public class TableDefinition {
         List<ColumnDefinition> primaryKeys = columns.stream().filter(ColumnDefinition::primaryKey).toList();
         if (primaryKeys.isEmpty()) {
             this.primaryKey = null;
-            logger.warn("table '{}' is not setting primary key, some features will not be available", name);
+            logger.warn("table '{}' has no primary key set, some features may not be available", name);
         } else if (primaryKeys.size() > 1) {
             throw new RuntimeException("Only one primary key can be defined");
         } else {
@@ -41,7 +41,7 @@ public class TableDefinition {
     public static TableDefinition of(Class<?> clazz) {
         DBTable table = clazz.getDeclaredAnnotation(DBTable.class);
         if (table == null) {
-            throw new RuntimeException("%s未被%s注解!".formatted(clazz.getName(), DBTable.class.getName()));
+            throw new RuntimeException("%s is not annotated with %s".formatted(clazz.getName(), DBTable.class.getName()));
         }
         String name = table.name().trim();
         if (name.isEmpty()) {
