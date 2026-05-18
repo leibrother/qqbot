@@ -17,4 +17,16 @@ public class Asserts {
         }
     }
 
+    public static void isTrue(boolean bool, String msg) {
+        if (!bool) {
+            throw new IllegalStateException(msg);
+        }
+    }
+
+    public static void isFalse(boolean bool, String msg) {
+        if (bool) {
+            throw new IllegalStateException(msg);
+        }
+    }
+
 }

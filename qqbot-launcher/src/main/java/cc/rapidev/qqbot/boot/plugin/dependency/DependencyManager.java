@@ -1,16 +1,13 @@
 package cc.rapidev.qqbot.boot.plugin.dependency;
 
-import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.boot.plugin.Plugin;
 import cc.rapidev.qqbot.boot.plugin.PluginFinder;
-import cc.rapidev.qqbot.boot.plugin.exception.PluginDependencyException;
-import cc.rapidev.qqbot.boot.plugin.exception.PluginIncompatibleException;
+import cc.rapidev.qqbot.boot.plugin.exception.CircularDependencyException;
+import cc.rapidev.qqbot.boot.plugin.exception.IncompatibleException;
 import cc.rapidev.qqbot.boot.plugin.exception.PluginNotFoundException;
+import cc.rapidev.qqbot.common.VExpr;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.*;
 
 /**
  * 插件依赖管理器
@@ -19,52 +16,51 @@ import java.util.stream.Stream;
  */
 public class DependencyManager {
 
-    private final PluginFinder pluginFinder;
+    private final PluginFinder finder;
 
-    public DependencyManager(PluginFinder pluginFinder) {
-        this.pluginFinder = pluginFinder;
+    public DependencyManager(PluginFinder finder) {
+        this.finder = finder;
     }
 
-    private void compareBotVersion(String expr) {
-        if (!Bot.version.compare(expr)) {
-            throw new PluginIncompatibleException("", Bot.version.toString(), expr);
+    /**
+     * 分析给定插件的依赖，给出反转的插件列表（含本体）
+     *
+     * @param plugins 插件
+     * @return 依赖列表
+     */
+    public List<Plugin> resolve(List<Plugin> plugins) {
+        Deque<Plugin> stack = new ArrayDeque<>();
+        for (Plugin plugin : plugins) {
+            dfs(plugin, new ArrayList<>(), stack);
         }
+        List<Plugin> ordered = new ArrayList<>(stack);
+        return ordered.reversed();
     }
 
-    public Dependency dependencies(String id) {
-        Plugin plugin = pluginFinder.find(id).orElseThrow(() -> new PluginNotFoundException(id));
-        return dependencies(plugin, List.of());
-    }
-
-    public Dependency dependencies(Plugin plugin) {
-        return dependencies(plugin, List.of());
-    }
-
-    private Dependency dependencies(Plugin plugin, List<Plugin> paths) {
-        Map<String, String> depends = plugin.manifest().depends();
-        List<Dependency> dependencies = new ArrayList<>();
-        depends.forEach((id, expr) -> {
-            // @bot 固定指 qqbot-core
-            if ("@bot".equals(id)) {
-                compareBotVersion(expr);
-            } else {
-                Plugin dependent = pluginFinder.find(id).orElseThrow(() -> new PluginNotFoundException(id));
-                // 检查循环依赖
-                int index = paths.indexOf(dependent);
-                if (index >= 0) {
-                    List<Plugin> looped = paths.subList(index + 1, paths.size());
-                    throw PluginDependencyException.loops(looped);
-                }
-                // 比对版本
-                if (!dependent.version().compare(expr)) {
-                    throw new PluginIncompatibleException(dependent.name(), dependent.version().toString(), expr);
-                }
-                // 递归构建依赖树
-                Dependency dependency = dependencies(dependent, Stream.concat(paths.stream(), Stream.of(dependent)).toList());
-                dependencies.add(dependency);
+    /**
+     * 搜索依赖路径
+     *
+     * @param plugin   查找的插件
+     * @param visiting 当前已循环的插件ID，重复出现代表依赖循环
+     * @param stack    反向依赖路径栈
+     */
+    private void dfs(Plugin plugin, List<Plugin> visiting, Deque<Plugin> stack) {
+        if (visiting.contains(plugin)) {
+            throw new CircularDependencyException(visiting);
+        }
+        if (stack.contains(plugin)) {
+            return;
+        }
+        visiting.add(plugin);
+        for (Map.Entry<String, VExpr> dependency : plugin.manifest().dependencies().entrySet()) {
+            Plugin depend = finder.find(dependency.getKey()).orElseThrow(() -> new PluginNotFoundException(dependency.getKey()));
+            if (!dependency.getValue().satisfy(depend.version())) {
+                throw new IncompatibleException(plugin, depend, dependency.getValue());
             }
-        });
-        return new Dependency(plugin, dependencies);
+            dfs(depend, visiting, stack);
+        }
+        visiting.remove(plugin);
+        stack.push(plugin);
     }
 
 }

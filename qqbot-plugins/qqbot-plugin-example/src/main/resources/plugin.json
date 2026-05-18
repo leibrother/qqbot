@@ -1,0 +1,14 @@
+{
+  "id": "example_a",
+  "name": "example_a",
+  "description": "example_a",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "framework": "~0.0.1",
+  "dependencies": {
+  },
+  "hooks": {
+  },
+  "injectors": [
+  ]
+}

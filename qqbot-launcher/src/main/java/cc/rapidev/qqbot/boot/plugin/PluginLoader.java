@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.boot.plugin;
 
+import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.utils.IdentityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
@@ -26,12 +25,11 @@ import java.util.stream.Stream;
  *
  * @author leibrother
  */
-public class PluginLoader {
+public class PluginLoader implements PluginFinder {
 
     private final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
     private final File tmpdir;
-    private final List<Path> paths;
-    private volatile List<Plugin> plugins;
+    private final Map<String, Plugin> plugins;
 
     public PluginLoader(List<Path> paths) {
         this.tmpdir = new File(System.getProperty("java.io.tmpdir"), "qqbot-plugins@" + IdentityUtils.shortID());
@@ -40,18 +38,26 @@ public class PluginLoader {
         }
         this.tmpdir.deleteOnExit();
         logger.debug("plugins temp directory is {}", tmpdir);
-        this.paths = paths;
-    }
-
-    public List<Plugin> plugins() {
-        if (this.plugins == null) {
-            synchronized (this) {
-                if (this.plugins == null) {
-                    this.plugins = search();
+        this.plugins = new HashMap<>();
+        for (Plugin plugin : search(paths)) {
+            if (this.plugins.containsKey(plugin.id())) {
+                // 如果重复，使用最高版本的
+                if (plugins.get(plugin.id()).version().compare(plugin.version()) >= 0) {
+                    continue;
                 }
             }
+            plugins.put(plugin.id(), plugin);
         }
-        return this.plugins;
+    }
+
+    @Override
+    public List<Plugin> plugins() {
+        return this.plugins.values().stream().toList();
+    }
+
+    @Override
+    public Optional<Plugin> find(String id) {
+        return Optional.ofNullable(plugins.get(id.toLowerCase()));
     }
 
     /**
@@ -59,12 +65,16 @@ public class PluginLoader {
      *
      * @return 插件列表
      */
-    private List<Plugin> search() {
+    private List<Plugin> search(List<Path> paths) {
         List<Plugin> list = new ArrayList<>();
-        for (Path path : this.paths) {
+        for (Path path : paths) {
             for (Path jarpath : searchJars(path)) {
                 try {
                     Manifest manifest = manifest(jarpath);
+                    if (!manifest.framework().satisfy(Bot.version)) {
+                        logger.warn("plugin {} dependent framework version does not match bot version {}", manifest, Bot.version);
+                        continue;
+                    }
                     Plugin plugin = copyJarAsPlugin(manifest, new File(jarpath.toUri()));
                     list.add(plugin);
                 } catch (Exception ignore) {
@@ -117,8 +127,7 @@ public class PluginLoader {
      * @throws IOException 拷贝失败会产生IOException
      */
     private Plugin copyJarAsPlugin(Manifest manifest, File jar) throws IOException {
-        String name = manifest.name() + "@" + manifest.version();
-        File target = new File(this.tmpdir, name);
+        File target = new File(this.tmpdir, manifest.toString());
         if (!target.mkdir()) {
             throw new IOException("create temp directory '%s' failed".formatted(target.getPath()));
         }

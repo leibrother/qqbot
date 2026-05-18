@@ -1,18 +1,20 @@
 package cc.rapidev.qqbot.boot.plugin;
 
+import cc.rapidev.qqbot.common.VExpr;
 import cc.rapidev.qqbot.common.Version;
+import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.common.utils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author leibrother
  */
 public record Manifest(
+        // 插件ID
+        String id,
         // 插件名称
         String name,
         // 插件说明
@@ -21,28 +23,49 @@ public record Manifest(
         String author,
         // 插件版本
         Version version,
+        // 框架版本
+        VExpr framework,
         // 插件依赖定义
-        Map<String, String> depends,
+        Map<String, VExpr> dependencies,
         // 插件钩子定义
         Map<String, String> hooks,
         // 插件注入器定义
         List<String> injectors
 ) {
 
+    @Override
+    public @NonNull String toString() {
+        return this.id + "@" + this.version;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Manifest manifest = (Manifest) o;
+        return Objects.equals(id, manifest.id) && Objects.equals(version, manifest.version);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, version);
+    }
+
     public static Manifest parse(String data) {
         JsonNode json = JsonUtils.fromJson(data, JsonNode.class);
-        if (!json.has("name") || !json.has("version")) {
-            throw new IllegalArgumentException("");
-        }
+        Asserts.isTrue(json.has("id"), "the plugin does not declare 'id'");
+        Asserts.isTrue(json.has("name"), "the plugin does not declare 'name'");
+        Asserts.isTrue(json.has("version"), "the plugin does not declare 'version'");
+        String id = json.get("id").asText().toLowerCase();
         String name = json.get("name").asText();
         String description = json.get("description").asText("");
         String author = json.get("author").asText("Unknown");
         String version = json.get("version").asText();
-        Map<String, String> depends = new HashMap<>();
-        if (json.has("depends")) {
-            json.get("depends").fields().forEachRemaining(entry -> {
+        String framework = json.get("framework").asText("*");
+        Map<String, VExpr> dependencies = new HashMap<>();
+        if (json.has("dependencies")) {
+            json.get("dependencies").fields().forEachRemaining(entry -> {
                 String v = entry.getValue().asText();
-                depends.put(entry.getKey(), v);
+                dependencies.put(entry.getKey().toLowerCase(), VExpr.parse(v));
             });
         }
         Map<String, String> hooks = new HashMap<>();
@@ -57,11 +80,13 @@ public record Manifest(
             json.get("injectors").elements().forEachRemaining(entry -> injectors.add(entry.asText()));
         }
         return new Manifest(
+                id,
                 name,
                 description,
                 author,
                 Version.parse(version),
-                depends,
+                VExpr.parse(framework),
+                dependencies,
                 hooks,
                 injectors
         );

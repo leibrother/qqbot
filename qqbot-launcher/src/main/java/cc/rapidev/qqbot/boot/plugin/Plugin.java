@@ -6,6 +6,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -28,6 +29,10 @@ public class Plugin {
         return this.manifest;
     }
 
+    public String id() {
+        return manifest.id();
+    }
+
     public String name() {
         return this.manifest.name();
     }
@@ -45,6 +50,23 @@ public class Plugin {
                         throw new RuntimeException(e);
                     }
                 }).toArray(URL[]::new);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Plugin plugin = (Plugin) o;
+        return Objects.equals(manifest, plugin.manifest);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(manifest);
+    }
+
+    @Override
+    public String toString() {
+        return this.manifest.toString();
     }
 
 }

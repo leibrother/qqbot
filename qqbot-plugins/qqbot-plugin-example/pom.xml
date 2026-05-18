@@ -5,21 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.rapidev</groupId>
-        <artifactId>qqbot</artifactId>
+        <artifactId>qqbot-plugins</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugins</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>qqbot-plugin-aigc</module>
-        <module>qqbot-plugin-example</module>
-    </modules>
+    <artifactId>qqbot-plugin-example</artifactId>
 
     <properties>
-        <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
-        <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
