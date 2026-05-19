@@ -7,6 +7,7 @@ import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.command.Command;
 import cc.rapidev.qqbot.message.command.CommandHandler;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,12 +23,14 @@ public class PluginEnableCommand implements CommandHandler {
 
     @Override
     public void handle(MessageContext context, Command command) {
-        String name = command.content().trim();
-        Optional<Plugin> optional = pluginService.get(name);
+        String id = command.content().trim();
+        Optional<Plugin> optional = pluginService.get(id);
         if (optional.isEmpty()) {
-            context.reply(Message.text("未找到插件: %s".formatted(name)));
+            context.reply(Message.text("未找到插件: %s".formatted(id)));
         } else {
-            pluginService.enable(name);
+            Plugin plugin = optional.get();
+            List<Plugin> enables = pluginService.enable(id);
+
         }
     }
 

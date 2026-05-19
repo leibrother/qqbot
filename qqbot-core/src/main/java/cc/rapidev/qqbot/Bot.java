@@ -12,6 +12,7 @@ import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
+import cc.rapidev.qqbot.database.repository.ParameterRepository;
 import cc.rapidev.qqbot.exception.BotException;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import lombok.Getter;
@@ -59,6 +60,14 @@ public class Bot {
         init();
     }
 
+    public BotDatabase database() {
+        return this.database;
+    }
+
+    public ParameterRepository parameters() {
+        return this.database.parameters();
+    }
+
     /**
      * 初始化
      */
@@ -67,7 +76,7 @@ public class Bot {
         this.adapter.bind(this);
         this.registerShutdownHook();
         User info = this.getApi().getAuthRequest().info();
-        this.database.parameters().set("bot.name", info.getCleanUsername());
+        this.parameters().set("bot.name", info.getCleanUsername());
         this.info = info;
         log.info("Bot name is {}", info.getCleanUsername());
     }

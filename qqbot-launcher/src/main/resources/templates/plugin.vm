@@ -1,9 +1,11 @@
 #set($manifest = $plugin.manifest())
 #[[##]]# $manifest.name()
 > $manifest.description()
-> 版本: `1.0.0`
+> 标识: `$manifest.id()`
+> 版本: `$manifest.version()`
 > 作者: `$manifest.author()`
 
+#if($manifest.depends().size() > 0)
 ---
 
 #[[###依赖项]]#
@@ -11,4 +13,5 @@
 |------|------|
 #foreach($entry in $manifest.depends().entrySet())
 | $entry.key | $entry.value |
+#end
 #end

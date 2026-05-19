@@ -12,6 +12,10 @@ public class PluginClassLoader extends URLClassLoader {
         registerAsParallelCapable();
     }
 
+    public PluginClassLoader(URL[] urls) {
+        super(urls, null);
+    }
+
     public PluginClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
     }

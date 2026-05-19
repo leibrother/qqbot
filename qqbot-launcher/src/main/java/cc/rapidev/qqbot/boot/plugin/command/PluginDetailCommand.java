@@ -33,12 +33,17 @@ public class PluginDetailCommand implements CommandHandler {
             context.reply(Message.text("未找到插件: " + name));
             return;
         }
+        Plugin plugin = optional.get();
         Map<String, Object> params = new HashMap<>();
         params.put("plugin", optional.get());
         TemplateService<?> service = context.getService(TemplateService.class);
         Message markdown = service.markdown("templates/plugin.vm", params);
         MessageKeyboard keyboard = new MessageKeyboard();
-        keyboard.add(buildEnableButton(name));
+        if (pluginService.enabled().contains(plugin)) {
+            keyboard.add(buildDisableButton(name));
+        }else{
+            keyboard.add(buildEnableButton(name));
+        }
         markdown.keyboard(keyboard);
         context.reply(markdown);
     }

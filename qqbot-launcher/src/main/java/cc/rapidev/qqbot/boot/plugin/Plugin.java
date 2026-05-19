@@ -19,7 +19,6 @@ public class Plugin {
     private final Manifest manifest;
     private final File pluginJar;
     private final List<File> pluginLibs;
-    private ClassLoader classLoader;
 
     public Plugin(Manifest manifest, File pluginJar, List<File> pluginLibs) {
         this.manifest = manifest;
@@ -37,6 +36,10 @@ public class Plugin {
 
     public String name() {
         return this.manifest.name();
+    }
+
+    public String description() {
+        return this.manifest.description();
     }
 
     public Version version() {

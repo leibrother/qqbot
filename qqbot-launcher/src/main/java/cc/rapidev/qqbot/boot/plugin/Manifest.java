@@ -57,10 +57,10 @@ public record Manifest(
         Asserts.isTrue(json.has("version"), "the plugin does not declare 'version'");
         String id = json.get("id").asText().toLowerCase();
         String name = json.get("name").asText();
-        String description = json.get("description").asText("");
-        String author = json.get("author").asText("Unknown");
+        String description = json.has("description") ? json.get("description").asText() : "";
+        String author = json.has("author") ? json.get("author").asText() : "unknown";
         String version = json.get("version").asText();
-        String framework = json.get("framework").asText("*");
+        String framework = json.has("framework") ? json.get("framework").asText() : "*";
         Map<String, VExpr> dependencies = new HashMap<>();
         if (json.has("dependencies")) {
             json.get("dependencies").fields().forEachRemaining(entry -> {

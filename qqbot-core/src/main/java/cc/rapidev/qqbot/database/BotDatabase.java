@@ -1,9 +1,11 @@
 package cc.rapidev.qqbot.database;
 
 import cc.rapidev.qqbot.Bot;
+import cc.rapidev.qqbot.common.utils.LogbackUtils;
 import cc.rapidev.qqbot.database.repository.ParameterRepository;
 import cc.rapidev.qqbot.database.table.ColumnDefinition;
 import cc.rapidev.qqbot.database.table.TableDefinition;
+import ch.qos.logback.classic.Level;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlite3.SQLitePlugin;
@@ -31,6 +33,7 @@ public class BotDatabase {
     private final ParameterRepository parameterRepository;
 
     public BotDatabase(Bot bot) {
+        LogbackUtils.setLogLevel("com.zaxxer.hikari", Level.INFO);
         String appid = bot.getConfig().getAppid();
         File directory = new File("./data");
         if (!directory.exists()) {

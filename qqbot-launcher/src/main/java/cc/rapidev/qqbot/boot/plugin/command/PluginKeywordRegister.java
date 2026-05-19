@@ -22,6 +22,7 @@ public class PluginKeywordRegister extends KeywordRegister {
         handler.register(new Keyword("插件列表", Events.C2C_MESSAGE_CREATE), new PluginListCommand(pluginService));
         handler.register(new Keyword("插件详情", Events.C2C_MESSAGE_CREATE), new PluginDetailCommand(pluginService));
         handler.register(new Keyword("启用插件", Events.C2C_MESSAGE_CREATE), new PluginEnableCommand(pluginService));
+        handler.register(new Keyword("禁用插件", Events.C2C_MESSAGE_CREATE), new PluginDisableCommand(pluginService));
     }
 
 }

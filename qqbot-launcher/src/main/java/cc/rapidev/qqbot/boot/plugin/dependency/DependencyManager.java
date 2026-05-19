@@ -63,4 +63,19 @@ public class DependencyManager {
         stack.push(plugin);
     }
 
+    public List<Plugin> dependOn(List<Plugin> plugins) {
+        List<Plugin> dependencies = new ArrayList<>();
+        for (Plugin plugin : plugins) {
+            for (Plugin dependency : pluginFinder.plugins()) {
+                if (!dependency.dependencies().containsKey(plugin.id())) {
+                    continue;
+                }
+                List<Plugin> dependOn = dependOn(List.of(dependency));
+                dependencies.addAll(dependOn);
+                dependencies.add(dependency);
+            }
+        }
+        return dependencies;
+    }
+
 }

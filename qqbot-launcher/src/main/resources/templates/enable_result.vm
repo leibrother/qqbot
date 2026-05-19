@@ -1,0 +1,13 @@
+#[[###]]# 插件 $plugin.name() 已启用
+
+#if($dependencies)
+
+#[[###]]# 同时启用了以下依赖插件
+
+#foreach($dependency in $dependencies)
+| 名称 | 说明 |
+|------|------|
+| $dependency.name() | $dependency.description() |
+#end
+
+#end
