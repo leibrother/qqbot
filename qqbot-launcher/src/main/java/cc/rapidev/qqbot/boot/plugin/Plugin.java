@@ -1,11 +1,13 @@
 package cc.rapidev.qqbot.boot.plugin;
 
+import cc.rapidev.qqbot.common.VExpr;
 import cc.rapidev.qqbot.common.Version;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -39,6 +41,10 @@ public class Plugin {
 
     public Version version() {
         return this.manifest.version();
+    }
+
+    public Map<String, VExpr> dependencies() {
+        return this.manifest.dependencies();
     }
 
     public URL[] urls() {

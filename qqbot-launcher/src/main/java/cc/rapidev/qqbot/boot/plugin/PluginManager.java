@@ -14,21 +14,23 @@ import java.util.Optional;
  */
 public class PluginManager {
 
-    private final PluginFinder finder;
+    private final PluginFinder pluginFinder;
+    private final PluginLoader pluginLoader;
     private final DependencyManager dependencyManager;
 
     public PluginManager(List<String> paths) {
         List<Path> exists = paths.stream().map(Path::of).filter(Files::exists).toList();
-        this.finder = new PluginLoader(exists);
-        this.dependencyManager = new DependencyManager(finder);
+        this.pluginFinder = new PluginFinder(exists);
+        this.pluginLoader = new PluginLoader();
+        this.dependencyManager = new DependencyManager(pluginFinder);
     }
 
     public List<Plugin> plugins() {
-        return this.finder.plugins();
+        return this.pluginFinder.plugins();
     }
 
     public Optional<Plugin> get(String id) {
-        return this.finder.find(id);
+        return this.pluginFinder.find(id);
     }
 
     public void enable(String... ids) {
@@ -40,9 +42,11 @@ public class PluginManager {
         enable(list);
     }
 
-    public void enable(List<Plugin> plugins) {
-        List<Plugin> resolved = dependencyManager.resolve(plugins);
-        System.out.println(resolved);
+    public void enable(List<Plugin> list) {
+        List<Plugin> plugins = dependencyManager.resolve(list);
+        for (Plugin plugin : plugins) {
+            pluginLoader.load(plugin);
+        }
     }
 
 }

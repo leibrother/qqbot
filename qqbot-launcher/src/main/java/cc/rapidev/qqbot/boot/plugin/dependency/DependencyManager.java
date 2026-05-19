@@ -16,10 +16,10 @@ import java.util.*;
  */
 public class DependencyManager {
 
-    private final PluginFinder finder;
+    private final PluginFinder pluginFinder;
 
-    public DependencyManager(PluginFinder finder) {
-        this.finder = finder;
+    public DependencyManager(PluginFinder pluginFinder) {
+        this.pluginFinder = pluginFinder;
     }
 
     /**
@@ -53,7 +53,7 @@ public class DependencyManager {
         }
         visiting.add(plugin);
         for (Map.Entry<String, VExpr> dependency : plugin.manifest().dependencies().entrySet()) {
-            Plugin depend = finder.find(dependency.getKey()).orElseThrow(() -> new PluginNotFoundException(dependency.getKey()));
+            Plugin depend = pluginFinder.find(dependency.getKey()).orElseThrow(() -> new PluginNotFoundException(dependency.getKey()));
             if (!dependency.getValue().satisfy(depend.version())) {
                 throw new IncompatibleException(plugin, depend, dependency.getValue());
             }
