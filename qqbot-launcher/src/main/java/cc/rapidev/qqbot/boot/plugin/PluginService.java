@@ -61,7 +61,13 @@ public class PluginService {
      */
     private List<String> readDB() {
         Optional<Object> optional = bot.parameters().get("bot.plugins.enabled");
-        return optional.map(enabled -> Arrays.stream(enabled.toString().split(",")).toList()).orElseGet(List::of);
+        if (optional.isPresent()) {
+            String enabled = optional.get().toString();
+            if (!enabled.isEmpty()) {
+                return Arrays.stream(enabled.split(",")).toList();
+            }
+        }
+        return List.of();
     }
 
 

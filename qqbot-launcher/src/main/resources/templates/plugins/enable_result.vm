@@ -1,0 +1,16 @@
+$plugin.name() 已启用
+#if($others.size() > 0)
+
+---
+
+**同时启用了以下依赖插件**
+| ID | 名称 | 说明 |
+|------|------|
+#foreach($other in $others)
+| $other.id() | $other.name() | $other.description() |
+#end
+#end
+
+---
+
+> 当前已启用 $enabled.size() 个插件 <qqbot-cmd-input text="插件列表 已启用" show="查看详情"/>

@@ -27,40 +27,40 @@ public class PluginDetailCommand implements CommandHandler {
 
     @Override
     public void handle(MessageContext context, Command command) {
-        String name = command.content().trim();
-        Optional<Plugin> optional = pluginService.get(name);
+        String id = command.content().trim();
+        Optional<Plugin> optional = pluginService.get(id);
         if (optional.isEmpty()) {
-            context.reply(Message.text("未找到插件: " + name));
+            context.reply(Message.text("未找到插件: " + id));
             return;
         }
         Plugin plugin = optional.get();
         Map<String, Object> params = new HashMap<>();
         params.put("plugin", optional.get());
         TemplateService<?> service = context.getService(TemplateService.class);
-        Message markdown = service.markdown("templates/plugin.vm", params);
+        Message markdown = service.markdown("templates/plugins/detail.vm", params);
         MessageKeyboard keyboard = new MessageKeyboard();
         if (pluginService.enabled().contains(plugin)) {
-            keyboard.add(buildDisableButton(name));
+            keyboard.add(buildDisableButton(plugin));
         }else{
-            keyboard.add(buildEnableButton(name));
+            keyboard.add(buildEnableButton(plugin));
         }
         markdown.keyboard(keyboard);
         context.reply(markdown);
     }
 
-    private MessageKeyboardButton buildEnableButton(String name) {
+    private MessageKeyboardButton buildEnableButton(Plugin plugin) {
         return MessageKeyboardButton.command()
                 .label("启用")
-                .data("启用插件 %s".formatted(name))
-                .enter(true)
+                .data("启用插件 %s".formatted(plugin.id()))
+                .enter()
                 .build();
     }
 
-    private MessageKeyboardButton buildDisableButton(String name) {
+    private MessageKeyboardButton buildDisableButton(Plugin plugin) {
         return MessageKeyboardButton.command()
                 .label("禁用")
-                .data("禁用插件 %s".formatted(name))
-                .enter(true)
+                .data("禁用插件 %s".formatted(plugin.id()))
+                .enter()
                 .build();
     }
 

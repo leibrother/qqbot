@@ -53,12 +53,14 @@ public class PluginManager {
 
     public List<Plugin> enable(List<Plugin> list) {
         List<Plugin> plugins = dependencyManager.resolve(list);
+        List<Plugin> enabled = enabled();
+        List<Plugin> unenabled = plugins.stream().filter(plugin -> !enabled.contains(plugin)).toList();
         MessageDispatcher dispatcher = bot.getDispatcher();
-        for (Plugin plugin : plugins) {
+        for (Plugin plugin : unenabled) {
             List<MessageHandlerInjector> injectors = pluginLoader.load(plugin);
             injectors.forEach(dispatcher::register);
         }
-        return plugins;
+        return unenabled;
     }
 
 }

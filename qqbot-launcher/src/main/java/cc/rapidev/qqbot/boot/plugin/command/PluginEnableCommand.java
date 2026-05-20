@@ -6,8 +6,11 @@ import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.command.Command;
 import cc.rapidev.qqbot.message.command.CommandHandler;
+import cc.rapidev.qqbot.message.template.TemplateService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,7 +33,15 @@ public class PluginEnableCommand implements CommandHandler {
         } else {
             Plugin plugin = optional.get();
             List<Plugin> enables = pluginService.enable(id);
-
+            List<Plugin> others = enables.stream().filter(oth -> !plugin.equals(oth)).toList();
+            List<Plugin> enabled = pluginService.enabled();
+            Map<String, Object> params = new HashMap<>();
+            params.put("plugin", plugin);
+            params.put("others", others);
+            params.put("enabled", enabled);
+            TemplateService<?> service = context.getService(TemplateService.class);
+            Message markdown = service.markdown("templates/plugins/enable_result.vm", params);
+            context.reply(markdown);
         }
     }
 

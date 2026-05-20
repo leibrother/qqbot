@@ -59,8 +59,8 @@ public class MessageKeyboardButtonBuilder {
         return this;
     }
 
-    public MessageKeyboardButtonBuilder enter(boolean enter) {
-        this.enter = enter;
+    public MessageKeyboardButtonBuilder enter() {
+        this.enter = true;
         return this;
     }
 

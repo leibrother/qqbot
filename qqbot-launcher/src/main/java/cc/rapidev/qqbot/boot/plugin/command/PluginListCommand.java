@@ -25,16 +25,24 @@ public class PluginListCommand implements CommandHandler {
 
     @Override
     public void handle(MessageContext context, Command command) {
-        TemplateService<?> service = context.getService(TemplateService.class);
         List<Plugin> plugins = pluginService.plugins();
-        Map<String, String> states = new HashMap<>();
-        plugins.forEach(plugin -> states.put(plugin.id(), "未启用"));
-        pluginService.enabled().forEach(plugin -> states.put(plugin.id(), "已启用"));
-        pluginService.disabled().forEach(plugin -> states.put(plugin.id(), "重启后禁用"));
+        List<Plugin> enabled = pluginService.enabled();
+        List<Plugin> disabled = pluginService.disabled();
+        if (command.match("已启用").isPresent()) {
+            plugins = plugins.stream().filter(enabled::contains).toList();
+        } else if (command.match("未启用").isPresent()) {
+            plugins = plugins.stream().filter(plugin -> !enabled.contains(plugin)).toList();
+        }
+        Map<String, String> statuses = new HashMap<>();
+        plugins.forEach(plugin -> statuses.put(plugin.id(), "未启用"));
+        enabled.forEach(plugin -> statuses.put(plugin.id(), "已启用"));
+        disabled.forEach(plugin -> statuses.put(plugin.id(), "重启后禁用"));
         Map<String, Object> params = new HashMap<>();
-        params.put("plugins", pluginService.plugins());
-        params.put("states", states);
-        Message markdown = service.markdown("templates/plugins.vm", params);
+        params.put("plugins", plugins);
+        params.put("statuses", statuses);
+
+        TemplateService<?> service = context.getService(TemplateService.class);
+        Message markdown = service.markdown("templates/plugins/list.vm", params);
         context.reply(markdown);
     }
 

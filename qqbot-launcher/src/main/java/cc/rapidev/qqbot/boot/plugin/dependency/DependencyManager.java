@@ -34,7 +34,7 @@ public class DependencyManager {
             dfs(plugin, new ArrayList<>(), stack);
         }
         List<Plugin> ordered = new ArrayList<>(stack);
-        return ordered.reversed();
+        return Collections.unmodifiableList(ordered.reversed());
     }
 
     /**
