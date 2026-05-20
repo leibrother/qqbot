@@ -6,6 +6,8 @@ import cc.rapidev.qqbot.boot.plugin.exception.PluginNotFoundException;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.message.MessageHandlerInjector;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ import java.util.Optional;
 /**
  * @author leibrother
  */
-public class PluginManager {
+public class PluginManager implements Closeable {
 
     private final Bot bot;
     private final PluginFinder pluginFinder;
@@ -28,6 +30,11 @@ public class PluginManager {
         this.pluginFinder = new PluginFinder(exists);
         this.pluginLoader = new PluginLoader();
         this.dependencyManager = new DependencyManager(pluginFinder);
+    }
+
+    @Override
+    public void close() throws IOException {
+        this.pluginFinder.close();
     }
 
     public List<Plugin> plugins() {
@@ -55,7 +62,7 @@ public class PluginManager {
         List<Plugin> plugins = dependencyManager.resolve(list);
         List<Plugin> enabled = enabled();
         List<Plugin> unenabled = plugins.stream().filter(plugin -> !enabled.contains(plugin)).toList();
-        MessageDispatcher dispatcher = bot.getDispatcher();
+        MessageDispatcher dispatcher = bot.dispatcher();
         for (Plugin plugin : unenabled) {
             List<MessageHandlerInjector> injectors = pluginLoader.load(plugin);
             injectors.forEach(dispatcher::register);

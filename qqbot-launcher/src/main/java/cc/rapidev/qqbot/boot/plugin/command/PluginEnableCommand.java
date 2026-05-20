@@ -32,8 +32,7 @@ public class PluginEnableCommand implements CommandHandler {
             context.reply(Message.text("未找到插件: %s".formatted(id)));
         } else {
             Plugin plugin = optional.get();
-            List<Plugin> enables = pluginService.enable(id);
-            List<Plugin> others = enables.stream().filter(oth -> !plugin.equals(oth)).toList();
+            List<Plugin> others = pluginService.enable(id);
             List<Plugin> enabled = pluginService.enabled();
             Map<String, Object> params = new HashMap<>();
             params.put("plugin", plugin);

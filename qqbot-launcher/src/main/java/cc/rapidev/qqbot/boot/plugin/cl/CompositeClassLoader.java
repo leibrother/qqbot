@@ -8,6 +8,10 @@ import java.util.Arrays;
  */
 public class CompositeClassLoader extends ClassLoader {
 
+    static {
+        registerAsParallelCapable();
+    }
+
     private final Iterable<? extends ClassLoader> delegates;
 
     public CompositeClassLoader(ClassLoader... delegates) {

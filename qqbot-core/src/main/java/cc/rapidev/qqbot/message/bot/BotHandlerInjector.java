@@ -11,9 +11,10 @@ public class BotHandlerInjector implements MessageHandlerInjector {
 
     @Override
     public void inject(MessageDispatcher dispatcher) {
-        StartupListener startedHandler = new StartupListener();
-        dispatcher.register(Events.START, startedHandler);
-        dispatcher.register(Events.STARTED, startedHandler);
+        StartListener start = new StartListener();
+        StartedListener started = new StartedListener(start);
+        dispatcher.register(Events.START, start);
+        dispatcher.register(Events.STARTED, started);
     }
 
 }

@@ -59,7 +59,7 @@ public final class MessageContext {
      * @return {@link BotApi}
      */
     public BotApi api() {
-        return bot.getApi();
+        return bot.api();
     }
 
     /**

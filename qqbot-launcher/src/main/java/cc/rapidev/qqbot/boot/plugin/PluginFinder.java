@@ -2,14 +2,12 @@ package cc.rapidev.qqbot.boot.plugin;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.utils.Asserts;
+import cc.rapidev.qqbot.common.utils.DirectoryCleaner;
 import cc.rapidev.qqbot.common.utils.IdentityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -26,7 +24,7 @@ import java.util.stream.Stream;
  *
  * @author leibrother
  */
-public class PluginFinder {
+public class PluginFinder implements Closeable {
 
     private final Logger logger = LoggerFactory.getLogger(PluginFinder.class);
 
@@ -38,7 +36,6 @@ public class PluginFinder {
         if (!tmpdir.mkdirs()) {
             throw new RuntimeException("failed to create temp directory");
         }
-        this.tmpdir.deleteOnExit();
         logger.debug("plugins temp directory is {}", tmpdir);
         this.plugins = new HashMap<>();
         for (Plugin plugin : search(paths)) {
@@ -50,6 +47,11 @@ public class PluginFinder {
             }
             plugins.put(plugin.id(), plugin);
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        DirectoryCleaner.clear(this.tmpdir.toPath());
     }
 
     /**

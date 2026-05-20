@@ -14,6 +14,7 @@ import cc.rapidev.qqbot.common.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.repository.ParameterRepository;
 import cc.rapidev.qqbot.exception.BotException;
+import cc.rapidev.qqbot.extension.ExtensionManager;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -30,12 +31,10 @@ public class Bot {
     @Getter
     private final BotConfig config;
     private final BotAdapter adapter;
-    @Getter
     private final MessageDispatcher dispatcher;
-    @Getter
     private final BotApi api;
-    @Getter
     private final BotDatabase database;
+    private final ExtensionManager extensionManager;
     @Getter
     private User info;
 
@@ -57,7 +56,12 @@ public class Bot {
         this.dispatcher = new MessageDispatcher(this);
         this.api = new BotApi(this);
         this.database = new BotDatabase(this);
+        this.extensionManager = new ExtensionManager(this);
         init();
+    }
+
+    public BotApi api() {
+        return this.api;
     }
 
     public BotDatabase database() {
@@ -68,6 +72,10 @@ public class Bot {
         return this.database.parameters();
     }
 
+    public MessageDispatcher dispatcher() {
+        return this.dispatcher;
+    }
+
     /**
      * 初始化
      */
@@ -75,7 +83,7 @@ public class Bot {
         log.info("Bot initializing...");
         this.adapter.bind(this);
         this.registerShutdownHook();
-        User info = this.getApi().getAuthRequest().info();
+        User info = this.api().getAuthRequest().info();
         this.parameters().set("bot.name", info.getCleanUsername());
         this.info = info;
         log.info("Bot name is {}", info.getCleanUsername());
@@ -84,7 +92,7 @@ public class Bot {
     /**
      * 注册Shutdown钩子，当程序退出时关闭机器人
      */
-    public void registerShutdownHook() {
+    private void registerShutdownHook() {
         Thread shutdown = new Thread(this::stop);
         shutdown.setName("Shutdown");
         Runtime.getRuntime().addShutdownHook(shutdown);
@@ -114,7 +122,8 @@ public class Bot {
     public void run(boolean keepLive) {
         if (!adapter.isRunning()) {
             consume(BotPayload.broadcast(Events.START));
-            adapter.run();
+            this.extensionManager.init();
+            this.adapter.run();
             consume(BotPayload.broadcast(Events.STARTED));
             if (keepLive) {
                 keepLive();
@@ -129,6 +138,7 @@ public class Bot {
         if (adapter.isRunning()) {
             log.info("Bot stopping...");
             adapter.stop();
+            this.extensionManager.destroy();
         }
     }
 
@@ -176,7 +186,7 @@ public class Bot {
      * @return 响应结果
      */
     public MessageResponse sendMessage(Topic topic, Message message) {
-        MessageRequest request = getApi().getMessageRequest();
+        MessageRequest request = api().getMessageRequest();
         if (topic.isPrivate()) {
             return request.toUser(topic.getId(), message);
         } else if (topic.isGroupAt()) {
@@ -198,7 +208,7 @@ public class Bot {
      * @return 响应结果
      */
     public MessageMediaResponse sendMessage(Topic topic, MessageMedia media) {
-        MessageRequest request = getApi().getMessageRequest();
+        MessageRequest request = api().getMessageRequest();
         if (topic.isPrivate()) {
             return request.toUserMedia(topic.getId(), media);
         } else if (topic.isGroupAt()) {

@@ -4,6 +4,7 @@ import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotConfig;
 import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.common.Constant;
+import cc.rapidev.qqbot.extension.ExtensionDeclarer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,13 +50,17 @@ public class Launcher {
         return properties;
     }
 
+    static {
+        // 声明插件服务扩展
+        ExtensionDeclarer.declare(PluginService.class);
+    }
+
     static void main(String[] args) {
         printWelcome();
         Properties properties = getPropertiesByArgs(args);
         BotConfig config = BotConfig.create();
         config.loadProperties(properties);
         Bot bot = new Bot(config);
-        PluginService.init(bot);
         bot.run();
     }
 

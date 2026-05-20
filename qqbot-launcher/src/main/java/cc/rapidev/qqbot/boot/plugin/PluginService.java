@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.boot.plugin;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.boot.plugin.command.PluginKeywordRegister;
+import cc.rapidev.qqbot.extension.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @author leibrother
  */
-public class PluginService {
+public class PluginService implements Extension {
 
     private final Logger logger = LoggerFactory.getLogger(PluginService.class);
 
@@ -27,6 +28,7 @@ public class PluginService {
         this.disabled = new ArrayList<>();
         String[] paths = bot.getConfig().getProperty("plugins", "./plugins").split(",");
         this.pluginManager = new PluginManager(bot, List.of(paths));
+        this.bot.dispatcher().register(new PluginKeywordRegister(this));
         this.init();
     }
 
@@ -71,28 +73,49 @@ public class PluginService {
     }
 
 
+    /**
+     * 获取指定插件
+     *
+     * @param id 插件ID
+     * @return Optional.ofNullable
+     */
     public Optional<Plugin> get(String id) {
         return this.pluginManager.get(id);
     }
 
+    /**
+     * 获取全部插件
+     */
     public List<Plugin> plugins() {
         return this.pluginManager.plugins();
     }
 
+    /**
+     * 获取已启用的插件
+     */
     public List<Plugin> enabled() {
         return this.pluginManager.enabled().stream().filter(plugin -> !disabled.contains(plugin)).toList();
     }
 
+    /**
+     * 获取已禁用（待重启）的插件
+     */
     public List<Plugin> disabled() {
         return this.disabled;
     }
 
+    /**
+     * 获取启用指定插件
+     *
+     * @param id 插件ID
+     * @return 同时启用的依赖插件
+     */
     public List<Plugin> enable(String id) {
         Plugin plugin = get(id).orElseThrow();
         List<Plugin> enables = this.pluginManager.enable(List.of(plugin));
         this.disabled.remove(plugin);
         this.saveDB();
-        return enables;
+        return enables.stream().filter(oth -> !oth.equals(plugin)).toList();
     }
 
     public void disable(String id) {
@@ -105,10 +128,9 @@ public class PluginService {
         this.saveDB();
     }
 
-    public static void init(Bot bot) {
-        PluginService service = new PluginService(bot);
-        PluginKeywordRegister injector = new PluginKeywordRegister(service);
-        injector.inject(bot.getDispatcher());
+    @Override
+    public void destroy() throws Exception {
+        this.pluginManager.close();
     }
 
 }
