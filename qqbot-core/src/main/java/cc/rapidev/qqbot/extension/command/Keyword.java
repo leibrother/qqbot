@@ -1,26 +1,16 @@
-package cc.rapidev.qqbot.message.command;
+package cc.rapidev.qqbot.extension.command;
 
-import cc.rapidev.qqbot.common.Events;
 import org.jspecify.annotations.NonNull;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
  * @author leibrother
  */
-public record Keyword(String key, String description, List<Events> events) {
+public record Keyword(String key, String description) {
 
     public Keyword(String key) {
-        this(key, "", List.of());
-    }
-
-    public Keyword(String key, String description) {
-        this(key, description, List.of());
-    }
-
-    public Keyword(String key, Events... events) {
-        this(key, "", List.of(events));
+        this(key, "");
     }
 
     @Override

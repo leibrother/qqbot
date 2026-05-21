@@ -6,6 +6,7 @@ package cc.rapidev.qqbot.message;
  *
  * @author leibrother
  */
+@FunctionalInterface
 public interface MessageHandler extends Comparable<MessageHandler> {
 
     default int order() {

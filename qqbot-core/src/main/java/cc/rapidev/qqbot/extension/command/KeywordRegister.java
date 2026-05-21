@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.command;
+package cc.rapidev.qqbot.extension.command;
 
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -17,12 +17,12 @@ public abstract class KeywordRegister implements MessageHandler, MessageHandlerI
 
     @Override
     public void inject(MessageDispatcher dispatcher) {
-        dispatcher.register(Events.START, this);
+        dispatcher.register(Events.STARTED, this);
     }
 
     @Override
     public void handle(MessageContext context) {
-        CommandMessageHandler handler = context.getService(CommandMessageHandler.class);
+        CommandEntry handler = context.getService(CommandEntry.class);
         try {
             register(handler);
         } catch (IllegalArgumentException e) {
@@ -30,6 +30,6 @@ public abstract class KeywordRegister implements MessageHandler, MessageHandlerI
         }
     }
 
-    protected abstract void register(HierarchyCommandHandler handler);
+    protected abstract void register(CommandHandlerSet handler);
 
 }

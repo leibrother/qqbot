@@ -2,9 +2,9 @@ package cc.rapidev.qqbot.boot.plugin.command;
 
 import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.common.Events;
-import cc.rapidev.qqbot.message.command.HierarchyCommandHandler;
-import cc.rapidev.qqbot.message.command.Keyword;
-import cc.rapidev.qqbot.message.command.KeywordRegister;
+import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
+import cc.rapidev.qqbot.extension.command.Keyword;
+import cc.rapidev.qqbot.extension.command.KeywordRegister;
 
 /**
  * @author leibrother
@@ -18,11 +18,11 @@ public class PluginKeywordRegister extends KeywordRegister {
     }
 
     @Override
-    protected void register(HierarchyCommandHandler handler) {
-        handler.register(new Keyword("插件列表", Events.C2C_MESSAGE_CREATE), new PluginListCommand(pluginService));
-        handler.register(new Keyword("插件详情", Events.C2C_MESSAGE_CREATE), new PluginDetailCommand(pluginService));
-        handler.register(new Keyword("启用插件", Events.C2C_MESSAGE_CREATE), new PluginEnableCommand(pluginService));
-        handler.register(new Keyword("禁用插件", Events.C2C_MESSAGE_CREATE), new PluginDisableCommand(pluginService));
+    protected void register(CommandHandlerSet handler) {
+        handler.add(new Keyword("插件列表"), new PluginListCommand(pluginService), Events.C2C_MESSAGE_CREATE);
+        handler.add(new Keyword("插件详情"), new PluginDetailCommand(pluginService), Events.C2C_MESSAGE_CREATE);
+        handler.add(new Keyword("启用插件"), new PluginEnableCommand(pluginService), Events.C2C_MESSAGE_CREATE);
+        handler.add(new Keyword("禁用插件"), new PluginDisableCommand(pluginService), Events.C2C_MESSAGE_CREATE);
     }
 
 }

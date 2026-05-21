@@ -37,6 +37,7 @@ public class Bot {
     private final ExtensionManager extensionManager;
     @Getter
     private User info;
+    private volatile boolean shutdown = false;
 
     public Bot() {
         this(BotConfig.create(), BotAdapter.create());
@@ -108,6 +109,15 @@ public class Bot {
     }
 
     /**
+     * 机器人是否已停机
+     *
+     * @return 机器人停机状态
+     */
+    public boolean isShutdown() {
+        return this.shutdown;
+    }
+
+    /**
      * 运行机器人
      */
     public void run() {
@@ -120,6 +130,9 @@ public class Bot {
      * @param keepLive 是否保持活跃
      */
     public void run(boolean keepLive) {
+        if (isShutdown()) {
+            throw new BotException("bot is shutdown");
+        }
         if (!adapter.isRunning()) {
             consume(BotPayload.broadcast(Events.START));
             this.extensionManager.init();
@@ -139,6 +152,8 @@ public class Bot {
             log.info("Bot stopping...");
             adapter.stop();
             this.extensionManager.destroy();
+            this.dispatcher.destroy();
+            this.shutdown = true;
         }
     }
 

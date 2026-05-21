@@ -3,10 +3,10 @@ package cc.rapidev.qqbot.boot.plugin.command;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.boot.plugin.Plugin;
 import cc.rapidev.qqbot.boot.plugin.PluginService;
+import cc.rapidev.qqbot.extension.command.Command;
+import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.command.Command;
-import cc.rapidev.qqbot.message.command.CommandHandler;
 
 import java.util.HashMap;
 import java.util.List;

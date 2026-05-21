@@ -1,6 +1,7 @@
 package cc.rapidev.qqbot.extension;
 
 import cc.rapidev.qqbot.Bot;
+import cc.rapidev.qqbot.common.interfaces.Disposable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public class ExtensionManager {
+public class ExtensionManager implements Disposable {
 
     private final Bot bot;
     private final List<Extension> extensions = new ArrayList<>();

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.command;
+package cc.rapidev.qqbot.extension.command;
 
 import cc.rapidev.qqbot.message.MessageContext;
 

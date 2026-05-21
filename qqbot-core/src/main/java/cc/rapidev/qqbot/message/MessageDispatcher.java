@@ -4,15 +4,13 @@ import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotPayload;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.interfaces.Disposable;
 import cc.rapidev.qqbot.common.utils.ExceptionUtils;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -21,7 +19,7 @@ import java.util.concurrent.Executors;
  *
  * @author leibrother
  */
-public class MessageDispatcher {
+public class MessageDispatcher implements Disposable {
 
     private final Logger log = LoggerFactory.getLogger("[Bot Message Dispatcher]");
 
@@ -42,6 +40,12 @@ public class MessageDispatcher {
         this.register("_default", new NotImplMessageHandler());
         List<MessageHandlerInjector> injectors = MessageHandlerInjectorLoader.load();
         injectors.forEach(this::register);
+    }
+
+    @Override
+    public void destroy() {
+        this.executor.shutdown();
+        this.messageHandlers.clear();
     }
 
     /**
@@ -135,18 +139,20 @@ public class MessageDispatcher {
         Events event = context.event();
         List<MessageHandler> handlers = getHandlers(event);
         Runnable runnable = () -> {
-            try {
-                for (MessageHandler handler : handlers) {
+            Iterator<MessageHandler> iterator = handlers.iterator();
+            while (iterator.hasNext()) {
+                try {
+                    MessageHandler handler = iterator.next();
                     if (context.isCompleted() && !handler.isRequired()) {
                         continue;
                     }
                     handler.handle(context);
-                }
-            } catch (Exception e) {
-                log.error("message handler error", e);
-                if (context.topic().isPrivate()) {
-                    Message message = generateStackTraceMessage(e);
-                    context.reply(message);
+                } catch (Exception e) {
+                    log.error("message handler error", e);
+                    if (context.topic().isPrivate()) {
+                        Message message = generateStackTraceMessage(e);
+                        context.reply(message);
+                    }
                 }
             }
         };
