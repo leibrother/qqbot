@@ -1,6 +1,8 @@
-package cc.rapidev.qqbot.message.template.velocity;
+package cc.rapidev.qqbot.extension.template.velocity;
 
-import cc.rapidev.qqbot.message.template.TemplateService;
+import cc.rapidev.qqbot.common.utils.LogbackUtils;
+import cc.rapidev.qqbot.extension.template.TemplateRenderer;
+import ch.qos.logback.classic.Level;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -13,36 +15,40 @@ import java.util.Map;
 /**
  * @author leibrother
  */
-public class VelocityTemplateService implements TemplateService<VelocityTemplate> {
+public class VelocityTemplateRenderer implements TemplateRenderer {
 
     private final VelocityEngine engine;
-    private final Map<String, VelocityTemplate> resources = new HashMap<>();
+    private final Map<String, Template> resources = new HashMap<>();
 
-    public VelocityTemplateService() {
+    public VelocityTemplateRenderer() {
         this.engine = new VelocityEngine();
+        LogbackUtils.setLogLevel("org.apache.velocity", Level.INFO);
         engine.setProperty(VelocityEngine.RESOURCE_LOADERS, "classpath");
         engine.setProperty("resource.loader.classpath.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         engine.init();
     }
 
-    @Override
-    public VelocityTemplate load(String name) {
+    private Template load(String name) {
         if (resources.containsKey(name)) {
             return resources.get(name);
         }
         Template template = engine.getTemplate(name, StandardCharsets.UTF_8.name());
-        VelocityTemplate resource = new VelocityTemplate(template);
-        resources.put(name, resource);
-        return resource;
+        resources.put(name, template);
+        return template;
     }
 
     @Override
-    public StringWriter render(VelocityTemplate template, Map<String, Object> ctx) {
-        Template resource = template.resource();
+    public StringWriter render(String name, Map<String, Object> ctx) {
+        Template template = this.load(name);
         VelocityContext context = new VelocityContext(ctx);
         StringWriter writer = new StringWriter();
-        resource.merge(context, writer);
+        template.merge(context, writer);
         return writer;
+    }
+
+    @Override
+    public void close() {
+        this.resources.clear();
     }
 
 }

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.template;
+package cc.rapidev.qqbot.extension.template;
 
 import cc.rapidev.qqbot.api.model.Message;
 
@@ -8,16 +8,9 @@ import java.util.Map;
 /**
  * @author leibrother
  */
-public interface TemplateService<T extends TemplateResource> {
+public interface TemplateRenderer extends AutoCloseable {
 
-    T load(String name);
-
-    StringWriter render(T template, Map<String, Object> params);
-
-    default StringWriter render(String name, Map<String, Object> params) {
-        T template = load(name);
-        return render(template, params);
-    }
+    StringWriter render(String name, Map<String, Object> params);
 
     default Message text(String name, Map<String, Object> params) {
         StringWriter writer = render(name, params);

@@ -3,10 +3,10 @@ package cc.rapidev.qqbot.boot.plugin.command;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.boot.plugin.Plugin;
 import cc.rapidev.qqbot.boot.plugin.PluginService;
+import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.command.Command;
 import cc.rapidev.qqbot.message.command.CommandHandler;
-import cc.rapidev.qqbot.message.template.TemplateService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +41,8 @@ public class PluginListCommand implements CommandHandler {
         params.put("plugins", plugins);
         params.put("statuses", statuses);
 
-        TemplateService<?> service = context.getService(TemplateService.class);
-        Message markdown = service.markdown("templates/plugins/list.vm", params);
+        TemplateRenderer renderer = context.getService(TemplateRenderer.class);
+        Message markdown = renderer.markdown("templates/plugins/list.vm", params);
         context.reply(markdown);
     }
 

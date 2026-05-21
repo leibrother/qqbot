@@ -1,5 +1,7 @@
 package cc.rapidev.qqbot.extension;
 
+import cc.rapidev.qqbot.extension.template.TemplateExtension;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,12 @@ public class ExtensionDeclarer {
             return;
         }
         declared.remove(extension);
+    }
+
+    // 一些内置扩展
+    static {
+        // 模板渲染器扩展
+        declare(TemplateExtension.class);
     }
 
 }
