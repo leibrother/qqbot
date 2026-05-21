@@ -1,3 +1,1 @@
-cc.rapidev.qqbot.message.bot.BotHandlerInjector
 cc.rapidev.qqbot.message.memory.MemoryHandlerInjector
-cc.rapidev.qqbot.message.matcher.MatcherHandlerInjector
