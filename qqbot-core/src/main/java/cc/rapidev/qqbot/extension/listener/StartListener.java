@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.bot;
+package cc.rapidev.qqbot.extension.listener;
 
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
