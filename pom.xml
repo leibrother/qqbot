@@ -33,7 +33,7 @@
         <httpclient5.version>5.4.3</httpclient5.version>
         <bcprov.version>1.79</bcprov.version>
         <velocity.version>2.4.1</velocity.version>
-        <sqlite.version>3.44.1.0</sqlite.version>
+        <sqlite.version>3.53.1.0</sqlite.version>
         <jdbi.version>3.27.0</jdbi.version>
         <hikari-cp.version>7.0.2</hikari-cp.version>
         <slf4j.version>2.0.16</slf4j.version>
