@@ -1,13 +1,13 @@
-package cc.rapidev.qqbot.boot.plugin.command;
+package cc.rapidev.qqbot.launcher.plugin.command;
 
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageKeyboard;
 import cc.rapidev.qqbot.api.model.MessageKeyboardButton;
-import cc.rapidev.qqbot.boot.plugin.Plugin;
-import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.extension.template.TemplateRenderer;
+import cc.rapidev.qqbot.launcher.plugin.Plugin;
+import cc.rapidev.qqbot.launcher.plugin.PluginService;
 import cc.rapidev.qqbot.message.MessageContext;
 
 import java.util.HashMap;

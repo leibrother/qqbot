@@ -1,6 +1,6 @@
-package cc.rapidev.qqbot.boot.plugin.exception;
+package cc.rapidev.qqbot.launcher.plugin.exception;
 
-import cc.rapidev.qqbot.boot.plugin.Plugin;
+import cc.rapidev.qqbot.launcher.plugin.Plugin;
 
 import java.util.List;
 import java.util.stream.Collectors;

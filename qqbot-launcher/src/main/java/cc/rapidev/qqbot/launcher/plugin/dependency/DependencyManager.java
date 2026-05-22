@@ -1,11 +1,11 @@
-package cc.rapidev.qqbot.boot.plugin.dependency;
+package cc.rapidev.qqbot.launcher.plugin.dependency;
 
-import cc.rapidev.qqbot.boot.plugin.Plugin;
-import cc.rapidev.qqbot.boot.plugin.PluginFinder;
-import cc.rapidev.qqbot.boot.plugin.exception.CircularDependencyException;
-import cc.rapidev.qqbot.boot.plugin.exception.IncompatibleException;
-import cc.rapidev.qqbot.boot.plugin.exception.PluginNotFoundException;
 import cc.rapidev.qqbot.common.VExpr;
+import cc.rapidev.qqbot.launcher.plugin.Plugin;
+import cc.rapidev.qqbot.launcher.plugin.PluginFinder;
+import cc.rapidev.qqbot.launcher.plugin.exception.CircularDependencyException;
+import cc.rapidev.qqbot.launcher.plugin.exception.IncompatibleException;
+import cc.rapidev.qqbot.launcher.plugin.exception.PluginNotFoundException;
 
 import java.util.*;
 

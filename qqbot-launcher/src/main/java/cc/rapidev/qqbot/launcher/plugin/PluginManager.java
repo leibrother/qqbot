@@ -1,8 +1,8 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.boot.plugin.dependency.DependencyManager;
-import cc.rapidev.qqbot.boot.plugin.exception.PluginNotFoundException;
+import cc.rapidev.qqbot.launcher.plugin.dependency.DependencyManager;
+import cc.rapidev.qqbot.launcher.plugin.exception.PluginNotFoundException;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.message.MessageHandlerInjector;
 

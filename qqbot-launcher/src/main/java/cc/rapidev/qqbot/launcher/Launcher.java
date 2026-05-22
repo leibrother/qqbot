@@ -1,10 +1,10 @@
-package cc.rapidev.qqbot.boot;
+package cc.rapidev.qqbot.launcher;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotConfig;
-import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.common.Constant;
 import cc.rapidev.qqbot.extension.ExtensionDeclarer;
+import cc.rapidev.qqbot.launcher.plugin.PluginService;
 
 import java.io.File;
 import java.io.FileInputStream;

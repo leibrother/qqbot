@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.boot.plugin.cl;
+package cc.rapidev.qqbot.launcher.plugin.cl;
 
 import java.net.URL;
 import java.net.URLClassLoader;

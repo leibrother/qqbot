@@ -1,7 +1,7 @@
-package cc.rapidev.qqbot.boot.plugin.exception;
+package cc.rapidev.qqbot.launcher.plugin.exception;
 
-import cc.rapidev.qqbot.boot.plugin.Plugin;
 import cc.rapidev.qqbot.common.VExpr;
+import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import lombok.Getter;
 
 /**

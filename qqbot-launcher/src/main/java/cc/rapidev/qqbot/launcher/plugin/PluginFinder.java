@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.utils.Asserts;

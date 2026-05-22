@@ -21,6 +21,7 @@
             <outputDirectory>lib</outputDirectory>
             <scope>runtime</scope>
             <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
         </dependencySet>
     </dependencySets>
 

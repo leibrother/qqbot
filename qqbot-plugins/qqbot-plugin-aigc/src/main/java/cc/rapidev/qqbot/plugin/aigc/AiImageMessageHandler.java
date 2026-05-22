@@ -1,12 +1,8 @@
 package cc.rapidev.qqbot.plugin.aigc;
 
-import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
-import cc.rapidev.qqbot.message.matcher.MatcherService;
-import cc.rapidev.qqbot.message.memory.MemoryService;
 import cc.rapidev.qqbot.plugin.aigc.client.AiImageClient;
-import dev.langchain4j.data.image.Image;
 
 import java.util.List;
 
@@ -25,16 +21,16 @@ public class AiImageMessageHandler implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        MatcherService matcher = context.getService(MatcherService.class);
-        if (!matcher.branch().match(keywords)) {
-            return;
-        }
-        context.complete();
-        String prompt = matcher.current();
-        Image image = client.generate(prompt);
-        context.reply(MessageMedia.image(image.url().toString()));
-        // 遗忘
-        context.getService(MemoryService.class).forget();
+//        MatcherService matcher = context.getService(MatcherService.class);
+//        if (!matcher.branch().match(keywords)) {
+//            return;
+//        }
+//        context.complete();
+//        String prompt = matcher.current();
+//        Image image = client.generate(prompt);
+//        context.reply(MessageMedia.image(image.url().toString()));
+//        // 遗忘
+//        context.getService(MemoryService.class).forget();
     }
 
 }

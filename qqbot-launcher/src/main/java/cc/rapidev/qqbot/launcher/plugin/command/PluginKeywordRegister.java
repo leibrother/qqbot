@@ -1,10 +1,10 @@
-package cc.rapidev.qqbot.boot.plugin.command;
+package cc.rapidev.qqbot.launcher.plugin.command;
 
-import cc.rapidev.qqbot.boot.plugin.PluginService;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
 import cc.rapidev.qqbot.extension.command.Keyword;
 import cc.rapidev.qqbot.extension.command.KeywordRegister;
+import cc.rapidev.qqbot.launcher.plugin.PluginService;
 
 /**
  * @author leibrother

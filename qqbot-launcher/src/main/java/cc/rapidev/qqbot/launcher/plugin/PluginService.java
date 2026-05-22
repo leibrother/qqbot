@@ -1,8 +1,8 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.boot.plugin.command.PluginKeywordRegister;
 import cc.rapidev.qqbot.extension.Extension;
+import cc.rapidev.qqbot.launcher.plugin.command.PluginKeywordRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

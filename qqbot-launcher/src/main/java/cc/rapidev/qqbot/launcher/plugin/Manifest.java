@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.common.VExpr;
 import cc.rapidev.qqbot.common.Version;

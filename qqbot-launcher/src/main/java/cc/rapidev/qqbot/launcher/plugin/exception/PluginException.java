@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.boot.plugin.exception;
+package cc.rapidev.qqbot.launcher.plugin.exception;
 
 /**
  * @author leibrother

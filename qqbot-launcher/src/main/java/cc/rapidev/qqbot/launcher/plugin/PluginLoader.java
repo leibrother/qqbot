@@ -1,7 +1,7 @@
-package cc.rapidev.qqbot.boot.plugin;
+package cc.rapidev.qqbot.launcher.plugin;
 
-import cc.rapidev.qqbot.boot.plugin.cl.CompositeClassLoader;
-import cc.rapidev.qqbot.boot.plugin.cl.PluginClassLoader;
+import cc.rapidev.qqbot.launcher.plugin.cl.CompositeClassLoader;
+import cc.rapidev.qqbot.launcher.plugin.cl.PluginClassLoader;
 import cc.rapidev.qqbot.message.MessageHandlerInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
