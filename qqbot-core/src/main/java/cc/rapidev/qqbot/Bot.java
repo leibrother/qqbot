@@ -132,8 +132,7 @@ public class Bot {
     public void run(boolean keepLive) {
         if (isShutdown()) {
             throw new BotException("bot is shutdown");
-        }
-        if (!adapter.isRunning()) {
+        } else if (!adapter.isRunning()) {
             consume(BotPayload.broadcast(Events.START));
             this.extensionManager.init();
             this.adapter.run();

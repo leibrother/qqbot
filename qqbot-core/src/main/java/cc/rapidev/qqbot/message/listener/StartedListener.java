@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.extension.listener;
+package cc.rapidev.qqbot.message.listener;
 
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
@@ -32,8 +32,8 @@ public class StartedListener implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        long startedTimestamp = System.currentTimeMillis();
-        logger.info("Bot started in {}ms", startedTimestamp - start.startTimestamp());
+        long time = start.stopAndGetTime();
+        logger.info("Bot started in {}ms", time);
     }
 
 }
