@@ -2,8 +2,7 @@ package cc.rapidev.qqbot.extension.command;
 
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
-import cc.rapidev.qqbot.message.memory.MemoryMessage;
-import cc.rapidev.qqbot.message.memory.MemoryService;
+import cc.rapidev.qqbot.message.model.MessageGeneric;
 
 /**
  * @author leibrother
@@ -17,9 +16,8 @@ public class CommandEntry extends CommandHandlerSet implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        MemoryService memory = context.getService(MemoryService.class);
-        MemoryMessage message = memory.current();
-        Command command = new Command(message.getText());
+        MessageGeneric message = context.message();
+        Command command = new Command(message.content());
         handle(context, command);
     }
 

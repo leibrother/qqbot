@@ -10,7 +10,9 @@ import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.Asserts;
-import cc.rapidev.qqbot.exception.BotException;
+import cc.rapidev.qqbot.message.converter.MessageConverter;
+import cc.rapidev.qqbot.message.converter.TopicConverter;
+import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -35,13 +37,16 @@ public final class MessageContext {
     private final ServiceRegistry serviceRegistry = new ServiceRegistry();
     private final AtomicInteger replySequence = new AtomicInteger(0);
     private final List<BiConsumer<Message, MessageResponse>> replyHooks = new ArrayList<>();
-    private volatile Topic topic;
+    private final Topic topic;
+    private final MessageGeneric message;
     @Getter
     private volatile boolean completed = false;
 
     public MessageContext(Bot bot, BotPayload payload) {
         this.bot = bot;
         this.payload = payload;
+        this.topic = TopicConverter.INSTANCE.convert(payload);
+        this.message = MessageConverter.INSTANCE.convert(payload);
     }
 
     /**
@@ -78,6 +83,25 @@ public final class MessageContext {
      */
     public BotPayload payload() {
         return this.payload;
+    }
+
+    /**
+     * 获取当前消息的Topic
+     *
+     * @return {@link Topic}
+     */
+    public Topic topic() {
+        return this.topic;
+    }
+
+
+    /**
+     * 获取上下文中的消息
+     *
+     * @return {@link MessageGeneric}
+     */
+    public MessageGeneric message() {
+        return this.message;
     }
 
     /**
@@ -128,31 +152,6 @@ public final class MessageContext {
             throw new IllegalArgumentException("service %s(%s) does not exist".formatted(type.getName(), name));
         }
         return service.get();
-    }
-
-    /**
-     * 获取当前消息的Topic
-     *
-     * @return {@link Topic}
-     */
-    public Topic topic() {
-        if (topic == null) {
-            synchronized (this) {
-                if (topic == null) {
-                    Events event = event();
-                    JsonNode data = payload.data();
-                    this.topic = switch (event) {
-                        case MESSAGE_CREATE -> Topic.ofGuild(data.get("channel_id").textValue());
-                        case AT_MESSAGE_CREATE -> Topic.ofGuildAt(data.get("channel_id").textValue());
-                        case C2C_MESSAGE_CREATE -> Topic.ofPrivate(data.path("author").get("id").textValue());
-                        case DIRECT_MESSAGE_CREATE -> Topic.ofDirect(data.get("guild_id").textValue());
-                        case GROUP_AT_MESSAGE_CREATE -> Topic.ofGroupAt(data.get("group_id").textValue());
-                        default -> throw new BotException("unable to retrieve topic for event %s".formatted(event));
-                    };
-                }
-            }
-        }
-        return topic;
     }
 
     /**
