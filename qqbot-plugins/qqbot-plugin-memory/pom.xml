@@ -9,7 +9,7 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugin-example</artifactId>
+    <artifactId>qqbot-plugin-memory</artifactId>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

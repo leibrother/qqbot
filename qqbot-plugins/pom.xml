@@ -15,6 +15,7 @@
     <modules>
         <module>qqbot-plugin-aigc</module>
         <module>qqbot-plugin-example</module>
+        <module>qqbot-plugin-memory</module>
     </modules>
 
     <properties>
@@ -48,5 +49,53 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                    <configuration>
+                        <inlineDescriptors>
+                            <inlineDescriptor>
+                                <id>release</id>
+                                <formats>
+                                    <format>jar</format>
+                                </formats>
+                                <includeBaseDirectory>false</includeBaseDirectory>
+                                <!-- 项目自身 class -->
+                                <fileSets>
+                                    <fileSet>
+                                        <directory>${project.build.outputDirectory}</directory>
+                                        <outputDirectory>/</outputDirectory>
+                                    </fileSet>
+                                </fileSets>
+                                <!-- 依赖 jar 放到 lib/ -->
+                                <dependencySets>
+                                    <dependencySet>
+                                        <outputDirectory>lib</outputDirectory>
+                                        <scope>runtime</scope>
+                                        <unpack>false</unpack>
+                                        <useProjectArtifact>false</useProjectArtifact>
+                                    </dependencySet>
+                                </dependencySets>
+                            </inlineDescriptor>
+                        </inlineDescriptors>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

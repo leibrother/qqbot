@@ -1,0 +1,14 @@
+{
+  "id": "memory",
+  "name": "记忆",
+  "description": "为机器人提供记忆能力",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "framework": "^0.0.1",
+  "dependencies": {
+  },
+  "hooks": {
+  },
+  "injectors": [
+  ]
+}
