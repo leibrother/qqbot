@@ -1,5 +1,6 @@
-package cc.rapidev.qqbot.message.memory;
+package cc.rapidev.qqbot.memory.handler;
 
+import cc.rapidev.qqbot.memory.service.MemoryService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
 

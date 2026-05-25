@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.message.converter;
 
 import cc.rapidev.qqbot.BotPayload;
 import cc.rapidev.qqbot.common.interfaces.Converter;
+import cc.rapidev.qqbot.common.utils.IdentityUtils;
 import cc.rapidev.qqbot.message.model.MessageAttachmentGeneric;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,7 +53,7 @@ public class MessageConverter implements Converter<BotPayload, MessageGeneric> {
             Optional<JsonNode> wavUrl = Optional.ofNullable(attr.get("voice_wav_url"));
             Optional<JsonNode> asrText = Optional.ofNullable(attr.get("asr_refer_text"));
             attachments.add(new MessageAttachmentGeneric(
-                    id.map(JsonNode::asText).orElse(null),
+                    id.map(JsonNode::asText).orElseGet(IdentityUtils::UUID),
                     filename.map(JsonNode::asText).orElse(null),
                     type.map(JsonNode::asText).orElse(null),
                     url.map(JsonNode::asText).orElse(null),

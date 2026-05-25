@@ -3,10 +3,10 @@ package cc.rapidev.qqbot.plugin.aigc;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.User;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.memory.model.MemoryMessage;
+import cc.rapidev.qqbot.memory.service.MemoryService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.MessageHandler;
-import cc.rapidev.qqbot.message.memory.MemoryMessage;
-import cc.rapidev.qqbot.message.memory.MemoryService;
 import cc.rapidev.qqbot.plugin.aigc.client.AiChatClient;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class AiChatMessageHandler implements MessageHandler {
         }
         try {
             MemoryService service = context.getService(MemoryService.class);
-            List<MemoryMessage> messages = service.all();
-            String result = client.chat(context, messages);
+            List<MemoryMessage> memory = service.memory();
+            String result = client.chat(context, memory);
             context.reply(Message.markdown(result));
         } finally {
             releaseLock(context);

@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.plugin.aigc.client;
 
+import cc.rapidev.qqbot.memory.model.MemoryMessage;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.memory.MemoryMessage;
 import cc.rapidev.qqbot.plugin.aigc.AiConfig;
 import cc.rapidev.qqbot.plugin.aigc.tools.AiTool;
 

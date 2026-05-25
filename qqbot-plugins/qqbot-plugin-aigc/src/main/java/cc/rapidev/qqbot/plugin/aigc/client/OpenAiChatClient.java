@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.plugin.aigc.client;
 
+import cc.rapidev.qqbot.memory.model.MemoryMessage;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.memory.MemoryMessage;
 import cc.rapidev.qqbot.plugin.aigc.AiConfig;
 import cc.rapidev.qqbot.plugin.aigc.tools.AiTool;
 import cc.rapidev.qqbot.plugin.aigc.tools.Today;
@@ -100,7 +100,7 @@ public class OpenAiChatClient implements AiChatClient {
     @Override
     public String chat(MessageContext context, List<MemoryMessage> messages) {
         List<ChatMessage> messageList = messages.stream()
-                .map(msg -> msg.isBot() ? AiMessage.from(msg.getText()) : UserMessage.from(msg.getText()))
+                .map(msg -> msg.bot() ? AiMessage.from(msg.content()) : UserMessage.from(msg.content()))
                 .collect(Collectors.toList());
         if (this.prompt != null) {
             messageList.addFirst(this.prompt);

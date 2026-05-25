@@ -14,6 +14,7 @@ import cc.rapidev.qqbot.common.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.repository.ParameterRepository;
 import cc.rapidev.qqbot.exception.BotException;
+import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.ExtensionManager;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import lombok.Getter;
@@ -178,6 +179,14 @@ public class Bot {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    /**
+     * 安装扩展
+     * @param extension 扩展
+     */
+    public void install(Class<? extends Extension> extension) {
+        this.extensionManager.declare(extension);
     }
 
     /**

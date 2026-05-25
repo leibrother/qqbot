@@ -26,16 +26,20 @@ public record ColumnDefinition(
 
     static {
         mapping.put(String.class, "TEXT");
+        mapping.put(int.class, "INTEGER");
         mapping.put(Integer.class, "INTEGER");
+        mapping.put(short.class, "INTEGER");
         mapping.put(Short.class, "INTEGER");
+        mapping.put(long.class, "INTEGER");
         mapping.put(Long.class, "INTEGER");
         mapping.put(Double.class, "REAL");
         mapping.put(Float.class, "REAL");
+        mapping.put(boolean.class, "INTEGER");
         mapping.put(Boolean.class, "INTEGER");
-        mapping.put(Date.class, "TEXT");
-        mapping.put(LocalDate.class, "TEXT");
-        mapping.put(LocalTime.class, "TEXT");
-        mapping.put(LocalDateTime.class, "TEXT");
+        mapping.put(Date.class, "INTEGER");
+        mapping.put(LocalDate.class, "INTEGER");
+        mapping.put(LocalTime.class, "INTEGER");
+        mapping.put(LocalDateTime.class, "INTEGER");
     }
 
     public static ColumnDefinition of(Field field) {

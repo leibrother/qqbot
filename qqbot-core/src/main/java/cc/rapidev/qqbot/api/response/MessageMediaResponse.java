@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.api.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,5 +24,8 @@ public class MessageMediaResponse implements Serializable {
     private String fileInfo;
 
     private String fileLink;
+
+    @JsonIgnore
+    private Integer fileType;
 
 }

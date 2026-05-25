@@ -64,9 +64,13 @@ public class Topic implements Serializable {
         return event == topic.event && Objects.equals(id, topic.id);
     }
 
+    public String code() {
+        return event + ":" + id;
+    }
+
     @Override
     public String toString() {
-        return event + ":" + id;
+        return code();
     }
 
     public static Topic ofPrivate(String id) {

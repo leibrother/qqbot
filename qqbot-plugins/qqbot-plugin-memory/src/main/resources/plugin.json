@@ -9,6 +9,7 @@
   },
   "hooks": {
   },
-  "injectors": [
+  "extensions": [
+    "cc.rapidev.qqbot.memory.MemoryExtension"
   ]
 }

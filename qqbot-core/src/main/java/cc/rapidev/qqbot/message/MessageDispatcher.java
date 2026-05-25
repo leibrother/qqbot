@@ -143,7 +143,7 @@ public class MessageDispatcher implements Disposable {
     public void doDispatch(BotPayload payload) {
         MessageContext context = getContext(payload);
         Events event = context.event();
-        List<MessageHandler> handlers = getHandlers(event);
+        List<MessageHandler> handlers = getHandlers(event).stream().toList();
         Runnable runnable = () -> {
             Iterator<MessageHandler> iterator = handlers.iterator();
             while (iterator.hasNext()) {

@@ -29,8 +29,8 @@ public record Manifest(
         Map<String, VExpr> dependencies,
         // 插件钩子定义
         Map<String, String> hooks,
-        // 插件注入器定义
-        List<String> injectors
+        // 扩展点定义
+        List<String> extensions
 ) {
 
     @Override
@@ -72,12 +72,12 @@ public record Manifest(
         if (json.has("hooks")) {
             json.get("hooks").fields().forEachRemaining(entry -> hooks.put(entry.getKey(), entry.getValue().asText()));
         }
-        List<String> injectors = new ArrayList<>();
-        if (json.has("injectors")) {
-            if (!json.get("injectors").isArray()) {
-                throw new IllegalArgumentException("injectors field must be an array");
+        List<String> extensions = new ArrayList<>();
+        if (json.has("extensions")) {
+            if (!json.get("extensions").isArray()) {
+                throw new IllegalArgumentException("extensions field must be an array");
             }
-            json.get("injectors").elements().forEachRemaining(entry -> injectors.add(entry.asText()));
+            json.get("extensions").elements().forEachRemaining(entry -> extensions.add(entry.asText()));
         }
         return new Manifest(
                 id,
@@ -88,7 +88,7 @@ public record Manifest(
                 VExpr.parse(framework),
                 dependencies,
                 hooks,
-                injectors
+                extensions
         );
     }
 

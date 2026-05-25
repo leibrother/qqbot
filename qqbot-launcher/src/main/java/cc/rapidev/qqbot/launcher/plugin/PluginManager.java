@@ -1,10 +1,9 @@
 package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.Bot;
+import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.launcher.plugin.dependency.DependencyManager;
 import cc.rapidev.qqbot.launcher.plugin.exception.PluginNotFoundException;
-import cc.rapidev.qqbot.message.MessageDispatcher;
-import cc.rapidev.qqbot.message.MessageHandlerInjector;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -62,10 +61,9 @@ public class PluginManager implements Closeable {
         List<Plugin> plugins = dependencyManager.resolve(list);
         List<Plugin> enabled = enabled();
         List<Plugin> unenabled = plugins.stream().filter(plugin -> !enabled.contains(plugin)).toList();
-        MessageDispatcher dispatcher = bot.dispatcher();
         for (Plugin plugin : unenabled) {
-            List<MessageHandlerInjector> injectors = pluginLoader.load(plugin);
-            injectors.forEach(dispatcher::register);
+            List<Class<? extends Extension>> extensions = pluginLoader.load(plugin);
+            extensions.forEach(bot::install);
         }
         return unenabled;
     }

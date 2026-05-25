@@ -24,6 +24,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cc.rapidev</groupId>
+                <artifactId>qqbot-plugin-memory</artifactId>
+                <version>${revision}</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>cc.rapidev</groupId>

@@ -201,6 +201,7 @@ public final class MessageContext {
         media.srvDontSend();
         Topic topic = topic();
         MessageMediaResponse response = getBot().sendMessage(topic, media);
+        response.setFileType(media.getFileType());
         Message message = Message.media(response);
         reply(message);
     }

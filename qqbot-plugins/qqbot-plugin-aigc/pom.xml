@@ -20,6 +20,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>cc.rapidev</groupId>
+            <artifactId>qqbot-plugin-memory</artifactId>
+        </dependency>
+        <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
             <version>${langchain4j.version}</version>
@@ -32,7 +36,7 @@
     </dependencies>
 
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

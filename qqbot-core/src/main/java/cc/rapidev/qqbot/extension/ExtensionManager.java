@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author leibrother
@@ -16,6 +17,7 @@ import java.util.List;
 public class ExtensionManager implements Disposable {
 
     private final Bot bot;
+    private final List<Class<? extends Extension>> declared = new ArrayList<>();
     private final List<Extension> extensions = new ArrayList<>();
     private volatile boolean initialized = false;
 
@@ -24,7 +26,17 @@ public class ExtensionManager implements Disposable {
     }
 
     public List<Class<? extends Extension>> declared() {
-        return ExtensionDeclarer.declared();
+        return Stream.concat(ExtensionDeclarer.declared().stream(), declared.stream()).toList();
+    }
+
+    public synchronized void declare(Class<? extends Extension> clazz) {
+        if (declared().contains(clazz)) {
+            return;
+        }
+        this.declared.add(clazz);
+        if (this.initialized) {
+            this.initExtension(clazz);
+        }
     }
 
     /**
@@ -35,11 +47,11 @@ public class ExtensionManager implements Disposable {
         if (!initialized) {
             synchronized (this) {
                 if (!initialized) {
+                    this.initialized = true;
                     for (Class<? extends Extension> clazz : declared()) {
                         Extension extension = this.initExtension(clazz);
                         this.extensions.add(extension);
                     }
-                    this.initialized = true;
                 }
             }
         }
