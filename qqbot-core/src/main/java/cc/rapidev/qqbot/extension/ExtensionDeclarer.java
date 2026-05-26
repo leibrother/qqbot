@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.extension;
 
+import cc.rapidev.qqbot.extension.admin.AdministratorExtension;
 import cc.rapidev.qqbot.extension.command.CommandExtension;
 import cc.rapidev.qqbot.extension.template.TemplateExtension;
 
@@ -37,6 +38,8 @@ public class ExtensionDeclarer {
         declare(TemplateExtension.class);
         // 指令消息处理扩展
         declare(CommandExtension.class);
+        // 管理员扩展
+        declare(AdministratorExtension.class);
     }
 
 }

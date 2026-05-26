@@ -13,7 +13,7 @@ import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.version.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
-import cc.rapidev.qqbot.database.repository.ParameterRepository;
+import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
 import cc.rapidev.qqbot.exception.BotException;
 import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.ExtensionManager;

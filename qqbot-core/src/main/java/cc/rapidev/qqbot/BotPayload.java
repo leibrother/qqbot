@@ -74,6 +74,15 @@ public class BotPayload {
     }
 
     /**
+     * 获取事件类型
+     *
+     * @return 事件类型
+     */
+    public Events e() {
+        return Events.valueOf(this.content.get(Constant.PAYLOAD_EVENT_TYPE).asText());
+    }
+
+    /**
      * 获取消息内容
      *
      * @param clazz 对应的实体类

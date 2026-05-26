@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.database.repository;
+package cc.rapidev.qqbot.database.repository.parameter;
 
 import cc.rapidev.qqbot.common.utils.JsonUtils;
 import lombok.Getter;

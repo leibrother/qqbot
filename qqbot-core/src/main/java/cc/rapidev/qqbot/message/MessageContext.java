@@ -11,13 +11,14 @@ import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
+import cc.rapidev.qqbot.database.repository.user.UserEntity;
+import cc.rapidev.qqbot.message.converter.AuthorConverter;
 import cc.rapidev.qqbot.message.converter.MessageConverter;
 import cc.rapidev.qqbot.message.converter.TopicConverter;
+import cc.rapidev.qqbot.message.model.Author;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +30,14 @@ import java.util.function.BiConsumer;
  */
 public final class MessageContext extends ServiceRegistrationCenter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Getter
     private final Bot bot;
     private final BotPayload payload;
+    private final Topic topic;
+    private final Author author;
+    private final MessageGeneric message;
     private final AtomicInteger replySequence = new AtomicInteger(0);
     private final List<BiConsumer<Message, MessageResponse>> replyHooks = new ArrayList<>();
-    private final Topic topic;
-    private final MessageGeneric message;
     @Getter
     private volatile boolean completed = false;
 
@@ -45,7 +45,12 @@ public final class MessageContext extends ServiceRegistrationCenter {
         this.bot = bot;
         this.payload = payload;
         this.topic = TopicConverter.INSTANCE.convert(payload);
+        this.author = AuthorConverter.INSTANCE.convert(payload);
         this.message = MessageConverter.INSTANCE.convert(payload);
+        if (this.author != null) {
+            UserEntity entity = UserEntity.from(this.author);
+            this.bot.database().users().store(entity);
+        }
     }
 
     /**
@@ -72,7 +77,7 @@ public final class MessageContext extends ServiceRegistrationCenter {
      * @return {@link Events}
      */
     public Events event() {
-        return Events.valueOf(payload.event());
+        return payload.e();
     }
 
     /**
@@ -93,6 +98,14 @@ public final class MessageContext extends ServiceRegistrationCenter {
         return this.topic;
     }
 
+    /**
+     * 获取消息作者
+     *
+     * @return 消息作者
+     */
+    public Author author() {
+        return this.author;
+    }
 
     /**
      * 获取上下文中的消息

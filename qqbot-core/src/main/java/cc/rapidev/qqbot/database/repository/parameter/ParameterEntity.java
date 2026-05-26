@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.database.repository;
+package cc.rapidev.qqbot.database.repository.parameter;
 
 import cc.rapidev.qqbot.database.table.DBTable;
 import cc.rapidev.qqbot.database.table.TBColumn;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter(AccessLevel.PRIVATE)
 @DBTable(name = "bot_parameters")
-public class Parameter {
+public class ParameterEntity {
 
     @TBColumn
     @TBPrimaryKey
@@ -25,22 +25,22 @@ public class Parameter {
     @TBColumn(nullable = false)
     private String value;
 
-    private Parameter(String key, String type, String value) {
+    private ParameterEntity(String key, String type, String value) {
         this.key = key;
         this.type = type;
         this.value = value;
     }
 
-    public Parameter(String key, ParameterType type, Object value) {
+    public ParameterEntity(String key, ParameterType type, Object value) {
         this(key, type.name(), type.getEncoder().apply(value));
     }
 
-    public static Parameter of(String key, Object value) {
+    public static ParameterEntity of(String key, Object value) {
         return switch (value) {
-            case Number ignore -> new Parameter(key, ParameterType.NUMBER, value);
-            case String ignore -> new Parameter(key, ParameterType.STRING, value);
-            case Boolean ignore -> new Parameter(key, ParameterType.BOOLEAN, value);
-            default -> new Parameter(key, ParameterType.JSON, value);
+            case Number ignore -> new ParameterEntity(key, ParameterType.NUMBER, value);
+            case String ignore -> new ParameterEntity(key, ParameterType.STRING, value);
+            case Boolean ignore -> new ParameterEntity(key, ParameterType.BOOLEAN, value);
+            default -> new ParameterEntity(key, ParameterType.JSON, value);
         };
     }
 

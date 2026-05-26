@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.database.repository;
+package cc.rapidev.qqbot.database.repository.parameter;
 
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.table.TableDefinition;
@@ -16,11 +16,11 @@ public class ParameterRepository {
 
     public ParameterRepository(BotDatabase db) {
         this.db = db;
-        this.table = db.register(Parameter.class);
+        this.table = db.register(ParameterEntity.class);
     }
 
     public void set(String key, Object value) {
-        Parameter parameter = Parameter.of(key, value);
+        ParameterEntity parameter = ParameterEntity.of(key, value);
         db.update("""
                 INSERT INTO %s(key,value,type) VALUES(:key,:value,:type)
                 ON CONFLICT(key) DO UPDATE SET value = excluded.value,type = excluded.type

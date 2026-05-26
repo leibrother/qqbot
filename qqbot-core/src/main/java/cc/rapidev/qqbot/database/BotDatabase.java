@@ -2,7 +2,8 @@ package cc.rapidev.qqbot.database;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.utils.LogbackUtils;
-import cc.rapidev.qqbot.database.repository.ParameterRepository;
+import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
+import cc.rapidev.qqbot.database.repository.user.UserRepository;
 import cc.rapidev.qqbot.database.table.ColumnDefinition;
 import cc.rapidev.qqbot.database.table.TableDefinition;
 import ch.qos.logback.classic.Level;
@@ -30,6 +31,7 @@ public class BotDatabase {
     private final Logger logger = LoggerFactory.getLogger("[Bot Database]");
     private final Jdbi jdbi;
     private final Map<Class<?>, TableDefinition> definitions = new HashMap<>();
+    private final UserRepository userRepository;
     private final ParameterRepository parameterRepository;
 
     public BotDatabase(Bot bot) {
@@ -46,6 +48,7 @@ public class BotDatabase {
         this.jdbi = Jdbi.create(dataSource)
                 .installPlugin(new SQLitePlugin())
                 .installPlugin(new SqlObjectPlugin());
+        this.userRepository = new UserRepository(this);
         this.parameterRepository = new ParameterRepository(this);
     }
 
@@ -180,6 +183,10 @@ public class BotDatabase {
                             "1".equals(row.get("pk").toString())
                     );
                 }).toList();
+    }
+
+    public UserRepository users() {
+        return this.userRepository;
     }
 
     public ParameterRepository parameters() {
