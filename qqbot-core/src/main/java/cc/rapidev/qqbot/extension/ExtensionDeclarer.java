@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.extension;
 
-import cc.rapidev.qqbot.extension.command.CommandHandlerExtension;
+import cc.rapidev.qqbot.extension.command.CommandExtension;
 import cc.rapidev.qqbot.extension.template.TemplateExtension;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ExtensionDeclarer {
         // 模板渲染器扩展
         declare(TemplateExtension.class);
         // 指令消息处理扩展
-        declare(CommandHandlerExtension.class);
+        declare(CommandExtension.class);
     }
 
 }

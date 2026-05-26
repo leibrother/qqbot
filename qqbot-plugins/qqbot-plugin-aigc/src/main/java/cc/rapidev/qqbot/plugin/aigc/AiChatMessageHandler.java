@@ -37,7 +37,7 @@ public class AiChatMessageHandler implements MessageHandler {
             return;
         }
         try {
-            MemoryService service = context.getService(MemoryService.class);
+            MemoryService service = context.use(MemoryService.class);
             List<MemoryMessage> memory = service.memory();
             String result = client.chat(context, memory);
             context.reply(Message.markdown(result));
@@ -52,7 +52,7 @@ public class AiChatMessageHandler implements MessageHandler {
             User info = context.getBot().getInfo();
             String name = info.getCleanUsername();
             context.reply(Message.text("%s正在思考中...".formatted(name)));
-            context.getService(MemoryService.class).forget();
+            context.use(MemoryService.class).forget();
             return false;
         }
         return this.thinkingLock.add(topic.toString());

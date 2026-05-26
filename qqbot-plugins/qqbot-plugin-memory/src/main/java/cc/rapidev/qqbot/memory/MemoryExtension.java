@@ -16,7 +16,8 @@ import java.util.stream.Stream;
  */
 public class MemoryExtension implements Extension {
 
-    public MemoryExtension(Bot bot) {
+    @Override
+    public void ready(Bot bot) {
         MemoryRepository repository = new SQLiteMemoryRepository(bot.database());
         MemoryHandler handler = new MemoryHandler(repository);
         MemoryRememberHandler remember = new MemoryRememberHandler();

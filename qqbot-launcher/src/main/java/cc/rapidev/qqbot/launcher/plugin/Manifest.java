@@ -1,9 +1,9 @@
 package cc.rapidev.qqbot.launcher.plugin;
 
-import cc.rapidev.qqbot.common.VExpr;
-import cc.rapidev.qqbot.common.Version;
 import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.common.utils.JsonUtils;
+import cc.rapidev.qqbot.common.utils.version.VExpr;
+import cc.rapidev.qqbot.common.utils.version.Version;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jspecify.annotations.NonNull;
 

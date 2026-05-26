@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.launcher.plugin.dependency;
 
-import cc.rapidev.qqbot.common.VExpr;
+import cc.rapidev.qqbot.common.utils.version.VExpr;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginFinder;
 import cc.rapidev.qqbot.launcher.plugin.exception.CircularDependencyException;

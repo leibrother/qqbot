@@ -10,7 +10,8 @@ import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.common.Version;
+import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
+import cc.rapidev.qqbot.common.utils.version.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.repository.ParameterRepository;
 import cc.rapidev.qqbot.exception.BotException;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author leibrother
  */
-public class Bot {
+public class Bot extends ServiceRegistrationCenter {
 
     public static final Version version = Version.parse("0.0.1");
     private final Logger log = LoggerFactory.getLogger("[Bot]");
@@ -183,6 +184,7 @@ public class Bot {
 
     /**
      * 安装扩展
+     *
      * @param extension 扩展
      */
     public void install(Class<? extends Extension> extension) {

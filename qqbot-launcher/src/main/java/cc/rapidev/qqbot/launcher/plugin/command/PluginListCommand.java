@@ -41,7 +41,7 @@ public class PluginListCommand implements CommandHandler {
         params.put("plugins", plugins);
         params.put("statuses", statuses);
 
-        TemplateRenderer renderer = context.getService(TemplateRenderer.class);
+        TemplateRenderer renderer = context.use(TemplateRenderer.class);
         Message markdown = renderer.markdown("templates/plugins/list.vm", params);
         context.reply(markdown);
     }

@@ -9,6 +9,7 @@ import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Events;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.message.converter.MessageConverter;
 import cc.rapidev.qqbot.message.converter.TopicConverter;
@@ -20,21 +21,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
 /**
  * @author leibrother
  */
-public final class MessageContext {
+public final class MessageContext extends ServiceRegistrationCenter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Getter
     private final Bot bot;
     private final BotPayload payload;
-    private final ServiceRegistry serviceRegistry = new ServiceRegistry();
     private final AtomicInteger replySequence = new AtomicInteger(0);
     private final List<BiConsumer<Message, MessageResponse>> replyHooks = new ArrayList<>();
     private final Topic topic;
@@ -102,56 +101,6 @@ public final class MessageContext {
      */
     public MessageGeneric message() {
         return this.message;
-    }
-
-    /**
-     * 添加一个服务
-     *
-     * @param service 服务实例
-     */
-    public void addService(Object service) {
-        serviceRegistry.register(service);
-    }
-
-    /**
-     * 添加一个服务
-     *
-     * @param name    服务名
-     * @param service 服务实例
-     */
-    public void addService(String name, Object service) {
-        serviceRegistry.register(name, service);
-    }
-
-    /**
-     * 通过类获取一个服务
-     *
-     * @param type 服务类
-     * @param <T>  类型
-     * @return 指定类型的服务实例
-     */
-    public <T> T getService(Class<T> type) {
-        Optional<T> service = serviceRegistry.get(type);
-        if (service.isEmpty()) {
-            throw new IllegalArgumentException("service %s does not exist".formatted(type.getName()));
-        }
-        return service.get();
-    }
-
-    /**
-     * 通过类与服务名获取一个服务
-     *
-     * @param name 服务名
-     * @param type 服务类型
-     * @param <T>  类型
-     * @return 指定类型的服务实例
-     */
-    public <T> T getService(String name, Class<T> type) {
-        Optional<T> service = serviceRegistry.get(name, type);
-        if (service.isEmpty()) {
-            throw new IllegalArgumentException("service %s(%s) does not exist".formatted(type.getName(), name));
-        }
-        return service.get();
     }
 
     /**

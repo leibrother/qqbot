@@ -43,7 +43,7 @@ public class MemoryHandler implements MessageHandler {
         } else {
             service = new MemoryService(repository, topic, MemoryMessage.of(context.message()));
         }
-        context.addService(service);
+        context.add(service);
         addReplyHook(context);
     }
 
@@ -52,7 +52,7 @@ public class MemoryHandler implements MessageHandler {
             if (message == null || response == null) {
                 return;
             }
-            MemoryService service = context.getService(MemoryService.class);
+            MemoryService service = context.use(MemoryService.class);
             service.add(MemoryMessage.of(message, response));
         });
     }

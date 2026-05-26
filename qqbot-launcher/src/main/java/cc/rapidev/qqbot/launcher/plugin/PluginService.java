@@ -2,7 +2,8 @@ package cc.rapidev.qqbot.launcher.plugin;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.extension.Extension;
-import cc.rapidev.qqbot.launcher.plugin.command.PluginKeywordRegister;
+import cc.rapidev.qqbot.extension.command.CommandEntry;
+import cc.rapidev.qqbot.launcher.plugin.command.PluginKeywordRegisterer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,17 +20,23 @@ public class PluginService implements Extension {
 
     private final Logger logger = LoggerFactory.getLogger(PluginService.class);
 
-    private final Bot bot;
-    private final List<Plugin> disabled;
-    private final PluginManager pluginManager;
+    private Bot bot;
+    private List<Plugin> disabled;
+    private PluginManager pluginManager;
 
-    public PluginService(Bot bot) {
+    @Override
+    public void ready(Bot bot) {
         this.bot = bot;
         this.disabled = new ArrayList<>();
         String[] paths = bot.getConfig().getProperty("plugins", "./plugins").split(",");
         this.pluginManager = new PluginManager(bot, List.of(paths));
-        this.bot.dispatcher().register(new PluginKeywordRegister(this));
+        this.bot.use(CommandEntry.class).register(new PluginKeywordRegisterer(this));
         this.init();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        this.pluginManager.close();
     }
 
     /**
@@ -126,11 +133,6 @@ public class PluginService implements Extension {
             }
         }
         this.saveDB();
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        this.pluginManager.close();
     }
 
 }

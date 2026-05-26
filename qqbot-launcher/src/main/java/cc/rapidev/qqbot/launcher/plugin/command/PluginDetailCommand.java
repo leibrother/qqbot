@@ -36,7 +36,7 @@ public class PluginDetailCommand implements CommandHandler {
         Plugin plugin = optional.get();
         Map<String, Object> params = new HashMap<>();
         params.put("plugin", optional.get());
-        TemplateRenderer renderer = context.getService(TemplateRenderer.class);
+        TemplateRenderer renderer = context.use(TemplateRenderer.class);
         Message markdown = renderer.markdown("templates/plugins/detail.vm", params);
         MessageKeyboard keyboard = new MessageKeyboard();
         if (pluginService.enabled().contains(plugin)) {

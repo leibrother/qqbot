@@ -21,4 +21,8 @@ public class CommandEntry extends CommandHandlerSet implements MessageHandler {
         handle(context, command);
     }
 
+    public void register(KeywordRegisterer registerer) {
+        registerer.register(this);
+    }
+
 }

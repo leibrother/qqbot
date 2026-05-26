@@ -22,8 +22,7 @@ public class MemoryRememberHandler implements MessageHandler {
     @Override
     public void handle(MessageContext context) {
         if (context.event().isMessageCreate()) {
-            MemoryService service = context.getService(MemoryService.class);
-            service.remember();
+            context.get(MemoryService.class).ifPresent(MemoryService::remember);
         }
     }
 

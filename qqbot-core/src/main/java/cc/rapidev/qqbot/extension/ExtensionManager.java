@@ -2,12 +2,11 @@ package cc.rapidev.qqbot.extension;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.interfaces.Disposable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -16,6 +15,7 @@ import java.util.stream.Stream;
  */
 public class ExtensionManager implements Disposable {
 
+    private final Logger logger = LoggerFactory.getLogger(ExtensionManager.class);
     private final Bot bot;
     private final List<Class<? extends Extension>> declared = new ArrayList<>();
     private final List<Extension> extensions = new ArrayList<>();
@@ -44,16 +44,29 @@ public class ExtensionManager implements Disposable {
      * <p>将所有声明的扩展实例化</p>
      */
     public void init() {
-        if (!initialized) {
-            synchronized (this) {
-                if (!initialized) {
-                    this.initialized = true;
-                    for (Class<? extends Extension> clazz : declared()) {
+        synchronized (this) {
+            if (!initialized) {
+                this.initialized = true;
+                for (Class<? extends Extension> clazz : declared()) {
+                    try {
                         Extension extension = this.initExtension(clazz);
                         this.extensions.add(extension);
+                    } catch (RuntimeException e) {
+                        logger.error("init extension error:", e);
                     }
                 }
             }
+        }
+    }
+
+    private Extension initExtension(Class<? extends Extension> clazz) {
+        try {
+            Constructor<? extends Extension> constructor = clazz.getDeclaredConstructor();
+            Extension extension = constructor.newInstance();
+            extension.ready(bot);
+            return extension;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -61,48 +74,19 @@ public class ExtensionManager implements Disposable {
      * 关闭扩展管理器
      * <p>关闭所有实例化的扩展</p>
      */
-    public synchronized void destroy() {
-        if (initialized) {
-            for (Extension extension : this.extensions) {
-                try {
-                    extension.destroy();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            this.extensions.clear();
-            this.initialized = false;
-        }
-    }
-
-    private Extension initExtension(Class<? extends Extension> clazz) {
-        List<Constructor<?>> constructors = Arrays.stream(clazz.getDeclaredConstructors())
-                .filter(constructor -> {
-                    constructor.setAccessible(true);
-                    Class<?>[] types = constructor.getParameterTypes();
-                    if (types.length == 0) {
-                        return true;
-                    } else if (types.length == 1) {
-                        return types[0].equals(Bot.class);
-                    } else {
-                        return false;
+    public void destroy() {
+        synchronized (this) {
+            if (initialized) {
+                this.initialized = false;
+                for (Extension extension : this.extensions.reversed()) {
+                    try {
+                        extension.destroy();
+                    } catch (Exception e) {
+                        logger.error("destroy extension error", e);
                     }
-                })
-                .sorted(Comparator.comparing(Constructor::getParameterCount, Comparator.reverseOrder()))
-                .toList();
-
-        if (constructors.isEmpty()) {
-            throw new RuntimeException("%s 没有可用的构造器".formatted(clazz));
-        }
-        Constructor<?> constructor = constructors.getFirst();
-        try {
-            if (constructor.getParameterCount() == 1) {
-                return (Extension) constructor.newInstance(this.bot);
-            } else {
-                return (Extension) constructor.newInstance();
+                }
+                this.extensions.clear();
             }
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
         }
     }
 

@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.launcher.plugin;
 
-import cc.rapidev.qqbot.common.VExpr;
-import cc.rapidev.qqbot.common.Version;
+import cc.rapidev.qqbot.common.utils.version.VExpr;
+import cc.rapidev.qqbot.common.utils.version.Version;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -15,13 +15,7 @@ import java.util.Arrays;
  */
 public class TemplateExtension implements Extension, MessageHandler {
 
-    private final TemplateRenderer templateRenderer;
-
-    public TemplateExtension(Bot bot) {
-        this.templateRenderer = new VelocityTemplateRenderer();
-        MessageDispatcher dispatcher = bot.dispatcher();
-        Arrays.stream(Events.values()).forEach(event -> dispatcher.register(event, this));
-    }
+    private TemplateRenderer templateRenderer;
 
     @Override
     public int order() {
@@ -30,7 +24,14 @@ public class TemplateExtension implements Extension, MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        context.addService(templateRenderer);
+        context.add(templateRenderer);
+    }
+
+    @Override
+    public void ready(Bot bot) {
+        this.templateRenderer = new VelocityTemplateRenderer();
+        MessageDispatcher dispatcher = bot.dispatcher();
+        Arrays.stream(Events.values()).forEach(event -> dispatcher.register(event, this));
     }
 
     @Override

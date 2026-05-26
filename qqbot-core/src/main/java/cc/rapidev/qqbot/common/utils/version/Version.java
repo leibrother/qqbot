@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.common;
+package cc.rapidev.qqbot.common.utils.version;
 
 import org.jspecify.annotations.NonNull;
 
