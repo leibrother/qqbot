@@ -1,27 +1,22 @@
-package cc.rapidev.qqbot.database.table;
+package cc.rapidev.qqbot.database.entity;
 
+import cc.rapidev.qqbot.database.entity.annotations.DBTable;
+import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
+import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
 import com.google.common.base.CaseFormat;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author leibrother
  */
-public record ColumnDefinition(
-        String name,
-        String type,
-        boolean nullable,
-        String defaultValue,
-        boolean unique,
-        boolean primaryKey
-) {
+public class EntityAnalyzer {
 
+    private static final Map<Class<?>, Table> tables = new HashMap<>();
     private static final Map<Class<?>, String> mapping = new HashMap<>();
 
     static {
@@ -42,7 +37,44 @@ public record ColumnDefinition(
         mapping.put(LocalDateTime.class, "INTEGER");
     }
 
-    public static ColumnDefinition of(Field field) {
+    /**
+     * 分析实体
+     *
+     * @param clazz 实体类
+     * @return 表定义
+     */
+    public static synchronized Table analyze(Class<?> clazz) {
+        if (tables.containsKey(clazz)) {
+            return tables.get(clazz);
+        }
+        DBTable dbtable = clazz.getDeclaredAnnotation(DBTable.class);
+        if (dbtable == null) {
+            throw new RuntimeException("%s is not annotated with %s".formatted(clazz.getName(), DBTable.class.getName()));
+        }
+        String name = dbtable.name().trim();
+        if (name.isEmpty()) {
+            name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, clazz.getSimpleName());
+        }
+        Field[] fields = clazz.getDeclaredFields();
+        List<TableColumn> columns = new ArrayList<>();
+        for (Field field : fields) {
+            TableColumn column = analyzeField(field);
+            if (column != null) {
+                columns.add(column);
+            }
+        }
+        Table table = new Table(name, columns);
+        tables.put(clazz, table);
+        return table;
+    }
+
+    /**
+     * 分析实体字段
+     *
+     * @param field 字段
+     * @return 列定义
+     */
+    private static TableColumn analyzeField(Field field) {
         TBColumn column = field.getDeclaredAnnotation(TBColumn.class);
         if (column == null) {
             return null;
@@ -59,31 +91,13 @@ public record ColumnDefinition(
             }
         }
         boolean primaryKey = field.isAnnotationPresent(TBPrimaryKey.class);
-        return new ColumnDefinition(
+        return new TableColumn(
                 name,
                 type,
-                column.nullable(),
+                column.notnull(),
                 column.defaultValue().trim(),
-                !primaryKey && column.unique(),
                 primaryKey
         );
-    }
-
-    public String schema() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(name).append(" ").append(type);
-        if (!nullable) {
-            builder.append(" NOT NULL");
-        }
-        if (defaultValue != null && !defaultValue.isEmpty()) {
-            builder.append(" DEFAULT ").append(defaultValue);
-        }
-        if (primaryKey) {
-            builder.append(" PRIMARY KEY");
-        } else if (unique) {
-            builder.append(" UNIQUE");
-        }
-        return builder.toString();
     }
 
 }

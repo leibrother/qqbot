@@ -1,9 +1,9 @@
 package cc.rapidev.qqbot.memory.repository.po;
 
 import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.database.table.DBTable;
-import cc.rapidev.qqbot.database.table.TBColumn;
-import cc.rapidev.qqbot.database.table.TBPrimaryKey;
+import cc.rapidev.qqbot.database.entity.annotations.DBTable;
+import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
+import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
 import cc.rapidev.qqbot.memory.model.MemoryMessage;
 import cc.rapidev.qqbot.message.model.MessageAttachmentGeneric;
 import lombok.Getter;
@@ -30,6 +30,7 @@ public class MessagePO {
     private String id;
 
     @TBColumn
+    @TBPrimaryKey
     private String topic;
 
     @TBColumn

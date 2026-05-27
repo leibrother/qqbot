@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.database.repository.parameter;
 
 import cc.rapidev.qqbot.database.BotDatabase;
-import cc.rapidev.qqbot.database.table.TableDefinition;
+import cc.rapidev.qqbot.database.entity.Table;
 
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ParameterRepository {
 
     private final BotDatabase db;
-    private final TableDefinition table;
+    private final Table table;
 
     public ParameterRepository(BotDatabase db) {
         this.db = db;

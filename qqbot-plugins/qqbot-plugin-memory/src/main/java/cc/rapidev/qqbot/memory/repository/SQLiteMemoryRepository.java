@@ -2,7 +2,7 @@ package cc.rapidev.qqbot.memory.repository;
 
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.database.BotDatabase;
-import cc.rapidev.qqbot.database.table.TableDefinition;
+import cc.rapidev.qqbot.database.entity.Table;
 import cc.rapidev.qqbot.memory.model.MemoryMessage;
 import cc.rapidev.qqbot.memory.repository.po.MessageAttachmentPO;
 import cc.rapidev.qqbot.memory.repository.po.MessagePO;
@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 public class SQLiteMemoryRepository implements MemoryRepository {
 
     private final BotDatabase database;
-    private final TableDefinition messageDef;
-    private final TableDefinition attachmentDef;
+    private final Table messageDef;
+    private final Table attachmentDef;
 
     public SQLiteMemoryRepository(BotDatabase database) {
         this.database = database;

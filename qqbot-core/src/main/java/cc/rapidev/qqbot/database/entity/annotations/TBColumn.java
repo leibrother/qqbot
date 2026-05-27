@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.database.table;
+package cc.rapidev.qqbot.database.entity.annotations;
 
 import java.lang.annotation.*;
 
@@ -16,7 +16,7 @@ public @interface TBColumn {
 
     boolean unique() default false;
 
-    boolean nullable() default true;
+    boolean notnull() default false;
 
     String defaultValue() default "";
 

@@ -1,8 +1,8 @@
 package cc.rapidev.qqbot.database.repository.user;
 
-import cc.rapidev.qqbot.database.table.DBTable;
-import cc.rapidev.qqbot.database.table.TBColumn;
-import cc.rapidev.qqbot.database.table.TBPrimaryKey;
+import cc.rapidev.qqbot.database.entity.annotations.DBTable;
+import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
+import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
 import cc.rapidev.qqbot.message.model.Author;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

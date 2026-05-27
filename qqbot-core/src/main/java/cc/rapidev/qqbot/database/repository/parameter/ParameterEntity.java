@@ -1,8 +1,8 @@
 package cc.rapidev.qqbot.database.repository.parameter;
 
-import cc.rapidev.qqbot.database.table.DBTable;
-import cc.rapidev.qqbot.database.table.TBColumn;
-import cc.rapidev.qqbot.database.table.TBPrimaryKey;
+import cc.rapidev.qqbot.database.entity.annotations.DBTable;
+import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
+import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,10 +19,10 @@ public class ParameterEntity {
     @TBPrimaryKey
     private String key;
 
-    @TBColumn(nullable = false)
+    @TBColumn(notnull = true)
     private String type;
 
-    @TBColumn(nullable = false)
+    @TBColumn(notnull = true)
     private String value;
 
     private ParameterEntity(String key, String type, String value) {

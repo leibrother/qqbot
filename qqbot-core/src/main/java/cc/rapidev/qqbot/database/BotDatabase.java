@@ -2,21 +2,19 @@ package cc.rapidev.qqbot.database;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.utils.LogbackUtils;
+import cc.rapidev.qqbot.database.entity.EntityAnalyzer;
+import cc.rapidev.qqbot.database.entity.Table;
+import cc.rapidev.qqbot.database.entity.TableColumn;
 import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
 import cc.rapidev.qqbot.database.repository.user.UserRepository;
-import cc.rapidev.qqbot.database.table.ColumnDefinition;
-import cc.rapidev.qqbot.database.table.TableDefinition;
 import ch.qos.logback.classic.Level;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlite3.SQLitePlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,9 +26,7 @@ import java.util.function.Function;
  */
 public class BotDatabase {
 
-    private final Logger logger = LoggerFactory.getLogger("[Bot Database]");
     private final Jdbi jdbi;
-    private final Map<Class<?>, TableDefinition> definitions = new HashMap<>();
     private final UserRepository userRepository;
     private final ParameterRepository parameterRepository;
 
@@ -46,44 +42,33 @@ public class BotDatabase {
         String database = "./data/%s.db".formatted(appid);
         DataSource dataSource = SQLiteDataSourceFactory.create(database);
         this.jdbi = Jdbi.create(dataSource)
+                .setSqlLogger(new SQLLogger())
                 .installPlugin(new SQLitePlugin())
                 .installPlugin(new SqlObjectPlugin());
         this.userRepository = new UserRepository(this);
         this.parameterRepository = new ParameterRepository(this);
     }
 
-    public TableDefinition getTableDefinition(Class<?> tb) {
-        if (!definitions.containsKey(tb)) {
-            synchronized (this) {
-                if (!definitions.containsKey(tb)) {
-                    TableDefinition definition = TableDefinition.of(tb);
-                    definitions.put(tb, definition);
-                }
-            }
-        }
-        return definitions.get(tb);
-    }
-
     /**
      * 注册一个数据库表，自动生成其表结构
      *
-     * @param tb 数据库表对应的类，需被<code>@DBTable</code>注解
+     * @param entity 数据库表对应的类，需被<code>@DBTable</code>注解
      */
-    public TableDefinition register(Class<?> tb) {
-        TableDefinition definition = getTableDefinition(tb);
-        String name = definition.name();
+    public Table register(Class<?> entity) {
+        Table table = EntityAnalyzer.analyze(entity);
+        String name = table.name();
         if (exist(name)) {
             // 表存在，进行差异更新
-            List<ColumnDefinition> columns = getTableColumns(name);
-            List<String> sqls = definition.diffUpdate(columns);
+            List<TableColumn> columns = getTableColumns(name);
+            List<String> sqls = table.diffUpdate(columns);
             if (!sqls.isEmpty()) {
                 this.transaction(sqls);
             }
         } else {
             // 表不存在，执行建表语句
-            execute(definition.schema());
+            execute(table.schema());
         }
-        return definition;
+        return table;
     }
 
     /**
@@ -169,18 +154,17 @@ public class BotDatabase {
         return one("SELECT 1 FROM sqlite_master WHERE type='table' AND name = ?", name).isPresent();
     }
 
-    public List<ColumnDefinition> getTableColumns(String name) {
+    public List<TableColumn> getTableColumns(String name) {
         List<Map<String, Object>> res = select("PRAGMA table_info(%s)".formatted(name));
         return res.stream()
                 .map(row -> {
-                    Object dfltValue = row.get("dflt_value");
-                    return new ColumnDefinition(
+                    Object defaultValue = row.get("dflt_value");
+                    return new TableColumn(
                             row.get("name").toString(),
                             row.get("type").toString(),
-                            !"1".equals(row.get("notnull").toString()),
-                            dfltValue == null ? "" : dfltValue.toString(),
-                            false,
-                            "1".equals(row.get("pk").toString())
+                            "1".equals(row.get("notnull").toString()),
+                            defaultValue == null ? "" : defaultValue.toString(),
+                            Integer.parseInt(row.get("pk").toString()) > 0
                     );
                 }).toList();
     }

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.database.table;
+package cc.rapidev.qqbot.database.entity.annotations;
 
 import java.lang.annotation.*;
 
