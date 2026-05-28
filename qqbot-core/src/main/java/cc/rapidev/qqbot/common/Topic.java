@@ -1,8 +1,6 @@
 package cc.rapidev.qqbot.common;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,16 +19,22 @@ import java.util.Objects;
  *
  * @author leibrother
  */
-@Getter
-@Setter(AccessLevel.PROTECTED)
 public class Topic implements Serializable {
 
-    private Events event;
-    private String id;
+    private final Events event;
+    private final String id;
 
-    public Topic(Events event, String id) {
+    private Topic(Events event, String id) {
         this.event = event;
         this.id = id;
+    }
+
+    public Events event() {
+        return event;
+    }
+
+    public String id() {
+        return id;
     }
 
     public boolean isPrivate() {
@@ -64,12 +68,12 @@ public class Topic implements Serializable {
         return event == topic.event && Objects.equals(id, topic.id);
     }
 
-    public String code() {
+    public @NonNull String code() {
         return event + ":" + id;
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return code();
     }
 

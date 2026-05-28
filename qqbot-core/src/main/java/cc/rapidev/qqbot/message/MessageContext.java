@@ -22,6 +22,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
@@ -30,7 +31,6 @@ import java.util.function.BiConsumer;
  */
 public final class MessageContext extends ServiceRegistrationCenter {
 
-    @Getter
     private final Bot bot;
     private final BotPayload payload;
     private final Topic topic;
@@ -59,6 +59,15 @@ public final class MessageContext extends ServiceRegistrationCenter {
      */
     public void complete() {
         this.completed = true;
+    }
+
+    /**
+     * 获取绑定的机器人
+     *
+     * @return 机器人
+     */
+    public Bot bot() {
+        return this.bot;
     }
 
     /**
@@ -108,6 +117,20 @@ public final class MessageContext extends ServiceRegistrationCenter {
     }
 
     /**
+     * 获取用户会话ID （User Session Identifier）
+     *
+     * @return 用户会话ID
+     */
+    public Optional<String> usid() {
+        if (topic == null || author == null) return Optional.empty();
+        if (topic.isPrivate()) {
+            return Optional.of(topic.id());
+        } else {
+            return Optional.of(topic.id() + ":" + author.openid());
+        }
+    }
+
+    /**
      * 获取上下文中的消息
      *
      * @return {@link MessageGeneric}
@@ -150,7 +173,7 @@ public final class MessageContext extends ServiceRegistrationCenter {
         JsonNode data = payload().data();
         String replyId = data.get("id").asText();
         message.reply(replyId, replySequence.incrementAndGet());
-        MessageResponse response = getBot().sendMessage(topic, message);
+        MessageResponse response = bot().sendMessage(topic, message);
         runReplyHooks(message, response);
     }
 
@@ -162,7 +185,7 @@ public final class MessageContext extends ServiceRegistrationCenter {
     public void reply(MessageMedia media) {
         media.srvDontSend();
         Topic topic = topic();
-        MessageMediaResponse response = getBot().sendMessage(topic, media);
+        MessageMediaResponse response = bot().sendMessage(topic, media);
         response.setFileType(media.getFileType());
         Message message = Message.media(response);
         reply(message);

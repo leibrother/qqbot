@@ -1,5 +1,7 @@
 package cc.rapidev.qqbot.extension.command;
 
+import cc.rapidev.qqbot.common.utils.StringUtils;
+
 import java.util.Optional;
 
 /**
@@ -37,6 +39,10 @@ public class Command {
 
     public String content() {
         return this.content;
+    }
+
+    public boolean isEmpty() {
+        return StringUtils.isEmpty(this.content);
     }
 
     public synchronized Optional<Command> match(Keyword keyword) {

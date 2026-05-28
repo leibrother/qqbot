@@ -1,0 +1,13 @@
+#[[#]]# $setting.path()
+#[[>]]# $setting.description()
+
+---
+
+$content
+
+---
+
+#if($setting.parent())
+<qqbot-cmd-enter text="返回"/>
+#end
+<qqbot-cmd-enter text="退出设置"/>

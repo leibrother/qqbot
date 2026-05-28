@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.extension;
 
 import cc.rapidev.qqbot.extension.admin.AdministratorExtension;
 import cc.rapidev.qqbot.extension.command.CommandExtension;
+import cc.rapidev.qqbot.extension.settings.SettingsExtension;
 import cc.rapidev.qqbot.extension.template.TemplateExtension;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class ExtensionDeclarer {
         declare(CommandExtension.class);
         // 管理员扩展
         declare(AdministratorExtension.class);
+        // 设置中心扩展
+        declare(SettingsExtension.class);
     }
 
 }

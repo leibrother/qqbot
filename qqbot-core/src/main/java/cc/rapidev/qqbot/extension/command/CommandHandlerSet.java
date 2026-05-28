@@ -18,6 +18,15 @@ public class CommandHandlerSet implements CommandHandler {
     private final Logger logger = LoggerFactory.getLogger(CommandHandlerSet.class);
     private final Map<Keyword, CommandHandler> mapping = new HashMap<>();
     private final Map<Keyword, List<Events>> keyEvents = new HashMap<>();
+    private final CommandHandler defaultHandler;
+
+    public CommandHandlerSet() {
+        this(null);
+    }
+
+    public CommandHandlerSet(CommandHandler defaultHandler) {
+        this.defaultHandler = defaultHandler;
+    }
 
     public void add(String key, CommandHandler handler, Events... events) {
         Keyword keyword = new Keyword(key);
@@ -45,8 +54,11 @@ public class CommandHandlerSet implements CommandHandler {
                     continue;
                 }
                 mapping.get(keyword).handle(context, next.get());
-                break;
+                return;
             }
+        }
+        if (defaultHandler != null) {
+            defaultHandler.handle(context, command);
         }
     }
 
