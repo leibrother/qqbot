@@ -66,8 +66,8 @@ public final class SettingGroup implements Setting {
             builder.append("**<qqbot-cmd-enter text=\"").append(item.name()).append("\"/>**");
             builder.append("\n");
             builder.append("> ").append(description);
-            builder.append("\n");
             if (iterator.hasNext()) {
+                builder.append("\n");
                 builder.append("\n");
                 builder.append("---");
                 builder.append("\n");

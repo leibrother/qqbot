@@ -40,4 +40,16 @@ public class Input extends SettingItem {
         return builder.toString();
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder extends SettingItemBuilder {
+
+        public Input build() {
+            return new Input(key, name, description, scope);
+        }
+
+    }
+
 }

@@ -56,18 +56,47 @@ public abstract class SettingItem implements Setting {
         return this.scope == SettingScope.GLOBAL ? "GLOBAL" : topic.code();
     }
 
-    protected final String getValue(SettingRepository repository, Topic topic) {
+    protected String getValue(SettingRepository repository, Topic topic) {
         return repository.get(completedKey(), scopeKey(topic));
     }
 
-    protected final void setValue(SettingRepository repository, Topic topic, String value) {
+    protected void setValue(SettingRepository repository, Topic topic, String value) {
         repository.set(completedKey(), scopeKey(topic), value);
     }
 
-    public String get(SettingRepository repository, Topic topic) {
+    public final String get(SettingRepository repository, Topic topic) {
         return this.getValue(repository, topic);
     }
 
     public abstract boolean set(MessageContext context, SettingRepository repository, MessageGeneric message);
+
+    public static class SettingItemBuilder {
+
+        protected String key;
+        protected String name;
+        protected String description;
+        protected SettingScope scope;
+
+        public SettingItemBuilder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public SettingItemBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public SettingItemBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public SettingItemBuilder scope(SettingScope scope) {
+            this.scope = scope;
+            return this;
+        }
+
+    }
 
 }
