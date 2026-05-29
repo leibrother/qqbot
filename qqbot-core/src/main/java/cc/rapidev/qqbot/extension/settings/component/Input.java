@@ -1,9 +1,9 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
+import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.RenderContext;
-import cc.rapidev.qqbot.extension.settings.SettingScope;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
@@ -15,7 +15,7 @@ public class Input extends SettingItem {
 
     private boolean password;
 
-    public Input(String key, String name, String description, SettingScope scope) {
+    public Input(String key, String name, String description, Scope scope) {
         super(key, name, description, scope);
     }
 
@@ -62,7 +62,7 @@ public class Input extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingItemBuilder<Builder> {
+    public static class Builder extends SettingBuilder<Builder> {
 
         private boolean password = false;
 

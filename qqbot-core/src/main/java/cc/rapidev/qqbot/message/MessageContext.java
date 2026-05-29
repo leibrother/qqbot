@@ -140,6 +140,35 @@ public final class MessageContext extends ServiceRegistrationCenter {
     }
 
     /**
+     * 获取服务
+     * <p>优先在本上下文查找，如果找不到则在机器人中查找</p>
+     *
+     * @param clazz 服务类
+     * @return 服务实例
+     */
+    @Override
+    public <T> Optional<T> get(Class<T> clazz) {
+        Optional<T> optional = super.get(clazz);
+        if (optional.isEmpty()) {
+            return bot().get(clazz);
+        }
+        return optional;
+    }
+
+    /**
+     * 使用服务
+     * <p>优先在本上下文查找，找不到则在机器人中查找</p>
+     *
+     * @param clazz 服务类
+     * @return 服务实例
+     */
+    @Override
+    public <T> T use(Class<T> clazz) {
+        Optional<T> optional = super.get(clazz);
+        return optional.orElseGet(() -> bot().use(clazz));
+    }
+
+    /**
      * 添加回复消息钩子，此钩子会在调用{@link MessageContext#reply(Message)}时触发
      *
      * @param hook 钩子

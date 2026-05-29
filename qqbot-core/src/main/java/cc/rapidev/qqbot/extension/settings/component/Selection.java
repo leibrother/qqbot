@@ -1,9 +1,9 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
+import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.RenderContext;
-import cc.rapidev.qqbot.extension.settings.SettingScope;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
@@ -19,12 +19,12 @@ public class Selection extends SettingItem {
 
     private final List<String> options;
 
-    public Selection(String key, String name, String description, List<String> options, SettingScope scope) {
+    public Selection(String key, String name, String description, List<String> options, Scope scope) {
         super(key, name, description, scope);
         this.options = options;
     }
 
-    protected String getValue(SettingRepository repository, Topic topic) {
+    public String getValue(SettingRepository repository, Topic topic) {
         String value = super.getValue(repository, topic);
         if (value != null && !options.contains(value)) {
             return null;
@@ -69,7 +69,7 @@ public class Selection extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingItemBuilder<Builder> {
+    public static class Builder extends SettingBuilder<Builder> {
 
         private List<String> options = new ArrayList<>();
 

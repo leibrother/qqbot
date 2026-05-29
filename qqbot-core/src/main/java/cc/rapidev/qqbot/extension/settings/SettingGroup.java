@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.extension.settings;
 
+import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
@@ -12,33 +13,31 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public final class SettingGroup implements Setting {
+public final class SettingGroup extends Setting {
 
-    private final String key;
-    private final String name;
-    private final String description;
     private final List<Setting> children = new ArrayList<>();
-    private Setting parent;
 
     public SettingGroup(String key, String name, String description) {
-        this.key = key;
-        this.name = name;
-        this.description = description;
+        super(key,name,description);
     }
 
-    @Override
-    public String key() {
-        return this.key;
+    public void append(Setting setting) {
+        List<Setting> exists = this.children.stream().filter(child -> child.key().equals(setting.key())).toList();
+        if (!exists.isEmpty()) {
+            throw new IllegalArgumentException("设置项: %s 已存在，请勿重复添加！".formatted(setting.key()));
+        }
+
+        if (setting.parent() != null) {
+            if (setting.parent() instanceof SettingGroup group) {
+                group.remove(setting);
+            }
+        }
+        setting.parent(this);
+        this.children.add(setting);
     }
 
-    @Override
-    public String name() {
-        return this.name;
-    }
-
-    @Override
-    public String description() {
-        return this.description;
+    public void remove(Setting setting) {
+        this.children.removeIf(child -> child.key().equals(setting.key()));
     }
 
     @Override
@@ -82,35 +81,6 @@ public final class SettingGroup implements Setting {
         return builder.toString();
     }
 
-    @Override
-    public Setting parent() {
-        return this.parent;
-    }
-
-    @Override
-    public void parent(Setting setting) {
-        this.parent = setting;
-    }
-
-    public void append(Setting setting) {
-        List<Setting> exists = this.children.stream().filter(child -> child.key().equals(setting.key())).toList();
-        if (!exists.isEmpty()) {
-            throw new IllegalArgumentException("设置项: %s 已存在，请勿重复添加！".formatted(setting.key()));
-        }
-
-        if (setting.parent() != null) {
-            if (setting.parent() instanceof SettingGroup group) {
-                group.remove(setting);
-            }
-        }
-        setting.parent(this);
-        this.children.add(setting);
-    }
-
-    public void remove(Setting setting) {
-        this.children.removeIf(child -> child.key().equals(setting.key()));
-    }
-
     /**
      * 管理员可见的设置项
      *
@@ -143,7 +113,7 @@ public final class SettingGroup implements Setting {
                     items.add(setting);
                 }
             } else if (setting instanceof SettingItem item) {
-                if (item.scope() == SettingScope.TOPIC) {
+                if (item.scope() == Scope.TOPIC) {
                     items.add(setting);
                 }
             }
@@ -151,7 +121,7 @@ public final class SettingGroup implements Setting {
         return items;
     }
 
-    public Setting findNextItem(String name) {
+    public Setting findChild(String name) {
         for (Setting setting : this.children) {
             if (setting.name().equalsIgnoreCase(name)) {
                 return setting;

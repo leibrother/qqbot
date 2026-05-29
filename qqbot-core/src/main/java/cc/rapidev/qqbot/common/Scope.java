@@ -1,9 +1,9 @@
-package cc.rapidev.qqbot.extension.settings;
+package cc.rapidev.qqbot.common;
 
 /**
  * @author leibrother
  */
-public enum SettingScope {
+public enum Scope {
 
     TOPIC, // 会话
     GLOBAL, // 全局

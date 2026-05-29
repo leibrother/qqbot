@@ -1,23 +1,45 @@
 package cc.rapidev.qqbot.extension.settings;
 
+import cc.rapidev.qqbot.common.Scope;
+import cc.rapidev.qqbot.common.utils.CastUtils;
+
 /**
  * @author leibrother
  */
-public interface Setting {
+public abstract class Setting {
 
-    String key();
+    private final String key;
+    private final String name;
+    private final String description;
+    private Setting parent;
 
-    String name();
+    public Setting(String key, String name, String description) {
+        this.key = key;
+        this.name = name;
+        this.description = description;
+    }
 
-    String description();
+    public String key() {
+        return this.key;
+    }
 
-    String render(RenderContext context);
+    public String name() {
+        return this.name;
+    }
 
-    Setting parent();
+    public String description() {
+        return this.description;
+    }
 
-    void parent(Setting setting);
+    public Setting parent() {
+        return parent;
+    }
 
-    default String path() {
+    public void parent(Setting parent) {
+        this.parent = parent;
+    }
+
+    public String path() {
         Setting parent = parent();
         if (parent == null) {
             return this.name();
@@ -26,13 +48,47 @@ public interface Setting {
         }
     }
 
-    default String completedKey() {
+    public String completedKey() {
         Setting parent = parent();
         if (parent == null) {
             return this.key();
         } else {
             return parent.completedKey() + "." + this.key();
         }
+    }
+
+    public abstract String render(RenderContext context);
+
+    /**
+     * 通用构建器
+     */
+    protected abstract static class SettingBuilder<B extends SettingBuilder<B>> {
+
+        protected String key;
+        protected String name;
+        protected String description;
+        protected Scope scope = Scope.TOPIC;
+
+        public B key(String key) {
+            this.key = key;
+            return CastUtils.cast(this);
+        }
+
+        public B name(String name) {
+            this.name = name;
+            return CastUtils.cast(this);
+        }
+
+        public B description(String description) {
+            this.description = description;
+            return CastUtils.cast(this);
+        }
+
+        public B global() {
+            this.scope = Scope.GLOBAL;
+            return CastUtils.cast(this);
+        }
+
     }
 
 }

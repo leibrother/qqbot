@@ -65,7 +65,7 @@ public class SettingSession {
      */
     public void proceed(MessageContext context) {
         if (setting instanceof SettingGroup group) {
-            Setting next = group.findNextItem(context.message().content().trim());
+            Setting next = group.findChild(context.message().content().trim());
             if (next == null) {
                 context.reply(Message.text("未找到设置项：" + context.message().content()));
                 return;
