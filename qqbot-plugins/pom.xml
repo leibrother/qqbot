@@ -13,9 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>qqbot-plugin-aigc</module>
         <module>qqbot-plugin-example</module>
         <module>qqbot-plugin-memory</module>
+        <module>qqbot-plugin-agent</module>
     </modules>
 
     <properties>

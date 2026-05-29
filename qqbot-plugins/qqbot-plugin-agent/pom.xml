@@ -9,29 +9,44 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugin-aigc</artifactId>
+    <artifactId>qqbot-plugin-agent</artifactId>
 
     <properties>
         <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
         <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <langchain4j.version>1.5.0</langchain4j.version>
+        <langchain4j.version>1.15.1</langchain4j.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-bom</artifactId>
+                <version>${langchain4j.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>cc.rapidev</groupId>
             <artifactId>qqbot-plugin-memory</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j</artifactId>
-            <version>${langchain4j.version}</version>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
-            <version>${langchain4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-anthropic</artifactId>
         </dependency>
     </dependencies>
 

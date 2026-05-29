@@ -1,0 +1,15 @@
+{
+  "id": "agent",
+  "name": "智能体",
+  "description": "将机器人变为AI智能体",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "framework": "^0.0.1",
+  "depends": {
+  },
+  "hooks": {
+  },
+  "extensions": [
+    "cc.rapidev.qqbot.agent.Agent"
+  ]
+}
