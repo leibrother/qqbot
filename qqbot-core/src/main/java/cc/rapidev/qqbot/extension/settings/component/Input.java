@@ -1,8 +1,8 @@
-package cc.rapidev.qqbot.extension.settings.item;
+package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
-import cc.rapidev.qqbot.extension.settings.SettingItem;
+import cc.rapidev.qqbot.extension.settings.RenderContext;
 import cc.rapidev.qqbot.extension.settings.SettingScope;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -13,8 +13,14 @@ import cc.rapidev.qqbot.message.model.MessageGeneric;
  */
 public class Input extends SettingItem {
 
+    private boolean password;
+
     public Input(String key, String name, String description, SettingScope scope) {
         super(key, name, description, scope);
+    }
+
+    public void password(boolean password) {
+        this.password = password;
     }
 
     @Override
@@ -28,15 +34,27 @@ public class Input extends SettingItem {
     }
 
     @Override
-    public String render(SettingRepository repository, Topic topic, boolean admin) {
+    public String getViewValue(SettingRepository repository, Topic topic) {
         String value = getValue(repository, topic);
+        if (value != null) {
+            if (password) {
+                value = "\\*\\*\\*\\*\\*\\*";
+            }
+        }
+        return value;
+    }
+
+    @Override
+    public String render(RenderContext context) {
+        String value = getViewValue(context.repository(), context.topic());
         StringBuilder builder = new StringBuilder();
         if (value != null) {
-            builder.append("当前值：");
             builder.append("**").append(value).append("**");
             builder.append("\n");
+            builder.append("> 发送消息替换当前值");
+        } else {
+            builder.append("> 发送消息设置值");
         }
-        builder.append("> 请发送要设置的值");
         return builder.toString();
     }
 
@@ -44,10 +62,19 @@ public class Input extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingItemBuilder {
+    public static class Builder extends SettingItemBuilder<Builder> {
+
+        private boolean password = false;
+
+        public Builder password() {
+            this.password = true;
+            return this;
+        }
 
         public Input build() {
-            return new Input(key, name, description, scope);
+            Input input = new Input(key, name, description, scope);
+            input.password(password);
+            return input;
         }
 
     }

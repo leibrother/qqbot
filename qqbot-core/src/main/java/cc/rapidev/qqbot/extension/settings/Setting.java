@@ -1,8 +1,5 @@
 package cc.rapidev.qqbot.extension.settings;
 
-import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
-
 /**
  * @author leibrother
  */
@@ -14,7 +11,7 @@ public interface Setting {
 
     String description();
 
-    String render(SettingRepository repository, Topic topic, boolean admin);
+    String render(RenderContext context);
 
     Setting parent();
 
@@ -24,7 +21,7 @@ public interface Setting {
         Setting parent = parent();
         if (parent == null) {
             return this.name();
-        }else{
+        } else {
             return parent.path() + " / " + this.name();
         }
     }

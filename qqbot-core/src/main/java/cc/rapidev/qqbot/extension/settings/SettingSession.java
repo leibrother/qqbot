@@ -5,6 +5,7 @@ import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.Context;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.extension.admin.AdministratorService;
+import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -27,15 +28,26 @@ public class SettingSession {
         this.setting = setting;
     }
 
+    /**
+     * 渲染当前聚焦的设置项
+     *
+     * @return 消息体
+     */
     public Message render() {
-        boolean admin = bot.use(AdministratorService.class).isAdmin(author);
         SettingRepository repository = bot.use(SettingRepository.class);
+        boolean admin = bot.use(AdministratorService.class).isAdmin(author);
+        RenderContext context = new RenderContext(repository, topic, author, admin);
         Context ctx = Context.empty();
         ctx.set("setting", setting);
-        ctx.set("content", setting.render(repository, topic, admin));
+        ctx.set("content", setting.render(context));
         return bot.use(TemplateRenderer.class).markdown("/templates/settings/view.vm", ctx.map());
     }
 
+    /**
+     * 回到当前聚焦的设置项的上一级并渲染
+     *
+     * @return 消息体
+     */
     public Message back() {
         Setting parent = this.setting.parent();
         if (parent == null) {
@@ -45,6 +57,12 @@ public class SettingSession {
         return this.render();
     }
 
+    /**
+     * 处理用户消息
+     * <p>如果当前聚焦的设置项是{@code SettingGroup}则查找下一级，否则执行赋值逻辑</p>
+     *
+     * @param context 消息上下文
+     */
     public void proceed(MessageContext context) {
         if (setting instanceof SettingGroup group) {
             Setting next = group.findNextItem(context.message().content().trim());

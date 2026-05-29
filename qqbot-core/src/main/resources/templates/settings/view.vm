@@ -1,5 +1,5 @@
 #[[#]]# $setting.path()
-#[[>]]# $setting.description()
+#[[>]]# **$setting.description()**
 
 ---
 

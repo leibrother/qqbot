@@ -1,17 +1,15 @@
 package cc.rapidev.qqbot.extension.settings;
 
-import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
-import cc.rapidev.qqbot.extension.settings.item.Input;
-import cc.rapidev.qqbot.extension.settings.item.Selection;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
+import cc.rapidev.qqbot.extension.settings.component.Button;
+import cc.rapidev.qqbot.extension.settings.component.Input;
+import cc.rapidev.qqbot.extension.settings.component.Selection;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.google.common.collect.Maps;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,16 +18,12 @@ import java.util.Optional;
  */
 public class SettingService {
 
-    private final Bot bot;
     private final SettingGroup root;
-    private final SettingRepository repository;
     private final CommandHandlerSet handler;
     private final Map<String, SettingSession> sessions = Maps.newConcurrentMap();
 
-    public SettingService(Bot bot) {
-        this.bot = bot;
+    public SettingService() {
         this.root = new SettingGroup("root", "设置", "选择设置项");
-        this.repository = new SettingRepository(bot.database());
         this.handler = new CommandHandlerSet((context, _) -> this.proceed(context));
         this.handler.add("返回", (context, _) -> this.back(context));
         this.handler.add("退出设置", (context, _) -> this.exit(context));
@@ -37,22 +31,58 @@ public class SettingService {
     }
 
     private void loadTestData() {
-        SettingGroup groupA = new SettingGroup("a", "模块A", "这是设置项描述");
-        groupA.append(new Input("a", "姓名", "设置您的姓名", SettingScope.TOPIC));
-        groupA.append(new Input("b", "性别", "设置您的性别", SettingScope.TOPIC));
-        groupA.append(new Input("c", "年龄", "设置您的年龄", SettingScope.TOPIC));
-        this.root.append(groupA);
-        SettingGroup groupB = new SettingGroup("b", "模块B", "这是设置项描述");
-        groupB.append(new Selection("a", "提供商", "选择模型提供商", List.of("deepseek", "google gemini"), SettingScope.TOPIC));
-        this.root.append(groupB);
-        this.root.append(new SettingGroup("c", "模块C", "这是设置项描述"));
+        SettingGroup components = new SettingGroup("components", "组件测试", "测试内置组件");
+        components.append(
+                Input.builder()
+                        .key("input")
+                        .name("输入")
+                        .description("这是一个普通输入组件")
+                        .build()
+        );
+        components.append(
+                Input.builder()
+                        .key("input-password")
+                        .name("密码输入")
+                        .description("这是一个会将内容隐藏的输入组件")
+                        .password()
+                        .build()
+        );
+        components.append(
+                Selection.builder()
+                        .key("selection")
+                        .name("选择")
+                        .description("这是一个单选组件")
+                        .addOption("Option A")
+                        .addOption("Option B")
+                        .build()
+        );
+        components.append(
+                Button.builder()
+                        .key("button")
+                        .name("按钮")
+                        .description("这是一个普通的按钮")
+                        .onclick(_ -> "你点击了按钮")
+                        .build()
+        );
+        this.root.append(components);
     }
 
+    /**
+     * 当前消息上下文是否在会话中（通过USID判断）
+     *
+     * @param context 消息上下文
+     * @return true/false
+     */
     public boolean insession(MessageContext context) {
         Optional<String> optional = context.usid();
         return optional.filter(sessions::containsKey).isPresent();
     }
 
+    /**
+     * 开启设置会话
+     *
+     * @param context 消息上下文
+     */
     public void open(MessageContext context) {
         Optional<String> optional = context.usid();
         if (optional.isEmpty()) {
@@ -63,6 +93,11 @@ public class SettingService {
         context.reply(render);
     }
 
+    /**
+     * 退出设置会话
+     *
+     * @param context 消息上下文
+     */
     public void exit(MessageContext context) {
         context.usid().ifPresent(usid -> {
             if (sessions.containsKey(usid)) {
@@ -72,6 +107,11 @@ public class SettingService {
         });
     }
 
+    /**
+     * 返回上一级
+     *
+     * @param context 消息上下文
+     */
     public void back(MessageContext context) {
         context.usid().ifPresent(usid -> {
             SettingSession session = sessions.get(usid);
@@ -85,6 +125,22 @@ public class SettingService {
         });
     }
 
+    /**
+     * 继续会话（返回、退出会话或者交给设置会话实例处理）
+     *
+     * @param context 消息上下文
+     */
+    public void following(MessageContext context) {
+        MessageGeneric message = context.message();
+        Command command = new Command(message.content());
+        this.handler.handle(context, command);
+    }
+
+    /**
+     * 交给设置会话实例进行处理（设置值、进入下一级、等等）
+     *
+     * @param context 消息上下文
+     */
     public void proceed(MessageContext context) {
         context.usid().ifPresent(usid -> {
             SettingSession session = sessions.get(usid);
@@ -93,12 +149,6 @@ public class SettingService {
             }
             session.proceed(context);
         });
-    }
-
-    public void following(MessageContext context) {
-        MessageGeneric message = context.message();
-        Command command = new Command(message.content());
-        this.handler.handle(context, command);
     }
 
 }

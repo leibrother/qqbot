@@ -1,6 +1,7 @@
 package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ public final class SettingGroup implements Setting {
     }
 
     @Override
-    public String render(SettingRepository repository, Topic topic, boolean admin) {
+    public String render(RenderContext context) {
+        SettingRepository repository = context.repository();
+        Topic topic = context.topic();
+        boolean admin = context.admin();
         List<Setting> items;
         if (admin) {
             items = this.adminVisible();
@@ -58,7 +62,7 @@ public final class SettingGroup implements Setting {
             Setting item = iterator.next();
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
-                String value = settingItem.get(repository, topic);
+                String value = settingItem.getViewValue(repository, topic);
                 if (value != null) {
                     description = value;
                 }
@@ -69,9 +73,9 @@ public final class SettingGroup implements Setting {
             if (iterator.hasNext()) {
                 builder.append("\n");
                 builder.append("\n");
-                builder.append("---");
-                builder.append("\n");
-                builder.append("\n");
+//                builder.append("---");
+//                builder.append("\n");
+//                builder.append("\n");
             }
         }
 
