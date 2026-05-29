@@ -12,6 +12,10 @@ public class StringUtils {
         return str == null || str.isEmpty();
     }
 
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
+    }
+
     public static String packing(CharSequence symbol, String content) {
         return packing(symbol, content, symbol);
     }

@@ -1,6 +1,7 @@
 package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 
@@ -60,6 +61,7 @@ public final class SettingGroup implements Setting {
         Iterator<Setting> iterator = items.iterator();
         while (iterator.hasNext()) {
             Setting item = iterator.next();
+            builder.append("**<qqbot-cmd-enter text=\"").append(item.name()).append("\"/>**");
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
                 String value = settingItem.getViewValue(repository, topic);
@@ -67,15 +69,13 @@ public final class SettingGroup implements Setting {
                     description = value;
                 }
             }
-            builder.append("**<qqbot-cmd-enter text=\"").append(item.name()).append("\"/>**");
-            builder.append("\n");
-            builder.append("> ").append(description);
+            if (StringUtils.isNotEmpty(description)) {
+                builder.append("\n");
+                builder.append("> ").append(description);
+            }
             if (iterator.hasNext()) {
                 builder.append("\n");
                 builder.append("\n");
-//                builder.append("---");
-//                builder.append("\n");
-//                builder.append("\n");
             }
         }
 
@@ -93,8 +93,22 @@ public final class SettingGroup implements Setting {
     }
 
     public void append(Setting setting) {
+        List<Setting> exists = this.children.stream().filter(child -> child.key().equals(setting.key())).toList();
+        if (!exists.isEmpty()) {
+            throw new IllegalArgumentException("设置项: %s 已存在，请勿重复添加！".formatted(setting.key()));
+        }
+
+        if (setting.parent() != null) {
+            if (setting.parent() instanceof SettingGroup group) {
+                group.remove(setting);
+            }
+        }
         setting.parent(this);
         this.children.add(setting);
+    }
+
+    public void remove(Setting setting) {
+        this.children.removeIf(child -> child.key().equals(setting.key()));
     }
 
     /**

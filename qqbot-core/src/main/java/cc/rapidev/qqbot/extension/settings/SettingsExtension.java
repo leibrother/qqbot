@@ -18,6 +18,7 @@ public class SettingsExtension implements Extension {
         SettingRepository repository = new SettingRepository(bot.database());
         bot.add(repository);
         SettingService service = new SettingService();
+        bot.add(service);
         // 注册进入指令处理器
         SettingHandler handler = new SettingHandler(service);
         bot.dispatcher().register(Events.C2C_MESSAGE_CREATE, handler);

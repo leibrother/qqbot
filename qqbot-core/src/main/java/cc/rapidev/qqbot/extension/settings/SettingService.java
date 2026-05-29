@@ -3,9 +3,6 @@ package cc.rapidev.qqbot.extension.settings;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
-import cc.rapidev.qqbot.extension.settings.component.Button;
-import cc.rapidev.qqbot.extension.settings.component.Input;
-import cc.rapidev.qqbot.extension.settings.component.Selection;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.google.common.collect.Maps;
@@ -27,44 +24,17 @@ public class SettingService {
         this.handler = new CommandHandlerSet((context, _) -> this.proceed(context));
         this.handler.add("返回", (context, _) -> this.back(context));
         this.handler.add("退出设置", (context, _) -> this.exit(context));
-        loadTestData();
     }
 
-    private void loadTestData() {
-        SettingGroup components = new SettingGroup("components", "组件测试", "测试内置组件");
-        components.append(
-                Input.builder()
-                        .key("input")
-                        .name("输入")
-                        .description("这是一个普通输入组件")
-                        .build()
-        );
-        components.append(
-                Input.builder()
-                        .key("input-password")
-                        .name("密码输入")
-                        .description("这是一个会将内容隐藏的输入组件")
-                        .password()
-                        .build()
-        );
-        components.append(
-                Selection.builder()
-                        .key("selection")
-                        .name("选择")
-                        .description("这是一个单选组件")
-                        .addOption("Option A")
-                        .addOption("Option B")
-                        .build()
-        );
-        components.append(
-                Button.builder()
-                        .key("button")
-                        .name("按钮")
-                        .description("这是一个普通的按钮")
-                        .onclick(_ -> "你点击了按钮")
-                        .build()
-        );
-        this.root.append(components);
+    /**
+     * 添加一个设置项
+     *
+     * @param setting 设置项
+     * @return 返回一个函数，用于将其移除
+     */
+    public Runnable append(Setting setting) {
+        this.root.append(setting);
+        return () -> this.root.remove(setting);
     }
 
     /**
