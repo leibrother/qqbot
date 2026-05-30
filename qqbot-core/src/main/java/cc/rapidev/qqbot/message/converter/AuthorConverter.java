@@ -54,7 +54,7 @@ public class AuthorConverter implements Converter<BotPayload, Author> {
                 author.get("union_openid").textValue(),
                 author.get("avatar").textValue(),
                 author.get("username").textValue(),
-                author.get("bot").booleanValue()
+                author.has("bot") && author.get("bot").booleanValue()
         );
     }
 
