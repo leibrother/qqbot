@@ -1,8 +1,12 @@
-package cc.rapidev.qqbot.agent.setting;
+package cc.rapidev.qqbot.agent.service;
 
 import cc.rapidev.qqbot.Bot;
+import cc.rapidev.qqbot.agent.model.ModelSetting;
+import cc.rapidev.qqbot.agent.model.ModelValues;
 import cc.rapidev.qqbot.extension.settings.SettingGroup;
 import cc.rapidev.qqbot.extension.settings.SettingService;
+import cc.rapidev.qqbot.message.MessageContext;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author leibrother
@@ -22,6 +26,10 @@ public class AgentSettingService implements AutoCloseable {
     @Override
     public void close() {
         this.remover.run();
+    }
+
+    public @Nullable ModelValues getModelValues(MessageContext context) {
+        return modelSetting.getValues(context);
     }
 
 }

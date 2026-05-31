@@ -10,6 +10,6 @@
   "hooks": {
   },
   "extensions": [
-    "cc.rapidev.qqbot.agent.Agent"
+    "cc.rapidev.qqbot.agent.AgentExtension"
   ]
 }
