@@ -9,11 +9,10 @@ import java.util.Objects;
  * 消息的来源（主题）
  * <p>有如下场景：</p>
  * <ul>
- *     <li>单聊消息，此时{@code event}为{@code C2C_MESSAGE_CREATE}，{@code id}为发送消息的用户ID</li>
- *     <li>群聊@消息，此时{@code event}为{@code GROUP_AT_MESSAGE_CREATE}，{@code id}为群ID</li>
- *     <li>频道私信消息，此时{@code event}为{@code DIRECT_MESSAGE_CREATE}，{@code id}为GuildID</li>
- *     <li>文字子频道@消息，此时{@code event}为{@code AT_MESSAGE_CREATE}，{@code id}子频道ID</li>
- *     <li>文字子频道全量消息，此时{@code event}为{@code MESSAGE_CREATE}，{@code id}子频道ID</li>
+ *     <li>单聊消息</li>
+ *     <li>群聊消息</li>
+ *     <li>频道私信消息</li>
+ *     <li>文字子频道全量，包括AT消息</li>
  * </ul>
  * <p>可以通过{@code id}向对应的来源回复消息</p>
  *
@@ -21,16 +20,23 @@ import java.util.Objects;
  */
 public class Topic implements Serializable {
 
-    private final Events event;
+    public enum Type {
+        PRIVATE,
+        GROUP,
+        GUILD,
+        DIRECT
+    }
+
+    private final Type type;
     private final String id;
 
-    private Topic(Events event, String id) {
-        this.event = event;
+    private Topic(Type type, String id) {
+        this.type = type;
         this.id = id;
     }
 
-    public Events event() {
-        return event;
+    public Type type() {
+        return type;
     }
 
     public String id() {
@@ -38,38 +44,34 @@ public class Topic implements Serializable {
     }
 
     public boolean isPrivate() {
-        return Events.C2C_MESSAGE_CREATE.equals(event);
+        return Type.PRIVATE.equals(type);
     }
 
-    public boolean isGroupAt() {
-        return Events.GROUP_AT_MESSAGE_CREATE.equals(event);
+    public boolean isGroup() {
+        return Type.GROUP.equals(type);
     }
 
     public boolean isGuild() {
-        return Events.MESSAGE_CREATE.equals(event);
-    }
-
-    public boolean isGuildAt() {
-        return Events.AT_MESSAGE_CREATE.equals(event);
+        return Type.GUILD.equals(type);
     }
 
     public boolean isDirect() {
-        return Events.DIRECT_MESSAGE_CREATE.equals(event);
+        return Type.DIRECT.equals(type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(event, id);
+        return Objects.hash(type, id);
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Topic topic)) return false;
-        return event == topic.event && Objects.equals(id, topic.id);
+        return type == topic.type && Objects.equals(id, topic.id);
     }
 
     public @NonNull String code() {
-        return event + ":" + id;
+        return type + ":" + id;
     }
 
     @Override
@@ -78,23 +80,19 @@ public class Topic implements Serializable {
     }
 
     public static Topic ofPrivate(String id) {
-        return new Topic(Events.C2C_MESSAGE_CREATE, id);
+        return new Topic(Type.PRIVATE, id);
     }
 
-    public static Topic ofGroupAt(String id) {
-        return new Topic(Events.GROUP_AT_MESSAGE_CREATE, id);
+    public static Topic ofGroup(String id) {
+        return new Topic(Type.GROUP, id);
     }
 
     public static Topic ofGuild(String id) {
-        return new Topic(Events.MESSAGE_CREATE, id);
-    }
-
-    public static Topic ofGuildAt(String id) {
-        return new Topic(Events.AT_MESSAGE_CREATE, id);
+        return new Topic(Type.GUILD, id);
     }
 
     public static Topic ofDirect(String id) {
-        return new Topic(Events.DIRECT_MESSAGE_CREATE, id);
+        return new Topic(Type.DIRECT, id);
     }
 
 }

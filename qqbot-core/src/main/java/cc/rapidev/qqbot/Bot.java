@@ -214,9 +214,9 @@ public class Bot extends ServiceRegistrationCenter {
         MessageRequest request = api().getMessageRequest();
         if (topic.isPrivate()) {
             return request.toUser(topic.id(), message);
-        } else if (topic.isGroupAt()) {
+        } else if (topic.isGroup()) {
             return request.toGroup(topic.id(), message);
-        } else if (topic.isGuild() || topic.isGuildAt()) {
+        } else if (topic.isGuild()) {
             return request.toChannel(topic.id(), message);
         } else if (topic.isDirect()) {
             return request.toDirect(topic.id(), message);
@@ -236,7 +236,7 @@ public class Bot extends ServiceRegistrationCenter {
         MessageRequest request = api().getMessageRequest();
         if (topic.isPrivate()) {
             return request.toUserMedia(topic.id(), media);
-        } else if (topic.isGroupAt()) {
+        } else if (topic.isGroup()) {
             return request.toGroupMedia(topic.id(), media);
         } else {
             throw new BotException("unable to send media message to topic %s".formatted(topic));
