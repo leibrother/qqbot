@@ -23,7 +23,7 @@ public record MessageAttachmentGeneric(
         return this.type.startsWith("video");
     }
 
-    public boolean isVoice() {
+    public boolean isAudio() {
         return this.type.startsWith("voice");
     }
 

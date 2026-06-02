@@ -1,11 +1,12 @@
 package cc.rapidev.qqbot.memory.repository.po;
 
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.utils.JsonUtils;
 import cc.rapidev.qqbot.database.entity.annotations.DBTable;
 import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
 import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
 import cc.rapidev.qqbot.memory.model.MemoryMessage;
-import cc.rapidev.qqbot.message.model.MessageAttachmentGeneric;
+import cc.rapidev.qqbot.memory.model.MemoryMessageAttachment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,6 @@ public class MessagePO {
     private String id;
 
     @TBColumn
-    @TBPrimaryKey
     private String topic;
 
     @TBColumn
@@ -43,6 +43,9 @@ public class MessagePO {
     private boolean bot;
 
     @TBColumn
+    private String metadata;
+
+    @TBColumn
     private int sequence;
 
     private List<MessageAttachmentPO> attachments;
@@ -53,6 +56,7 @@ public class MessagePO {
         this.content = message.content();
         this.timestamp = message.timestamp().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         this.bot = message.bot();
+        this.metadata = JsonUtils.toJson(message.metadata());
         if (message.attachments() == null || message.attachments().isEmpty()) {
             this.attachments = new ArrayList<>();
         } else {
@@ -64,7 +68,7 @@ public class MessagePO {
     }
 
     public MemoryMessage toMemoryMessage() {
-        List<MessageAttachmentGeneric> attachments = this.attachments.stream()
+        List<MemoryMessageAttachment> attachments = this.attachments.stream()
                 .map(MessageAttachmentPO::toMemoryMessageAttachment)
                 .toList();
 
@@ -73,7 +77,8 @@ public class MessagePO {
                 content,
                 attachments,
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault()),
-                bot
+                bot,
+                JsonUtils.fromJson(this.metadata, JsonUtils.mapTypeReference())
         );
     }
 

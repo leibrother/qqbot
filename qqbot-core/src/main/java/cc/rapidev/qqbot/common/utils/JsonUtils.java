@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author leibrother
  */
@@ -53,6 +56,16 @@ public class JsonUtils {
 
     public static <T> T convert(JsonNode node, TypeReference<T> type) {
         return mapper.convertValue(node, type);
+    }
+
+    public static <T> TypeReference<List<T>> listTypeReference() {
+        return new TypeReference<>() {
+        };
+    }
+
+    public static <K, T> TypeReference<Map<K, T>> mapTypeReference() {
+        return new TypeReference<>() {
+        };
     }
 
 }

@@ -28,4 +28,16 @@ public class MessageMediaResponse implements Serializable {
     @JsonIgnore
     private Integer fileType;
 
+    public boolean isImage() {
+        return fileType == 1;
+    }
+
+    public boolean isVideo() {
+        return fileType == 2;
+    }
+
+    public boolean isAudio() {
+        return fileType == 3;
+    }
+
 }

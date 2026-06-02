@@ -13,12 +13,12 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public final class SettingGroup extends Setting {
+public class SettingGroup extends Setting {
 
     private final List<Setting> children = new ArrayList<>();
 
     public SettingGroup(String key, String name, String description) {
-        super(key,name,description);
+        super(key, name, description);
     }
 
     public void append(Setting setting) {

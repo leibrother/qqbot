@@ -40,12 +40,12 @@ public class SQLiteMemoryRepository implements MemoryRepository {
             this.clear(handle, topic);
 
             PreparedBatch batchMessage = handle.prepareBatch("""
-                    INSERT INTO %s (id, sequence, topic, content, timestamp, bot)
-                     VALUES(:id, :sequence, :topic, :content, :timestamp, :bot)
+                    INSERT INTO %s (id, sequence, topic, content, timestamp, bot, metadata)
+                     VALUES(:id, :sequence, :topic, :content, :timestamp, :bot, :metadata)
                     """.formatted(messageDef.name()));
             PreparedBatch batchAttachment = handle.prepareBatch("""
-                    INSERT INTO %s (id, msgid, topic, filename, type, url, size, width, height, wav_url, asr_text)
-                     VALUES(:id, :msgid, :topic, :filename, :type, :url, :size, :width, :height, :wavUrl, :asrText)
+                    INSERT INTO %s (id, msgid, topic, filename, type, url)
+                     VALUES(:id, :msgid, :topic, :filename, :type, :url)
                     """.formatted(attachmentDef.name()));
             AtomicInteger index = new AtomicInteger(1);
             for (MessagePO po : list) {
