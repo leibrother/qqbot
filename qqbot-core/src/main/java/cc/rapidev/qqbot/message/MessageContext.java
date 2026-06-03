@@ -12,9 +12,9 @@ import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.database.repository.user.UserEntity;
-import cc.rapidev.qqbot.message.converter.AuthorConverter;
-import cc.rapidev.qqbot.message.converter.MessageConverter;
-import cc.rapidev.qqbot.message.converter.TopicConverter;
+import cc.rapidev.qqbot.message.extractor.AuthorExtractor;
+import cc.rapidev.qqbot.message.extractor.MessageExtractor;
+import cc.rapidev.qqbot.message.extractor.TopicExtractor;
 import cc.rapidev.qqbot.message.model.Author;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,9 +44,9 @@ public final class MessageContext extends ServiceRegistrationCenter {
     public MessageContext(Bot bot, BotPayload payload) {
         this.bot = bot;
         this.payload = payload;
-        this.topic = TopicConverter.INSTANCE.convert(payload);
-        this.author = AuthorConverter.INSTANCE.convert(payload);
-        this.message = MessageConverter.INSTANCE.convert(payload);
+        this.topic = TopicExtractor.instance().extract(payload);
+        this.author = AuthorExtractor.instance().extract(payload);
+        this.message = MessageExtractor.instance().extract(payload);
         if (this.author != null) {
             UserEntity entity = UserEntity.from(this.author);
             this.bot.database().users().store(entity);

@@ -1,7 +1,5 @@
-package cc.rapidev.qqbot.message.converter;
+package cc.rapidev.qqbot.message.extractor;
 
-import cc.rapidev.qqbot.BotPayload;
-import cc.rapidev.qqbot.common.interfaces.Converter;
 import cc.rapidev.qqbot.common.utils.IdentityUtils;
 import cc.rapidev.qqbot.message.model.MessageAttachmentGeneric;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
@@ -14,13 +12,40 @@ import java.util.Optional;
 /**
  * @author leibrother
  */
-public class MessageConverter implements Converter<BotPayload, MessageGeneric> {
+public class MessageExtractor extends Extractor<MessageGeneric> {
 
-    public static final MessageConverter INSTANCE = new MessageConverter();
+    private static final MessageExtractor INSTANCE = new MessageExtractor();
+
+    public static MessageExtractor instance() {
+        return INSTANCE;
+    }
 
     @Override
-    public MessageGeneric convert(BotPayload payload) {
-        JsonNode data = payload.data();
+    protected MessageGeneric byC2CMessageCreate(JsonNode data) {
+        return parse(data);
+    }
+
+    @Override
+    protected MessageGeneric byGroupAtMessageCreate(JsonNode data) {
+        return parse(data);
+    }
+
+    @Override
+    protected MessageGeneric byMessageCreate(JsonNode data) {
+        return parse(data);
+    }
+
+    @Override
+    protected MessageGeneric byAtMessageCreate(JsonNode data) {
+        return parse(data);
+    }
+
+    @Override
+    protected MessageGeneric byDirectMessageCreate(JsonNode data) {
+        return parse(data);
+    }
+
+    protected MessageGeneric parse(JsonNode data) {
         if (data == null || data.isNull()) {
             return null;
         }
@@ -32,17 +57,17 @@ public class MessageConverter implements Converter<BotPayload, MessageGeneric> {
         return new MessageGeneric(
                 id.asText(),
                 content.map(JsonNode::asText).orElse(""),
-                convertAttachments(attachments),
+                parseAttachments(attachments),
                 timestamp.map(JsonNode::asText).orElse(null)
         );
     }
 
-    private List<MessageAttachmentGeneric> convertAttachments(JsonNode node) {
-        if (node == null || node.isNull() || !node.isArray()) {
+    private List<MessageAttachmentGeneric> parseAttachments(JsonNode data) {
+        if (data == null || data.isNull() || !data.isArray()) {
             return List.of();
         }
         List<MessageAttachmentGeneric> attachments = new ArrayList<>();
-        node.elements().forEachRemaining(attr -> {
+        data.elements().forEachRemaining(attr -> {
             Optional<JsonNode> id = Optional.ofNullable(attr.get("id"));
             Optional<JsonNode> filename = Optional.ofNullable(attr.get("filename"));
             Optional<JsonNode> type = Optional.ofNullable(attr.get("content_type"));
