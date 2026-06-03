@@ -8,7 +8,7 @@ import cc.rapidev.qqbot.api.model.User;
 import cc.rapidev.qqbot.api.request.MessageRequest;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.version.Version;
@@ -135,10 +135,10 @@ public class Bot extends ServiceRegistrationCenter {
         if (isShutdown()) {
             throw new BotException("bot is shutdown");
         } else if (!adapter.isRunning()) {
-            consume(BotPayload.broadcast(Events.START));
+            consume(BotPayload.broadcast(Event.START));
             this.extensionManager.init();
             this.adapter.run();
-            consume(BotPayload.broadcast(Events.STARTED));
+            consume(BotPayload.broadcast(Event.STARTED));
             if (keepLive) {
                 keepLive();
             }

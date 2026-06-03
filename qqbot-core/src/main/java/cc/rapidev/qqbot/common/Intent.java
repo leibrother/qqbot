@@ -12,7 +12,7 @@ import java.util.List;
  * @author leibrother
  * @see <a href="https://bot.q.qq.com/wiki/develop/api-v2/dev-prepare/interface-framework/event-emit.html#事件订阅Intents">事件订阅
  */
-public class Intents {
+public class Intent {
 
     @Getter
     public enum IntentValue {
@@ -41,26 +41,26 @@ public class Intents {
 
     private final List<IntentValue> intentValues = new ArrayList<>();
 
-    public Intents(IntentValue... values) {
+    public Intent(IntentValue... values) {
         this.intentValues.addAll(Arrays.asList(values));
     }
 
-    public Intents add(IntentValue value) {
+    public Intent add(IntentValue value) {
         this.intentValues.add(value);
         return this;
     }
 
-    public Intents remove(IntentValue value) {
+    public Intent remove(IntentValue value) {
         this.intentValues.remove(value);
         return this;
     }
 
-    public static Intents all() {
-        return new Intents(IntentValue.values());
+    public static Intent all() {
+        return new Intent(IntentValue.values());
     }
 
-    public static Intents publics() {
-        return new Intents(
+    public static Intent publics() {
+        return new Intent(
                 IntentValue.GUILDS,
                 IntentValue.GUILD_MEMBERS,
                 IntentValue.GUILD_MESSAGE_REACTIONS,
@@ -73,8 +73,8 @@ public class Intents {
         );
     }
 
-    public static Intents privates() {
-        return new Intents(
+    public static Intent privates() {
+        return new Intent(
                 IntentValue.GUILDS,
                 IntentValue.GUILD_MEMBERS,
                 IntentValue.GUILD_MESSAGES,

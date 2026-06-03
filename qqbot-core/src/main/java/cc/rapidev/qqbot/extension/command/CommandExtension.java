@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.extension.command;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 
@@ -17,7 +17,7 @@ public class CommandExtension implements Extension {
         this.entry = new CommandEntry();
         bot.add(entry);
         MessageDispatcher dispatcher = bot.dispatcher();
-        Events.messageCreateEvents.forEach(e -> dispatcher.register(e, entry));
+        Event.messageCreateEvents.forEach(e -> dispatcher.register(e, entry));
     }
 
     @Override

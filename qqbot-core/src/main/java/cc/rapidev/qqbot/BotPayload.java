@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot;
 
 import cc.rapidev.qqbot.common.Constant;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.utils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -78,8 +78,8 @@ public class BotPayload {
      *
      * @return 事件类型
      */
-    public Events e() {
-        return Events.valueOf(this.content.get(Constant.PAYLOAD_EVENT_TYPE).asText());
+    public Event e() {
+        return Event.valueOf(this.content.get(Constant.PAYLOAD_EVENT_TYPE).asText());
     }
 
     /**
@@ -119,7 +119,7 @@ public class BotPayload {
         return payload;
     }
 
-    public static BotPayload broadcast(Events event) {
+    public static BotPayload broadcast(Event event) {
         BotPayload payload = new BotPayload(0);
         payload.content.put(Constant.PAYLOAD_EVENT_TYPE, event.name());
         return payload;

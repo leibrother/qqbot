@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.extension.settings.handler;
 
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.extension.settings.SettingService;
@@ -40,7 +40,7 @@ public class SettingHandler implements MessageHandler, MessageHandlerInjector, C
 
     @Override
     public void inject(MessageDispatcher dispatcher) {
-        Events.messageCreateEvents.forEach(e -> dispatcher.register(e, this));
+        Event.messageCreateEvents.forEach(e -> dispatcher.register(e, this));
     }
 
 }

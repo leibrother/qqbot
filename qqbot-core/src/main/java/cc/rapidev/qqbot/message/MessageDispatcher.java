@@ -3,7 +3,7 @@ package cc.rapidev.qqbot.message;
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotPayload;
 import cc.rapidev.qqbot.api.model.Message;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.interfaces.Disposable;
 import cc.rapidev.qqbot.common.utils.ExceptionUtils;
 import cc.rapidev.qqbot.message.listener.StartListener;
@@ -42,8 +42,8 @@ public class MessageDispatcher implements Disposable {
         this.register("_default", new NotImplMessageHandler());
         StartListener startListener = new StartListener();
         StartedListener startedListener = new StartedListener(startListener);
-        this.register(Events.START, startListener);
-        this.register(Events.STARTED, startedListener);
+        this.register(Event.START, startListener);
+        this.register(Event.STARTED, startedListener);
         List<MessageHandlerInjector> injectors = MessageHandlerInjectorLoader.load();
         injectors.forEach(this::register);
     }
@@ -72,7 +72,7 @@ public class MessageDispatcher implements Disposable {
      * @param event   消息事件
      * @param handler 消息处理器
      */
-    public void register(Events event, MessageHandler handler) {
+    public void register(Event event, MessageHandler handler) {
         register(event.name(), handler);
     }
 
@@ -82,7 +82,7 @@ public class MessageDispatcher implements Disposable {
      * @param event    - 消息事件
      * @param handlers - 消息处理器列表
      */
-    public void register(Events event, List<MessageHandler> handlers) {
+    public void register(Event event, List<MessageHandler> handlers) {
         if (handlers != null && !handlers.isEmpty()) {
             handlers.forEach(handler -> register(event, handler));
         }
@@ -120,7 +120,7 @@ public class MessageDispatcher implements Disposable {
      * @param event 事件
      * @return 消息处理器列表
      */
-    private List<MessageHandler> getHandlers(Events event) {
+    private List<MessageHandler> getHandlers(Event event) {
         return getHandlers(event.name());
     }
 
@@ -142,7 +142,7 @@ public class MessageDispatcher implements Disposable {
      */
     public void doDispatch(BotPayload payload) {
         MessageContext context = getContext(payload);
-        Events event = context.event();
+        Event event = context.event();
         List<MessageHandler> handlers = getHandlers(event).stream().toList();
         Runnable runnable = () -> {
             Iterator<MessageHandler> iterator = handlers.iterator();

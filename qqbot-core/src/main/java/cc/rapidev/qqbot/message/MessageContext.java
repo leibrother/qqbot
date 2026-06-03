@@ -7,7 +7,7 @@ import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
@@ -83,9 +83,9 @@ public final class MessageContext extends ServiceRegistrationCenter {
     /**
      * 获取当前消息事件类型
      *
-     * @return {@link Events}
+     * @return {@link Event}
      */
-    public Events event() {
+    public Event event() {
         return payload.e();
     }
 

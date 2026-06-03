@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.common;
 
-import cc.rapidev.qqbot.common.Intents.IntentValue;
+import cc.rapidev.qqbot.common.Intent.IntentValue;
 import lombok.Getter;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * @author leibrother
  */
 @Getter
-public enum Events {
+public enum Event {
 
     // Framework Event
     START(IntentValue.BOT),
@@ -70,11 +70,11 @@ public enum Events {
 
     private final IntentValue intent;
 
-    Events(IntentValue intent) {
+    Event(IntentValue intent) {
         this.intent = intent;
     }
 
-    public static final List<Events> messageCreateEvents = List.of(
+    public static final List<Event> messageCreateEvents = List.of(
             C2C_MESSAGE_CREATE,
             GROUP_AT_MESSAGE_CREATE,
             MESSAGE_CREATE,
@@ -82,7 +82,7 @@ public enum Events {
             DIRECT_MESSAGE_CREATE
     );
 
-    public static final List<Events> messageDeleteEvents = List.of(
+    public static final List<Event> messageDeleteEvents = List.of(
             MESSAGE_DELETE,
             PUBLIC_MESSAGE_DELETE,
             DIRECT_MESSAGE_DELETE

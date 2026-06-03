@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.extension.template;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.template.velocity.VelocityTemplateRenderer;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -32,7 +32,7 @@ public class TemplateExtension implements Extension, MessageHandler {
         this.renderer = new VelocityTemplateRenderer();
         bot.add(renderer);
         MessageDispatcher dispatcher = bot.dispatcher();
-        Arrays.stream(Events.values()).forEach(event -> dispatcher.register(event, this));
+        Arrays.stream(Event.values()).forEach(event -> dispatcher.register(event, this));
     }
 
     @Override

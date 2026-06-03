@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.message;
 
-import cc.rapidev.qqbot.common.Events;
+import cc.rapidev.qqbot.common.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class NotImplMessageHandler implements MessageHandler {
 
     @Override
     public void handle(MessageContext context) {
-        Events event = context.event();
+        Event event = context.event();
         log.warn("no handler registered for event {}", event);
     }
 
