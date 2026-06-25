@@ -9,11 +9,11 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugins</artifactId>
+    <artifactId>qqbot-plugin</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>qqbot-plugins-memory</module>
+        <module>qqbot-plugin-memory</module>
     </modules>
 
     <properties>
@@ -26,7 +26,7 @@
         <dependencies>
             <dependency>
                 <groupId>cc.rapidev</groupId>
-                <artifactId>qqbot-plugins-memory</artifactId>
+                <artifactId>qqbot-plugin-memory</artifactId>
                 <version>${revision}</version>
                 <scope>provided</scope>
             </dependency>

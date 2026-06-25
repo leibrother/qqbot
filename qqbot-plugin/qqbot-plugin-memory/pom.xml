@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.rapidev</groupId>
-        <artifactId>qqbot-plugins</artifactId>
+        <artifactId>qqbot-plugin</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugins-memory</artifactId>
+    <artifactId>qqbot-plugin-memory</artifactId>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

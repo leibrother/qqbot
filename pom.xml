@@ -11,8 +11,8 @@
 
     <modules>
         <module>qqbot-core</module>
-        <module>qqbot-plugins</module>
         <module>qqbot-launcher</module>
+        <module>qqbot-plugin</module>
     </modules>
 
     <properties>
