@@ -10,8 +10,6 @@ public class Constant {
     private Constant() {
     }
 
-    public final static String version = "1.0.0";
-
     public final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
     //---------------------------------------------------------
@@ -30,12 +28,13 @@ public class Constant {
     public static final String PROPERTY_HOST = "bot.host";
     public static final String PROPERTY_APPID = "bot.appid";
     public static final String PROPERTY_SECRET = "bot.secret";
-    public static final String PROPERTY_WEBHOOK_PORT = "bot.webhook.port";
+    public static final String PROPERTY_SERVER_PORT = "bot.server.port";
 
     //---------------------------------------------------------
     // Properties Defaults
     //---------------------------------------------------------
     public static final String DEFAULT_PROPERTY_HOST = "api.sgroup.qq.com";
     public static final String DEFAULT_PROPERTY_SANDBOX_HOST = "sandbox.api.sgroup.qq.com";
+    public static final int DEFAULT_SERVER_PORT = 8080;
 
 }

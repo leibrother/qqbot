@@ -11,22 +11,17 @@ import cc.rapidev.qqbot.adapter.BotAdapter;
 public class WebsocketBotAdapter implements BotAdapter {
 
     @Override
-    public void bind(Bot bot) {
-
-    }
-
-    @Override
     public boolean isRunning() {
         return false;
     }
 
     @Override
-    public void run() {
+    public void run(Bot bot) {
 
     }
 
     @Override
-    public void stop() {
+    public void destroy() {
 
     }
 

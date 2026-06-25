@@ -4,8 +4,7 @@ import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.adapter.BotAdapter;
 import cc.rapidev.qqbot.adapter.webhook.handler.WebhookOpCode0Handler;
 import cc.rapidev.qqbot.adapter.webhook.handler.WebhookOpCode13Handler;
-import cc.rapidev.qqbot.common.Constant;
-import cc.rapidev.qqbot.exception.BotException;
+import io.vertx.ext.web.Route;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,26 +16,18 @@ import org.slf4j.LoggerFactory;
  */
 public class WebhookBotAdapter implements BotAdapter {
 
-    private final Logger log = LoggerFactory.getLogger("[Bot Webhook Adapter]");
+    private final Logger log = LoggerFactory.getLogger(WebhookBotAdapter.class);
 
     private volatile boolean running = false;
     private final Webhook webhook;
     @Getter
     private Bot bot;
+    private Route route;
 
     public WebhookBotAdapter() {
-        this(Webhook.create());
-    }
-
-    public WebhookBotAdapter(Webhook webhook) {
-        this.webhook = webhook;
+        this.webhook = new Webhook();
         this.webhook.setHandler(0, new WebhookOpCode0Handler(this));
         this.webhook.setHandler(13, new WebhookOpCode13Handler(this));
-    }
-
-    @Override
-    public void bind(Bot bot) {
-        this.bot = bot;
     }
 
     @Override
@@ -45,40 +36,31 @@ public class WebhookBotAdapter implements BotAdapter {
     }
 
     @Override
-    public void run() {
-        if (!isRunning()) {
-            synchronized (this) {
-                if (!isRunning()) {
-                    log.info("Webhook starting...");
-                    int port = getPort();
-                    this.webhook.open(port);
-                    this.running = true;
-                    log.info("Webhook started on port {}", port);
-                }
-            }
+    public synchronized void run(Bot bot) {
+        if (this.isRunning()) {
+            throw new IllegalStateException("webhook adapter is already running");
         }
+        log.info("Webhook starting...");
+        this.bot = bot;
+        this.route = bot.server().route("/webhook");
+        this.webhook.open(this.route);
+        this.running = true;
     }
 
     @Override
-    public void stop() {
+    public void destroy() {
         if (isRunning()) {
             synchronized (this) {
                 if (isRunning()) {
                     log.info("Bot webhook stopping...");
-                    this.webhook.close();
                     this.running = false;
+                    if (this.route != null) {
+                        this.route.remove();
+                        this.route = null;
+                    }
                 }
             }
         }
-    }
-
-    private int getPort() {
-        String property = System.getProperty(Constant.PROPERTY_WEBHOOK_PORT, "8080");
-        int port = Integer.parseInt(property);
-        if (port < 1 || port > 65535) {
-            throw new BotException("webhook port must be between 1 and 65535");
-        }
-        return port;
     }
 
 }
