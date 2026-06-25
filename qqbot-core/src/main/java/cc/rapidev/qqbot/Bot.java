@@ -8,9 +8,9 @@ import cc.rapidev.qqbot.api.model.User;
 import cc.rapidev.qqbot.api.request.MessageRequest;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
-import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
+import cc.rapidev.qqbot.common.utils.Timer;
 import cc.rapidev.qqbot.common.utils.version.Version;
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class Bot extends ServiceRegistrationCenter {
 
     public static final Version version = Version.parse("0.0.1");
-    private final Logger log = LoggerFactory.getLogger("[Bot]");
+    private final Logger logger = LoggerFactory.getLogger("[Bot]");
 
     @Getter
     private final BotConfig config;
@@ -83,13 +83,13 @@ public class Bot extends ServiceRegistrationCenter {
      * 初始化
      */
     private void init() {
-        log.info("Bot initializing...");
+        logger.info("Bot initializing...");
         this.adapter.bind(this);
         this.registerShutdownHook();
         User info = this.api().getAuthRequest().info();
         this.parameters().set("bot.name", info.getCleanUsername());
         this.info = info;
-        log.info("Bot name is {}", info.getCleanUsername());
+        logger.info("Bot name is {}", info.getCleanUsername());
     }
 
     /**
@@ -135,10 +135,11 @@ public class Bot extends ServiceRegistrationCenter {
         if (isShutdown()) {
             throw new BotException("bot is shutdown");
         } else if (!adapter.isRunning()) {
-            consume(BotPayload.broadcast(Event.START));
-            this.extensionManager.init();
-            this.adapter.run();
-            consume(BotPayload.broadcast(Event.STARTED));
+            long take = Timer.take(() -> {
+                this.extensionManager.init();
+                this.adapter.run();
+            });
+            logger.info("Bot started in {}ms", take);
             if (keepLive) {
                 keepLive();
             }
@@ -150,7 +151,7 @@ public class Bot extends ServiceRegistrationCenter {
      */
     public void stop() {
         if (adapter.isRunning()) {
-            log.info("Bot stopping...");
+            logger.info("Bot stopping...");
             adapter.stop();
             this.extensionManager.destroy();
             this.dispatcher.destroy();

@@ -6,8 +6,6 @@ import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.interfaces.Disposable;
 import cc.rapidev.qqbot.common.utils.ExceptionUtils;
-import cc.rapidev.qqbot.message.listener.StartListener;
-import cc.rapidev.qqbot.message.listener.StartedListener;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,10 +38,6 @@ public class MessageDispatcher implements Disposable {
      */
     private void init() {
         this.register("_default", new NotImplMessageHandler());
-        StartListener startListener = new StartListener();
-        StartedListener startedListener = new StartedListener(startListener);
-        this.register(Event.START, startListener);
-        this.register(Event.STARTED, startedListener);
         List<MessageHandlerInjector> injectors = MessageHandlerInjectorLoader.load();
         injectors.forEach(this::register);
     }
