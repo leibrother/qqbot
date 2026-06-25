@@ -13,9 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>qqbot-plugin-example</module>
-        <module>qqbot-plugin-memory</module>
-        <module>qqbot-plugin-agent</module>
+        <module>qqbot-plugins-memory</module>
     </modules>
 
     <properties>
@@ -28,7 +26,7 @@
         <dependencies>
             <dependency>
                 <groupId>cc.rapidev</groupId>
-                <artifactId>qqbot-plugin-memory</artifactId>
+                <artifactId>qqbot-plugins-memory</artifactId>
                 <version>${revision}</version>
                 <scope>provided</scope>
             </dependency>

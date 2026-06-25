@@ -9,27 +9,13 @@
         <version>${revision}</version>
     </parent>
 
-    <artifactId>qqbot-plugin-agent</artifactId>
+    <artifactId>qqbot-plugins-memory</artifactId>
 
     <properties>
-        <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
-        <maven.compiler.target>${project.jdk.version}</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <agentscope.version>1.0.12</agentscope.version>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>cc.rapidev</groupId>
-            <artifactId>qqbot-plugin-memory</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.agentscope</groupId>
-            <artifactId>agentscope-core</artifactId>
-            <version>${agentscope.version}</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
