@@ -1,5 +1,4 @@
-#set($h3 = '###')
-$h3 已加载$plugins.size()个插件
+#[[###]]# 已加载$plugins.size()个插件
 > 发送 <qqbot-cmd-input text="插件详情" show="插件详情 [ID]"/> 查看插件详情
 > 发送 <qqbot-cmd-input text="启用插件" show="启用插件 [ID]"/> 启用插件
 > 发送 <qqbot-cmd-input text="禁用插件" show="禁用插件 [ID]"/> 禁用插件

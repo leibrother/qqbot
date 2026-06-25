@@ -40,7 +40,7 @@ public class SettingSession {
         Context ctx = Context.empty();
         ctx.set("setting", setting);
         ctx.set("content", setting.render(context));
-        return bot.use(TemplateRenderer.class).markdown("/templates/settings/view.vm", ctx.map());
+        return bot.use(TemplateRenderer.class).render("/templates/settings/view.vm", ctx.map()).markdown();
     }
 
     /**

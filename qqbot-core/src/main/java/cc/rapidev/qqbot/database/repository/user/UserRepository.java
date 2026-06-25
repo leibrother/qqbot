@@ -1,8 +1,8 @@
 package cc.rapidev.qqbot.database.repository.user;
 
+import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.entity.Table;
-import org.apache.commons.lang3.StringUtils;
 import org.jdbi.v3.core.result.ResultIterable;
 
 import java.util.List;

@@ -39,7 +39,7 @@ public class PluginEnableCommand implements CommandHandler {
             params.put("others", others);
             params.put("enabled", enabled);
             TemplateRenderer renderer = context.use(TemplateRenderer.class);
-            Message markdown = renderer.markdown("templates/plugins/enable_result.vm", params);
+            Message markdown = renderer.render("templates/plugins/enable_result.vm", params).markdown();
             context.reply(markdown);
         }
     }

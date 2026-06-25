@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.common.utils;
 
-import org.apache.commons.lang3.time.StopWatch;
+import com.google.common.base.Stopwatch;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,11 +10,10 @@ import java.util.concurrent.TimeUnit;
 public class Timer {
 
     public static long take(Runnable runnable) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        Stopwatch stopWatch = Stopwatch.createStarted();
         runnable.run();
         stopWatch.stop();
-        return stopWatch.getTime(TimeUnit.MILLISECONDS);
+        return stopWatch.elapsed(TimeUnit.MILLISECONDS);
     }
 
 }
