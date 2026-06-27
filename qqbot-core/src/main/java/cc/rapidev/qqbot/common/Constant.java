@@ -24,11 +24,11 @@ public class Constant {
     //---------------------------------------------------------
     // Properties
     //---------------------------------------------------------
-    public static final String PROPERTY_SANDBOX_ENABLE = "bot.sandbox.enable";
     public static final String PROPERTY_HOST = "bot.host";
     public static final String PROPERTY_APPID = "bot.appid";
     public static final String PROPERTY_SECRET = "bot.secret";
     public static final String PROPERTY_SERVER_PORT = "bot.server.port";
+    public static final String PROPERTY_SANDBOX_ENABLE = "bot.sandbox.enable";
 
     //---------------------------------------------------------
     // Properties Defaults

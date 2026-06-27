@@ -5,7 +5,7 @@ import cc.rapidev.qqbot.BotPayload;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.interfaces.Disposable;
-import cc.rapidev.qqbot.common.utils.ExceptionUtils;
+import cc.rapidev.qqbot.message.view.ExceptionView;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,28 +150,13 @@ public class MessageDispatcher implements Disposable {
                 } catch (Exception e) {
                     log.error("message handler error", e);
                     if (context.topic().isPrivate()) {
-                        Message message = generateStackTraceMessage(e);
+                        Message message = new ExceptionView(e).render();
                         context.reply(message);
                     }
                 }
             }
         };
         executor.execute(runnable);
-    }
-
-    private Message generateStackTraceMessage(Exception e) {
-        String trace = ExceptionUtils.getStackTrace(e);
-        String template = """
-                ### 机器人发生异常，请联系开发者
-                
-                ---
-                
-                异常堆栈
-                ```java
-                %s
-                ```
-                """;
-        return Message.markdown(template.formatted(trace));
     }
 
 }

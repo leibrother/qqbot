@@ -16,6 +16,10 @@ public class StringUtils {
         return !isEmpty(str);
     }
 
+    public static String orDefault(String str, String defaultStr) {
+        return isEmpty(str) ? defaultStr : str;
+    }
+
     public static String packing(CharSequence symbol, String content) {
         return packing(symbol, content, symbol);
     }
