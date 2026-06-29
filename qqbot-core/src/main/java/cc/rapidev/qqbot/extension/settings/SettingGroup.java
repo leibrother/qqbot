@@ -2,12 +2,15 @@ package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.markdown.MarkdownUI;
+import cc.rapidev.qqbot.common.markdown.component.Block;
+import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
+import cc.rapidev.qqbot.common.markdown.component.Component;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -41,7 +44,7 @@ public class SettingGroup extends Setting {
     }
 
     @Override
-    public String render(RenderContext context) {
+    public BlockComponent render(RenderContext context) {
         SettingRepository repository = context.repository();
         Topic topic = context.topic();
         boolean admin = context.admin();
@@ -51,16 +54,12 @@ public class SettingGroup extends Setting {
         } else {
             items = this.topicVisible();
         }
-
         if (items.isEmpty()) {
-            return "无设置项";
+            return MarkdownUI.block(MarkdownUI.text("无设置项"));
         }
-
-        StringBuilder builder = new StringBuilder();
-        Iterator<Setting> iterator = items.iterator();
-        while (iterator.hasNext()) {
-            Setting item = iterator.next();
-            builder.append("**<qqbot-cmd-enter text=\"").append(item.name()).append("\"/>**");
+        Block<Component> block = MarkdownUI.block();
+        for (Setting item : items) {
+            block.add(MarkdownUI.block(MarkdownUI.bold(MarkdownUI.cmdEnter(item.name()))));
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
                 String value = settingItem.getViewValue(repository, topic);
@@ -69,16 +68,10 @@ public class SettingGroup extends Setting {
                 }
             }
             if (StringUtils.isNotEmpty(description)) {
-                builder.append("\n");
-                builder.append("> ").append(description);
-            }
-            if (iterator.hasNext()) {
-                builder.append("\n");
-                builder.append("\n");
+                block.add(MarkdownUI.block(MarkdownUI.blockQuote(description)));
             }
         }
-
-        return builder.toString();
+        return block;
     }
 
     /**

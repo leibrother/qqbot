@@ -2,6 +2,10 @@ package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.markdown.MarkdownUI;
+import cc.rapidev.qqbot.common.markdown.component.Block;
+import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
+import cc.rapidev.qqbot.common.markdown.component.Component;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.RenderContext;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
@@ -45,17 +49,16 @@ public class Input extends SettingItem {
     }
 
     @Override
-    public String render(RenderContext context) {
+    public BlockComponent render(RenderContext context) {
         String value = getViewValue(context.repository(), context.topic());
-        StringBuilder builder = new StringBuilder();
+        Block<Component> block = MarkdownUI.block();
         if (value != null) {
-            builder.append("**").append(value).append("**");
-            builder.append("\n");
-            builder.append("> 发送消息替换当前值");
+            block.add(MarkdownUI.block(MarkdownUI.bold(value)));
+            block.add(MarkdownUI.block(MarkdownUI.blockQuote("发送消息替换当前值")));
         } else {
-            builder.append("> 发送消息设置值");
+            block.add(MarkdownUI.block(MarkdownUI.blockQuote("发送消息设置值")));
         }
-        return builder.toString();
+        return block;
     }
 
     public static Builder builder() {

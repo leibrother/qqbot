@@ -2,6 +2,8 @@ package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.markdown.MarkdownUI;
+import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.extension.settings.RenderContext;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -35,14 +37,14 @@ public class Button extends SettingItem {
     }
 
     @Override
-    public String render(RenderContext context) {
+    public BlockComponent render(RenderContext context) {
         if (this.onclick != null) {
             String result = onclick.apply(context);
             if (result != null) {
-                return result;
+                return MarkdownUI.block(MarkdownUI.text(result));
             }
         }
-        return "";
+        return MarkdownUI.block();
     }
 
     public static Builder builder() {

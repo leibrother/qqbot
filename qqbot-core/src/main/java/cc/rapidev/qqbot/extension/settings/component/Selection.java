@@ -2,6 +2,9 @@ package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.markdown.MarkdownUI;
+import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
+import cc.rapidev.qqbot.common.markdown.component.Listview;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.settings.RenderContext;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
@@ -9,7 +12,6 @@ import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,26 +35,20 @@ public class Selection extends SettingItem {
     }
 
     @Override
-    public String render(RenderContext context) {
+    public BlockComponent render(RenderContext context) {
         String value = getValue(context.repository(), context.topic());
-        StringBuilder builder = new StringBuilder();
         if (options.isEmpty()) {
-            builder.append("暂无可选项");
-        } else {
-            Iterator<String> iterator = options.iterator();
-            while (iterator.hasNext()) {
-                String option = iterator.next();
-                if (option.equals(value)) {
-                    builder.append("- ").append(option).append(" √");
-                } else {
-                    builder.append("- ").append("<qqbot-cmd-enter text=\"").append(option).append("\"/>");
-                }
-                if (iterator.hasNext()) {
-                    builder.append("\n");
-                }
+            return MarkdownUI.block(MarkdownUI.text("暂无可选项"));
+        }
+        Listview list = MarkdownUI.list();
+        for (String option : options) {
+            if (option.equals(value)) {
+                list.add(MarkdownUI.item(MarkdownUI.text(option), MarkdownUI.whitespace(), MarkdownUI.text("√")));
+            } else {
+                list.add(MarkdownUI.item(MarkdownUI.cmdEnter(option)));
             }
         }
-        return builder.toString();
+        return list;
     }
 
     @Override

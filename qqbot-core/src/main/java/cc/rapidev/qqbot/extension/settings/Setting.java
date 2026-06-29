@@ -1,6 +1,7 @@
 package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.common.Scope;
+import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.utils.CastUtils;
 
 /**
@@ -57,7 +58,7 @@ public abstract class Setting {
         }
     }
 
-    public abstract String render(RenderContext context);
+    public abstract BlockComponent render(RenderContext context);
 
     /**
      * 通用构建器

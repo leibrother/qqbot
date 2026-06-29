@@ -22,7 +22,7 @@ public class HelpView extends MarkdownView<HelpView> {
             for (Keyword keyword : keywords) {
                 add(
                         MarkdownUI.block(
-                                MarkdownUI.block(MarkdownUI.text(keyword.key(), true, false)),
+                                MarkdownUI.block(MarkdownUI.bold(keyword.key())),
                                 MarkdownUI.blockQuote(StringUtils.orDefault(keyword.description(), "暂无说明"))
                         )
                 );

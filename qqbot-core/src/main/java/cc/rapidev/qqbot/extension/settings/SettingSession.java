@@ -2,12 +2,10 @@ package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.api.model.Message;
-import cc.rapidev.qqbot.common.Context;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.extension.admin.AdministratorService;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
-import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.Author;
 
@@ -37,10 +35,8 @@ public class SettingSession {
         SettingRepository repository = bot.use(SettingRepository.class);
         boolean admin = bot.use(AdministratorService.class).isAdmin(author);
         RenderContext context = new RenderContext(repository, topic, author, admin);
-        Context ctx = Context.empty();
-        ctx.set("setting", setting);
-        ctx.set("content", setting.render(context));
-        return bot.use(TemplateRenderer.class).render("/templates/settings/view.vm", ctx.map()).markdown();
+        SettingView view = new SettingView(setting, context);
+        return view.render();
     }
 
     /**

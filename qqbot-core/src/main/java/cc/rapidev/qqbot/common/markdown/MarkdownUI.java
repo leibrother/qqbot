@@ -1,6 +1,8 @@
 package cc.rapidev.qqbot.common.markdown;
 
 import cc.rapidev.qqbot.common.markdown.component.*;
+import cc.rapidev.qqbot.common.markdown.interactive.CmdEnter;
+import cc.rapidev.qqbot.common.markdown.interactive.CmdInput;
 
 /**
  * @author leibrother
@@ -12,16 +14,32 @@ public class MarkdownUI {
         return Block.of(components);
     }
 
-    public static Text text(String text) {
-        return new Text(text);
+    public static Text whitespace() {
+        return Text.whitespace();
     }
 
-    public static Text text(String text, boolean bold, boolean italic) {
-        return new EmphasizedText(text).bold(bold).italic(italic);
+    public static Text text(String text) {
+        return Text.of(text);
     }
 
     public static Code code(String code) {
         return new Code(code);
+    }
+
+    public static Bold bold(Text text) {
+        return new Bold(text);
+    }
+
+    public static Bold bold(String text) {
+        return new Bold(text);
+    }
+
+    public static Italic italic(Text text) {
+        return new Italic(text);
+    }
+
+    public static Italic italic(String text) {
+        return new Italic(text);
     }
 
     public static BlockCode blockCode(String code) {
@@ -87,4 +105,29 @@ public class MarkdownUI {
     public static Separator separator() {
         return new Separator();
     }
+
+    public static Listview list() {
+        return new Listview();
+    }
+
+    public static Item item(String text) {
+        return item(text(text));
+    }
+
+    public static Item item(Text... components) {
+        return new Item().add(components);
+    }
+
+    public static CmdEnter cmdEnter(String text) {
+        return new CmdEnter(text);
+    }
+
+    public static CmdInput cmdInput(String text) {
+        return new CmdInput(text);
+    }
+
+    public static CmdInput cmdInput(String text, String show, boolean reference) {
+        return new CmdInput(text, show, reference);
+    }
+
 }
