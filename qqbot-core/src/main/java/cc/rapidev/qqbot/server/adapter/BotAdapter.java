@@ -1,8 +1,8 @@
-package cc.rapidev.qqbot.adapter;
+package cc.rapidev.qqbot.server.adapter;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.adapter.webhook.WebhookBotAdapter;
 import cc.rapidev.qqbot.common.interfaces.Disposable;
+import cc.rapidev.qqbot.server.adapter.webhook.WebhookBotAdapter;
 
 /**
  * @author leibrother

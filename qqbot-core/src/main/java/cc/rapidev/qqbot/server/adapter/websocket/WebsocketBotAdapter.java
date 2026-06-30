@@ -1,7 +1,7 @@
-package cc.rapidev.qqbot.adapter.websocket;
+package cc.rapidev.qqbot.server.adapter.websocket;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.adapter.BotAdapter;
+import cc.rapidev.qqbot.server.adapter.BotAdapter;
 
 /**
  * 机器人WebSocket适配器，使用WebSocket与机器人交互

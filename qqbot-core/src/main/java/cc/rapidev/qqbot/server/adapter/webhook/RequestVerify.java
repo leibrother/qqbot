@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.adapter.webhook;
+package cc.rapidev.qqbot.server.adapter.webhook;
 
 import org.bouncycastle.crypto.params.Ed25519PrivateKeyParameters;
 import org.bouncycastle.crypto.signers.Ed25519Signer;

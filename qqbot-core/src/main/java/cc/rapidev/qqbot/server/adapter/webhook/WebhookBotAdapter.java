@@ -1,9 +1,9 @@
-package cc.rapidev.qqbot.adapter.webhook;
+package cc.rapidev.qqbot.server.adapter.webhook;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.adapter.BotAdapter;
-import cc.rapidev.qqbot.adapter.webhook.handler.WebhookOpCode0Handler;
-import cc.rapidev.qqbot.adapter.webhook.handler.WebhookOpCode13Handler;
+import cc.rapidev.qqbot.server.adapter.BotAdapter;
+import cc.rapidev.qqbot.server.adapter.webhook.handler.WebhookOpCode0Handler;
+import cc.rapidev.qqbot.server.adapter.webhook.handler.WebhookOpCode13Handler;
 import io.vertx.ext.web.Route;
 import lombok.Getter;
 import org.slf4j.Logger;

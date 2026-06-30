@@ -1,7 +1,7 @@
-package cc.rapidev.qqbot.adapter.webhook;
+package cc.rapidev.qqbot.server.adapter.webhook;
 
 import cc.rapidev.qqbot.BotPayload;
-import cc.rapidev.qqbot.adapter.webhook.handler.WebhookHandler;
+import cc.rapidev.qqbot.server.adapter.webhook.handler.WebhookHandler;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.handler.BodyHandler;

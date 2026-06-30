@@ -1,8 +1,8 @@
-package cc.rapidev.qqbot.adapter.webhook.handler;
+package cc.rapidev.qqbot.server.adapter.webhook.handler;
 
 import cc.rapidev.qqbot.BotPayload;
-import cc.rapidev.qqbot.adapter.webhook.RequestVerify;
-import cc.rapidev.qqbot.adapter.webhook.WebhookBotAdapter;
+import cc.rapidev.qqbot.server.adapter.webhook.RequestVerify;
+import cc.rapidev.qqbot.server.adapter.webhook.WebhookBotAdapter;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package cc.rapidev.qqbot.adapter.webhook.handler;
+package cc.rapidev.qqbot.server.adapter.webhook.handler;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotConfig;
 import cc.rapidev.qqbot.BotPayload;
-import cc.rapidev.qqbot.adapter.webhook.WebhookBotAdapter;
 import cc.rapidev.qqbot.exception.BotException;
+import cc.rapidev.qqbot.server.adapter.webhook.WebhookBotAdapter;
 
 import java.util.Map;
 

@@ -1,6 +1,5 @@
 package cc.rapidev.qqbot;
 
-import cc.rapidev.qqbot.adapter.BotAdapter;
 import cc.rapidev.qqbot.api.BotRequest;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
@@ -19,6 +18,7 @@ import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.ExtensionManager;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.server.BotServer;
+import cc.rapidev.qqbot.server.adapter.BotAdapter;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
