@@ -2,7 +2,6 @@ package cc.rapidev.qqbot.message;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.BotPayload;
-import cc.rapidev.qqbot.api.BotApi;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
@@ -68,16 +67,6 @@ public final class MessageContext extends ServiceRegistrationCenter {
      */
     public Bot bot() {
         return this.bot;
-    }
-
-    /**
-     * 获取机器人Api服务
-     * <p>可通过它与调用机器人接口</p>
-     *
-     * @return {@link BotApi}
-     */
-    public BotApi api() {
-        return bot.api();
     }
 
     /**

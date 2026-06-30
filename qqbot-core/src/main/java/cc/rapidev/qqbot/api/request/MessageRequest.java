@@ -1,52 +1,62 @@
 package cc.rapidev.qqbot.api.request;
 
-import cc.rapidev.qqbot.api.BotApi;
+import cc.rapidev.qqbot.api.BotRequest;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
-
-import java.net.URI;
+import cc.rapidev.qqbot.common.request.ApiUrl;
+import cc.rapidev.qqbot.common.utils.JsonUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import okhttp3.HttpUrl;
 
 /**
  * 消息相关Api
  *
  * @author leibrother
  */
-public class MessageRequest extends AbstractRequest {
+public class MessageRequest {
 
-    public MessageRequest(BotApi openApi) {
-        super(openApi);
+    private final BotRequest request;
+
+    public MessageRequest(BotRequest request) {
+        this.request = request;
     }
 
     public MessageResponse toUser(String id, Message message) {
-        URI uri = uri("/v2/users/{0}/messages", id);
-        return doPost(uri, message, MessageResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/v2/users/{0}/messages", id).build();
+        JsonNode node = request.wrap().post(url, message);
+        return JsonUtils.convert(node, MessageResponse.class);
     }
 
     public MessageResponse toGroup(String id, Message message) {
-        URI uri = uri("/v2/groups/{0}/messages", id);
-        return doPost(uri, message, MessageResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/v2/groups/{0}/messages", id).build();
+        JsonNode node = request.wrap().post(url, message);
+        return JsonUtils.convert(node, MessageResponse.class);
     }
 
     public MessageResponse toDirect(String id, Message message) {
-        URI uri = uri("/dms/{0}/messages", id);
-        return doPost(uri, message, MessageResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/dms/{0}/messages", id).build();
+        JsonNode node = request.wrap().post(url, message);
+        return JsonUtils.convert(node, MessageResponse.class);
     }
 
     public MessageResponse toChannel(String id, Message message) {
-        URI uri = uri("/channels/{0}/messages", id);
-        return doPost(uri, message, MessageResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/channels/{0}/messages", id).build();
+        JsonNode node = request.wrap().post(url, message);
+        return JsonUtils.convert(node, MessageResponse.class);
     }
 
     public MessageMediaResponse toUserMedia(String id, MessageMedia media) {
-        URI uri = uri("/v2/users/{0}/files", id);
-        return doPost(uri, media, MessageMediaResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/v2/users/{0}/files", id).build();
+        JsonNode node = request.wrap().post(url, media);
+        return JsonUtils.convert(node, MessageMediaResponse.class);
     }
 
     public MessageMediaResponse toGroupMedia(String id, MessageMedia media) {
-        URI uri = uri("/v2/groups/{0}/files", id);
-        return doPost(uri, media, MessageMediaResponse.class);
+        HttpUrl url = ApiUrl.create(request.baseUrl()).path("/v2/groups/{0}/files", id).build();
+        JsonNode node = request.wrap().post(url, media);
+        return JsonUtils.convert(node, MessageMediaResponse.class);
     }
 
 }

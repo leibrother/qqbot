@@ -29,8 +29,7 @@
         <guava.version>33.6.0-jre</guava.version>
         <fastjson.version>2.0.54</fastjson.version>
         <jackson.version>2.18.2</jackson.version>
-        <httpcore5.version>5.3.5</httpcore5.version>
-        <httpclient5.version>5.4.3</httpclient5.version>
+        <okhttp3.version>5.3.2</okhttp3.version>
         <bcprov.version>1.79</bcprov.version>
         <velocity.version>2.4.1</velocity.version>
         <sqlite.version>3.53.1.0</sqlite.version>
@@ -67,14 +66,9 @@
             </dependency>
             <!-- Http Client -->
             <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5</artifactId>
-                <version>${httpcore5.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.client5</groupId>
-                <artifactId>httpclient5</artifactId>
-                <version>${httpclient5.version}</version>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp-jvm</artifactId>
+                <version>${okhttp3.version}</version>
             </dependency>
             <!-- Ed25519 Crypto -->
             <dependency>

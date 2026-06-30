@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot;
 
 import cc.rapidev.qqbot.adapter.BotAdapter;
-import cc.rapidev.qqbot.api.BotApi;
+import cc.rapidev.qqbot.api.BotRequest;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.model.User;
@@ -35,8 +35,8 @@ public class Bot extends ServiceRegistrationCenter {
     private final BotConfig config;
     private final BotServer server;
     private final BotAdapter adapter;
+    private final BotRequest request;
     private final MessageDispatcher dispatcher;
-    private final BotApi api;
     private final BotDatabase database;
     private final ExtensionManager extensionManager;
     @Getter
@@ -59,8 +59,8 @@ public class Bot extends ServiceRegistrationCenter {
         this.config = config;
         this.adapter = adapter;
         this.server = new BotServer();
+        this.request = new BotRequest(this);
         this.dispatcher = new MessageDispatcher(this);
-        this.api = new BotApi(this);
         this.database = new BotDatabase(this);
         this.extensionManager = new ExtensionManager(this);
         init();
@@ -70,8 +70,8 @@ public class Bot extends ServiceRegistrationCenter {
         return this.server;
     }
 
-    public BotApi api() {
-        return this.api;
+    public BotRequest request() {
+        return this.request;
     }
 
     public BotDatabase database() {
@@ -92,7 +92,7 @@ public class Bot extends ServiceRegistrationCenter {
     private void init() {
         logger.info("Bot initializing...");
         this.registerShutdownHook();
-        User info = this.api().getAuthRequest().info();
+        User info = this.request.info();
         this.parameters().set("bot.name", info.getCleanUsername());
         this.info = info;
         logger.info("Bot name is {}", info.getCleanUsername());
@@ -222,7 +222,7 @@ public class Bot extends ServiceRegistrationCenter {
      * @return 响应结果
      */
     public MessageResponse sendMessage(Topic topic, Message message) {
-        MessageRequest request = api().getMessageRequest();
+        MessageRequest request = use(MessageRequest.class);
         if (topic.isPrivate()) {
             return request.toUser(topic.id(), message);
         } else if (topic.isGroup()) {
@@ -244,7 +244,7 @@ public class Bot extends ServiceRegistrationCenter {
      * @return 响应结果
      */
     public MessageMediaResponse sendMessage(Topic topic, MessageMedia media) {
-        MessageRequest request = api().getMessageRequest();
+        MessageRequest request = use(MessageRequest.class);
         if (topic.isPrivate()) {
             return request.toUserMedia(topic.id(), media);
         } else if (topic.isGroup()) {
