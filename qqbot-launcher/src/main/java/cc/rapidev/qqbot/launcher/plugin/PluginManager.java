@@ -33,6 +33,7 @@ public class PluginManager implements Closeable {
 
     @Override
     public void close() throws IOException {
+        this.pluginLoader.close();
         this.pluginFinder.close();
     }
 

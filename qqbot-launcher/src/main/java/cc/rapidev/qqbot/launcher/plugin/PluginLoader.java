@@ -7,6 +7,8 @@ import cc.rapidev.qqbot.launcher.plugin.cl.PluginClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -15,7 +17,7 @@ import java.util.*;
  *
  * @author leibrother
  */
-public class PluginLoader {
+public class PluginLoader implements Closeable {
 
     private final Logger logger = LoggerFactory.getLogger(PluginLoader.class);
 
@@ -97,6 +99,19 @@ public class PluginLoader {
             }
         }
         return extensions;
+    }
+
+    @Override
+    public void close() {
+        for (PluginClassLoader loader : this.classLoaders.values()) {
+            try {
+                loader.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        this.loaded.clear();
+        this.classLoaders.clear();
     }
 
 }
