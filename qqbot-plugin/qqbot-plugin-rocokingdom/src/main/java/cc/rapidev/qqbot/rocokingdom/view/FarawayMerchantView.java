@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public class FarawayMerchantView extends MarkdownView<FarawayMerchantView> {
+public class FarawayMerchantView extends MarkdownView {
 
     private static final List<String> numbers = List.of("零", "一", "二", "三", "四");
     private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");

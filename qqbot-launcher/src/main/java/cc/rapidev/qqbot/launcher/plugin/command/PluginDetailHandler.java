@@ -5,23 +5,21 @@ import cc.rapidev.qqbot.api.model.MessageKeyboard;
 import cc.rapidev.qqbot.api.model.MessageKeyboardButton;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
-import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
+import cc.rapidev.qqbot.launcher.plugin.view.PluginView;
 import cc.rapidev.qqbot.message.MessageContext;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author leibrother
  */
-public class PluginDetailCommand implements CommandHandler {
+public class PluginDetailHandler implements CommandHandler {
 
     private final PluginService pluginService;
 
-    public PluginDetailCommand(PluginService pluginService) {
+    public PluginDetailHandler(PluginService pluginService) {
         this.pluginService = pluginService;
     }
 
@@ -34,18 +32,16 @@ public class PluginDetailCommand implements CommandHandler {
             return;
         }
         Plugin plugin = optional.get();
-        Map<String, Object> params = new HashMap<>();
-        params.put("plugin", optional.get());
-        TemplateRenderer renderer = context.use(TemplateRenderer.class);
-        Message markdown = renderer.render("templates/plugins/detail.vm", params).markdown();
+        PluginView view = new PluginView(plugin);
+        Message message = view.render();
         MessageKeyboard keyboard = new MessageKeyboard();
         if (pluginService.enabled().contains(plugin)) {
             keyboard.add(buildDisableButton(plugin));
         } else {
             keyboard.add(buildEnableButton(plugin));
         }
-        markdown.keyboard(keyboard);
-        context.reply(markdown);
+        message.keyboard(keyboard);
+        context.reply(message);
     }
 
     private MessageKeyboardButton buildEnableButton(Plugin plugin) {

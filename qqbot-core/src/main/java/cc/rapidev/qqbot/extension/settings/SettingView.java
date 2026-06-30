@@ -6,11 +6,11 @@ import cc.rapidev.qqbot.common.markdown.MarkdownView;
 /**
  * @author leibrother
  */
-public class SettingView extends MarkdownView<SettingView> {
+public class SettingView extends MarkdownView {
 
     public SettingView(Setting setting, RenderContext context) {
         add(MarkdownUI.h1("设置"));
-        add(MarkdownUI.block(MarkdownUI.blockQuote(setting.description())));
+        add(MarkdownUI.blockQuote(setting.description()));
         add(MarkdownUI.separator());
         add(setting.render(context));
         add(MarkdownUI.separator());

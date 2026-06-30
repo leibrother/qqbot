@@ -120,6 +120,10 @@ public class Table implements BlockComponent {
             this.builder = builder;
         }
 
+        public TableHeaderBuilder head(Text head) {
+            return this.head(Block.of(head), Align.LEFT);
+        }
+
         public TableHeaderBuilder head(Block<Text> head) {
             return this.head(head, Align.LEFT);
         }

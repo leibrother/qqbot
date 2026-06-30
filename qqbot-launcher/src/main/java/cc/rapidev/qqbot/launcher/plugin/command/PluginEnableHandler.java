@@ -5,18 +5,20 @@ import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
+import cc.rapidev.qqbot.launcher.plugin.view.PluginEnableResultView;
 import cc.rapidev.qqbot.message.MessageContext;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author leibrother
  */
-public class PluginDisableCommand implements CommandHandler {
+public class PluginEnableHandler implements CommandHandler {
 
-    private final PluginService pluginService;
+    public final PluginService pluginService;
 
-    public PluginDisableCommand(PluginService pluginService) {
+    public PluginEnableHandler(PluginService pluginService) {
         this.pluginService = pluginService;
     }
 
@@ -28,8 +30,11 @@ public class PluginDisableCommand implements CommandHandler {
             context.reply(Message.text("未找到插件: %s".formatted(id)));
         } else {
             Plugin plugin = optional.get();
-            pluginService.disable(plugin.id());
-            context.reply(Message.text("插件%s已标记，重启后将禁用此插件".formatted(plugin.name())));
+            List<Plugin> dependencies = pluginService.enable(id);
+            List<Plugin> enabled = pluginService.enabled();
+            PluginEnableResultView view = new PluginEnableResultView(plugin, dependencies, enabled);
+            Message message = view.render();
+            context.reply(message);
         }
     }
 

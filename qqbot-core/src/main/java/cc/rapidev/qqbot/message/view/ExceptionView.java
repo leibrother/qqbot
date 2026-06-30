@@ -7,7 +7,7 @@ import cc.rapidev.qqbot.common.utils.ExceptionUtils;
 /**
  * @author leibrother
  */
-public class ExceptionView extends MarkdownView<ExceptionView> {
+public class ExceptionView extends MarkdownView {
 
     public ExceptionView(Exception exception) {
         String trace = ExceptionUtils.getStackTrace(exception);

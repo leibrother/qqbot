@@ -3,7 +3,7 @@ package cc.rapidev.qqbot.launcher.plugin;
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.command.CommandEntry;
-import cc.rapidev.qqbot.launcher.plugin.command.PluginKeywordRegisterer;
+import cc.rapidev.qqbot.launcher.plugin.command.CommandRegisterer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ public class PluginService implements Extension {
         this.disabled = new ArrayList<>();
         String[] paths = bot.getConfig().getProperty("plugins", "./plugins").split(",");
         this.pluginManager = new PluginManager(bot, List.of(paths));
-        this.bot.use(CommandEntry.class).register(new PluginKeywordRegisterer(this));
+        this.bot.use(CommandEntry.class).register(new CommandRegisterer(this));
         this.init();
     }
 

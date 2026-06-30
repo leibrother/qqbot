@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public class HelpView extends MarkdownView<HelpView> {
+public class HelpView extends MarkdownView {
 
     public HelpView(List<Keyword> keywords) {
         add(MarkdownUI.h1("帮助"));

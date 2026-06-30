@@ -3,24 +3,20 @@ package cc.rapidev.qqbot.launcher.plugin.command;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
-import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
 import cc.rapidev.qqbot.message.MessageContext;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author leibrother
  */
-public class PluginEnableCommand implements CommandHandler {
+public class PluginDisableHandler implements CommandHandler {
 
-    public final PluginService pluginService;
+    private final PluginService pluginService;
 
-    public PluginEnableCommand(PluginService pluginService) {
+    public PluginDisableHandler(PluginService pluginService) {
         this.pluginService = pluginService;
     }
 
@@ -32,15 +28,8 @@ public class PluginEnableCommand implements CommandHandler {
             context.reply(Message.text("未找到插件: %s".formatted(id)));
         } else {
             Plugin plugin = optional.get();
-            List<Plugin> others = pluginService.enable(id);
-            List<Plugin> enabled = pluginService.enabled();
-            Map<String, Object> params = new HashMap<>();
-            params.put("plugin", plugin);
-            params.put("others", others);
-            params.put("enabled", enabled);
-            TemplateRenderer renderer = context.use(TemplateRenderer.class);
-            Message markdown = renderer.render("templates/plugins/enable_result.vm", params).markdown();
-            context.reply(markdown);
+            pluginService.disable(plugin.id());
+            context.reply(Message.text("插件%s已标记，重启后将禁用此插件".formatted(plugin.name())));
         }
     }
 

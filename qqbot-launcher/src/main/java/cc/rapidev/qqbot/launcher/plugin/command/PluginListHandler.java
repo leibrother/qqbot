@@ -1,11 +1,10 @@
 package cc.rapidev.qqbot.launcher.plugin.command;
 
-import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
-import cc.rapidev.qqbot.extension.template.TemplateRenderer;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
+import cc.rapidev.qqbot.launcher.plugin.view.PluginListView;
 import cc.rapidev.qqbot.message.MessageContext;
 
 import java.util.HashMap;
@@ -15,11 +14,11 @@ import java.util.Map;
 /**
  * @author leibrother
  */
-public class PluginListCommand implements CommandHandler {
+public class PluginListHandler implements CommandHandler {
 
     private final PluginService pluginService;
 
-    public PluginListCommand(PluginService pluginService) {
+    public PluginListHandler(PluginService pluginService) {
         this.pluginService = pluginService;
     }
 
@@ -37,13 +36,8 @@ public class PluginListCommand implements CommandHandler {
         plugins.forEach(plugin -> statuses.put(plugin.id(), "未启用"));
         enabled.forEach(plugin -> statuses.put(plugin.id(), "已启用"));
         disabled.forEach(plugin -> statuses.put(plugin.id(), "重启后禁用"));
-        Map<String, Object> params = new HashMap<>();
-        params.put("plugins", plugins);
-        params.put("statuses", statuses);
-
-        TemplateRenderer renderer = context.use(TemplateRenderer.class);
-        Message markdown = renderer.render("templates/plugins/list.vm", params).markdown();
-        context.reply(markdown);
+        PluginListView view = new PluginListView(plugins, statuses);
+        context.reply(view.render());
     }
 
 }
