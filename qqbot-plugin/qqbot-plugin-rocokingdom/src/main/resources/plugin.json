@@ -1,0 +1,15 @@
+{
+  "id": "rocokingdom",
+  "name": "洛克王国世界助手",
+  "description": "提供一些洛克王国世界的便捷功能",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "framework": "^0.0.1",
+  "dependencies": {
+  },
+  "hooks": {
+  },
+  "extensions": [
+    "cc.rapidev.qqbot.rocokingdom.Rocokingdom"
+  ]
+}

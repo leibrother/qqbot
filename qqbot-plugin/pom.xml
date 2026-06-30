@@ -14,6 +14,7 @@
 
     <modules>
         <module>qqbot-plugin-memory</module>
+        <module>qqbot-plugin-rocokingdom</module>
     </modules>
 
     <properties>
