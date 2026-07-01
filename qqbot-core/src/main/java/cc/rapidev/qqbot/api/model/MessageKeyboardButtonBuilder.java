@@ -18,17 +18,22 @@ public class MessageKeyboardButtonBuilder {
     private boolean enter;
     private Integer anchor;
     private String unsupportedTips;
+    private int permissionType;
+    private List<String> specifyUserIds;
+    private List<String> specifyRoleIds;
 
     public MessageKeyboardButtonBuilder(int type) {
         if (!List.of(0, 1, 2).contains(type)) {
             throw new RuntimeException("unsupported button type: " + type);
         }
         this.type = type;
+        this.everyone();
     }
 
     public MessageKeyboardButton build() {
         MessageKeyboardButton.Render render = new MessageKeyboardButton.Render(label, visitedLabel);
-        MessageKeyboardButton.Action action = new MessageKeyboardButton.Action(type, data, reply, enter, anchor, unsupportedTips);
+        MessageKeyboardButton.Permission permission = new MessageKeyboardButton.Permission(permissionType, specifyUserIds, specifyRoleIds);
+        MessageKeyboardButton.Action action = new MessageKeyboardButton.Action(type, data, reply, enter, anchor, unsupportedTips, permission);
         return new MessageKeyboardButton(id, render, action);
     }
 
@@ -71,6 +76,34 @@ public class MessageKeyboardButtonBuilder {
 
     public MessageKeyboardButtonBuilder unsupportedTips(String unsupportedTips) {
         this.unsupportedTips = unsupportedTips;
+        return this;
+    }
+
+    public MessageKeyboardButtonBuilder manager() {
+        this.permissionType = 1;
+        this.specifyUserIds = null;
+        this.specifyRoleIds = null;
+        return this;
+    }
+
+    public MessageKeyboardButtonBuilder everyone() {
+        this.permissionType = 2;
+        this.specifyUserIds = null;
+        this.specifyRoleIds = null;
+        return this;
+    }
+
+    public MessageKeyboardButtonBuilder specifyUserIds(List<String> ids) {
+        this.permissionType = 0;
+        this.specifyUserIds = ids;
+        this.specifyRoleIds = null;
+        return this;
+    }
+
+    public MessageKeyboardButtonBuilder specifyRoleIds(List<String> ids) {
+        this.permissionType = 3;
+        this.specifyUserIds = null;
+        this.specifyRoleIds = ids;
         return this;
     }
 

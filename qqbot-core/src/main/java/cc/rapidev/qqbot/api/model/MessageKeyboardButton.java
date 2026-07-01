@@ -1,5 +1,7 @@
 package cc.rapidev.qqbot.api.model;
 
+import java.util.List;
+
 /**
  * 消息按钮
  *
@@ -10,7 +12,10 @@ public record MessageKeyboardButton(String id, Render renderData, Action action)
     public record Render(String label, String visitedLabel) {
     }
 
-    public record Action(int type, String data, boolean reply, boolean enter, Integer anchor, String unsupportTips) {
+    public record Action(int type, String data, boolean reply, boolean enter, Integer anchor, String unsupportTips, Permission permission) {
+    }
+
+    public record Permission(int type, List<String> specifyUserIds, List<String> specifyRoleIds) {
     }
 
     /**
