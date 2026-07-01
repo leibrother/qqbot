@@ -8,6 +8,7 @@ import cc.rapidev.qqbot.common.request.Requester;
 import cc.rapidev.qqbot.common.request.Wrap;
 import cc.rapidev.qqbot.common.request.wrapper.JsonRequestWrapper;
 import cc.rapidev.qqbot.common.utils.JsonUtils;
+import cc.rapidev.qqbot.common.utils.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.*;
 import org.jspecify.annotations.NonNull;
@@ -78,6 +79,20 @@ public class BotRequest {
         HttpUrl url = requester.https(host(), "/users/@me");
         JsonNode node = wrap().get(url);
         return JsonUtils.convert(node, User.class);
+    }
+
+    public String link() {
+        return this.link(null);
+    }
+
+    public String link(String data) {
+        Map<String, Object> map = new HashMap<>();
+        if (StringUtils.isNotEmpty(data)) {
+            map.put("callback_data", data);
+        }
+        HttpUrl url = requester.https(host(), "/v2/generate_url_link");
+        JsonNode node = wrap().post(url, map);
+        return node.get("data").get("url").textValue();
     }
 
 }
