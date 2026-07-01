@@ -6,7 +6,6 @@ import cc.rapidev.qqbot.database.entity.EntityAnalyzer;
 import cc.rapidev.qqbot.database.entity.Table;
 import cc.rapidev.qqbot.database.entity.TableColumn;
 import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
-import cc.rapidev.qqbot.database.repository.user.UserRepository;
 import ch.qos.logback.classic.Level;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
@@ -27,7 +26,6 @@ import java.util.function.Function;
 public class BotDatabase {
 
     private final Jdbi jdbi;
-    private final UserRepository userRepository;
     private final ParameterRepository parameterRepository;
 
     public BotDatabase(Bot bot) {
@@ -45,7 +43,6 @@ public class BotDatabase {
                 .setSqlLogger(new SQLLogger())
                 .installPlugin(new SQLitePlugin())
                 .installPlugin(new SqlObjectPlugin());
-        this.userRepository = new UserRepository(this);
         this.parameterRepository = new ParameterRepository(this);
     }
 
@@ -167,10 +164,6 @@ public class BotDatabase {
                             Integer.parseInt(row.get("pk").toString()) > 0
                     );
                 }).toList();
-    }
-
-    public UserRepository users() {
-        return this.userRepository;
     }
 
     public ParameterRepository parameters() {

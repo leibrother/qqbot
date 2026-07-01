@@ -5,6 +5,7 @@ import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.command.CommandEntry;
 import cc.rapidev.qqbot.extension.command.Keyword;
 import cc.rapidev.qqbot.extension.settings.handler.SettingHandler;
+import cc.rapidev.qqbot.extension.settings.manager.ManagerService;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 
 /**
@@ -23,6 +24,8 @@ public class SettingsExtension implements Extension {
         bot.dispatcher().register(handler);
         Keyword open = new Keyword("设置", "打开设置会话");
         bot.use(CommandEntry.class).add(open, handler);
+        // 管理员服务
+        new ManagerService(bot);
     }
 
     @Override

@@ -1,13 +1,10 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
-import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.markdown.component.Listview;
 import cc.rapidev.qqbot.common.utils.StringUtils;
-import cc.rapidev.qqbot.extension.settings.RenderContext;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
@@ -26,8 +23,8 @@ public class Selection extends SettingItem {
         this.options = options;
     }
 
-    public String getValue(SettingRepository repository, Topic topic) {
-        String value = super.getValue(repository, topic);
+    public String getValue(MessageContext context) {
+        String value = super.getValue(context);
         if (value != null && !options.contains(value)) {
             return null;
         }
@@ -35,8 +32,8 @@ public class Selection extends SettingItem {
     }
 
     @Override
-    public BlockComponent render(RenderContext context) {
-        String value = getValue(context.repository(), context.topic());
+    public BlockComponent render(MessageContext context) {
+        String value = getValue(context);
         if (options.isEmpty()) {
             return MarkdownUI.block(MarkdownUI.text("暂无可选项"));
         }
@@ -52,10 +49,10 @@ public class Selection extends SettingItem {
     }
 
     @Override
-    public boolean set(MessageContext context, SettingRepository repository, MessageGeneric message) {
+    public boolean set(MessageContext context, MessageGeneric message) {
         String content = message.content().trim();
         if (!StringUtils.isEmpty(content) && options.contains(content)) {
-            setValue(repository, context.topic(), content);
+            setValue(context, content);
             return true;
         }
         return false;

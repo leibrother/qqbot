@@ -36,8 +36,8 @@ public class Bot extends ServiceRegistrationCenter {
     private final BotServer server;
     private final BotAdapter adapter;
     private final BotRequest request;
-    private final MessageDispatcher dispatcher;
     private final BotDatabase database;
+    private final MessageDispatcher dispatcher;
     private final ExtensionManager extensionManager;
     @Getter
     private User info;
@@ -60,8 +60,8 @@ public class Bot extends ServiceRegistrationCenter {
         this.adapter = adapter;
         this.server = new BotServer();
         this.request = new BotRequest(this);
-        this.dispatcher = new MessageDispatcher(this);
         this.database = new BotDatabase(this);
+        this.dispatcher = new MessageDispatcher(this);
         this.extensionManager = new ExtensionManager(this);
         init();
     }

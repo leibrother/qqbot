@@ -6,15 +6,14 @@ import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
+import cc.rapidev.qqbot.common.Author;
 import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
-import cc.rapidev.qqbot.database.repository.user.UserEntity;
 import cc.rapidev.qqbot.message.extractor.AuthorExtractor;
 import cc.rapidev.qqbot.message.extractor.MessageExtractor;
 import cc.rapidev.qqbot.message.extractor.TopicExtractor;
-import cc.rapidev.qqbot.message.model.Author;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
@@ -46,10 +45,6 @@ public final class MessageContext extends ServiceRegistrationCenter {
         this.topic = TopicExtractor.instance().extract(payload);
         this.author = AuthorExtractor.instance().extract(payload);
         this.message = MessageExtractor.instance().extract(payload);
-        if (this.author != null) {
-            UserEntity entity = UserEntity.from(this.author);
-            this.bot.database().users().store(entity);
-        }
     }
 
     /**

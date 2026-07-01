@@ -1,14 +1,16 @@
 package cc.rapidev.qqbot.extension.settings;
 
+import cc.rapidev.qqbot.common.Author;
 import cc.rapidev.qqbot.common.Scope;
-import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.Block;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.markdown.component.Component;
 import cc.rapidev.qqbot.common.utils.StringUtils;
+import cc.rapidev.qqbot.extension.admin.AdminService;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
+import cc.rapidev.qqbot.extension.settings.manager.ManagerService;
+import cc.rapidev.qqbot.message.MessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,15 +46,15 @@ public class SettingGroup extends Setting {
     }
 
     @Override
-    public BlockComponent render(RenderContext context) {
-        SettingRepository repository = context.repository();
-        Topic topic = context.topic();
-        boolean admin = context.admin();
+    public BlockComponent render(MessageContext context) {
+        Author author = context.author();
         List<Setting> items;
-        if (admin) {
+        if (context.use(AdminService.class).isAdmin(author)) {
             items = this.adminVisible();
-        } else {
+        } else if (context.use(ManagerService.class).isManager(context)) {
             items = this.topicVisible();
+        } else {
+            return MarkdownUI.block(MarkdownUI.text("无权访问"));
         }
         if (items.isEmpty()) {
             return MarkdownUI.block(MarkdownUI.text("无设置项"));
@@ -62,7 +64,7 @@ public class SettingGroup extends Setting {
             block.add(MarkdownUI.block(MarkdownUI.bold(MarkdownUI.cmdEnter(item.name()))));
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
-                String value = settingItem.getViewValue(repository, topic);
+                String value = settingItem.getViewValue(context);
                 if (value != null) {
                     description = value;
                 }

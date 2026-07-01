@@ -36,29 +36,28 @@ public abstract class SettingItem extends Setting {
     public String getValue(MessageContext context) {
         SettingRepository repository = context.use(SettingRepository.class);
         Topic topic = context.topic();
-        return getValue(repository, topic);
-    }
-
-    /**
-     * 获取值
-     *
-     * @param repository repository
-     * @param topic      topic
-     * @return value
-     */
-    public String getValue(SettingRepository repository, Topic topic) {
         return repository.get(completedKey(), scopeKey(topic));
     }
 
     /**
      * 获取视图显示的值
      *
-     * @param repository repository
-     * @param topic      topic
+     * @param context 消息上下文
      * @return 在Markdown显示的值
      */
-    public String getViewValue(SettingRepository repository, Topic topic) {
-        return this.getValue(repository, topic);
+    public String getViewValue(MessageContext context) {
+        return this.getValue(context);
+    }
+
+    /**
+     * 将值持久化
+     *
+     * @param context 消息上下文
+     * @param value   value
+     */
+    protected void setValue(MessageContext context, String value) {
+        SettingRepository repository = context.use(SettingRepository.class);
+        this.setValue(repository, context.topic(), value);
     }
 
     /**
@@ -76,10 +75,9 @@ public abstract class SettingItem extends Setting {
      * 用户设置值
      *
      * @param context    消息上下文
-     * @param repository repository
      * @param message    message
      * @return 是否成功
      */
-    public abstract boolean set(MessageContext context, SettingRepository repository, MessageGeneric message);
+    public abstract boolean set(MessageContext context, MessageGeneric message);
 
 }

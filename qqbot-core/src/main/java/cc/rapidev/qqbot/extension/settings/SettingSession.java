@@ -1,28 +1,18 @@
 package cc.rapidev.qqbot.extension.settings;
 
-import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.api.model.Message;
-import cc.rapidev.qqbot.common.Topic;
-import cc.rapidev.qqbot.extension.admin.AdministratorService;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.message.model.Author;
 
 /**
  * @author leibrother
  */
 public class SettingSession {
 
-    private final Bot bot;
-    private final Topic topic;
-    private final Author author;
     private Setting setting;
 
-    public SettingSession(MessageContext context, Setting setting) {
-        this.bot = context.bot();
-        this.topic = context.topic();
-        this.author = context.author();
+    public SettingSession(Setting setting) {
         this.setting = setting;
     }
 
@@ -31,10 +21,8 @@ public class SettingSession {
      *
      * @return 消息体
      */
-    public Message render() {
-        SettingRepository repository = bot.use(SettingRepository.class);
-        boolean admin = bot.use(AdministratorService.class).isAdmin(author);
-        RenderContext context = new RenderContext(repository, topic, author, admin);
+    public Message render(MessageContext context) {
+        SettingRepository repository = context.use(SettingRepository.class);
         SettingView view = new SettingView(setting, context);
         return view.render();
     }
@@ -44,13 +32,13 @@ public class SettingSession {
      *
      * @return 消息体
      */
-    public Message back() {
+    public Message back(MessageContext context) {
         Setting parent = this.setting.parent();
         if (parent == null) {
             return Message.text("当前已是最上级");
         }
         this.setting = parent;
-        return this.render();
+        return this.render(context);
     }
 
     /**
@@ -67,12 +55,11 @@ public class SettingSession {
                 return;
             }
             this.setting = next;
-            context.reply(this.render());
+            context.reply(this.render(context));
         } else if (setting instanceof SettingItem item) {
-            SettingRepository repository = bot.use(SettingRepository.class);
-            boolean result = item.set(context, repository, context.message());
+            boolean result = item.set(context, context.message());
             if (result) {
-                context.reply(this.render());
+                context.reply(this.render(context));
             }
         }
     }

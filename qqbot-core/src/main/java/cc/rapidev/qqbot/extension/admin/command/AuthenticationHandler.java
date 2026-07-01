@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.extension.admin.command;
 
 import cc.rapidev.qqbot.api.model.Message;
-import cc.rapidev.qqbot.extension.admin.AdministratorService;
+import cc.rapidev.qqbot.extension.admin.AdminService;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -9,11 +9,11 @@ import cc.rapidev.qqbot.message.MessageContext;
 /**
  * @author leibrother
  */
-public class BecomeAdmin implements CommandHandler {
+public class AuthenticationHandler implements CommandHandler {
 
-    private final AdministratorService service;
+    private final AdminService service;
 
-    public BecomeAdmin(AdministratorService service) {
+    public AuthenticationHandler(AdminService service) {
         this.service = service;
     }
 

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.message.model;
+package cc.rapidev.qqbot.common;
 
 import java.util.Objects;
 
@@ -6,6 +6,7 @@ import java.util.Objects;
  * @author leibrother
  */
 public record Author(
+        String id,
         String openid,
         String avatar,
         String username,

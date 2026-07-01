@@ -1,6 +1,6 @@
 package cc.rapidev.qqbot.extension.admin.command;
 
-import cc.rapidev.qqbot.extension.admin.AdministratorService;
+import cc.rapidev.qqbot.extension.admin.AdminService;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
 import cc.rapidev.qqbot.extension.command.Keyword;
 import cc.rapidev.qqbot.extension.command.KeywordRegisterer;
@@ -10,15 +10,15 @@ import cc.rapidev.qqbot.extension.command.KeywordRegisterer;
  */
 public class CommandRegisterer implements KeywordRegisterer {
 
-    private final AdministratorService service;
+    private final AdminService service;
 
-    public CommandRegisterer(AdministratorService service) {
+    public CommandRegisterer(AdminService service) {
         this.service = service;
     }
 
     @Override
     public void register(CommandHandlerSet entry) {
-        entry.add(new Keyword("管理员认证"), new BecomeAdmin(service));
+        entry.add(new Keyword("认证", "认证成为机器人管理员"), new AuthenticationHandler(service));
     }
 
 }

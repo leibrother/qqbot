@@ -95,4 +95,13 @@ public class Topic implements Serializable {
         return new Topic(Type.DIRECT, id);
     }
 
+    public static Topic resolve(String code) {
+        String[] arr = code.split(":");
+        if (arr.length != 2){
+            throw new IllegalArgumentException(code);
+        }
+        Type type = Type.valueOf(arr[0]);
+        return new Topic(type, arr[1]);
+    }
+
 }

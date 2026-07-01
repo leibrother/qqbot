@@ -4,7 +4,6 @@ import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
-import cc.rapidev.qqbot.extension.settings.RenderContext;
 import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
@@ -16,13 +15,13 @@ import java.util.function.Function;
  */
 public class Button extends SettingItem {
 
-    private Function<RenderContext, String> onclick;
+    private Function<MessageContext, String> onclick;
 
     public Button(String key, String name, String description, Scope scope) {
         super(key, name, description, scope);
     }
 
-    public void onclick(Function<RenderContext, String> onclick) {
+    public void onclick(Function<MessageContext, String> onclick) {
         this.onclick = onclick;
     }
 
@@ -32,12 +31,12 @@ public class Button extends SettingItem {
     }
 
     @Override
-    public boolean set(MessageContext context, SettingRepository repository, MessageGeneric message) {
+    public boolean set(MessageContext context, MessageGeneric message) {
         return false;
     }
 
     @Override
-    public BlockComponent render(RenderContext context) {
+    public BlockComponent render(MessageContext context) {
         if (this.onclick != null) {
             String result = onclick.apply(context);
             if (result != null) {
@@ -53,9 +52,9 @@ public class Button extends SettingItem {
 
     public static class Builder extends SettingBuilder<Builder> {
 
-        private Function<RenderContext, String> onclick;
+        private Function<MessageContext, String> onclick;
 
-        public Builder onclick(Function<RenderContext, String> onclick) {
+        public Builder onclick(Function<MessageContext, String> onclick) {
             this.onclick = onclick;
             return this;
         }

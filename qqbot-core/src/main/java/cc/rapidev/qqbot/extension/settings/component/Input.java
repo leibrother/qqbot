@@ -1,14 +1,11 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
-import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.Block;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.markdown.component.Component;
 import cc.rapidev.qqbot.common.utils.StringUtils;
-import cc.rapidev.qqbot.extension.settings.RenderContext;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
@@ -28,18 +25,18 @@ public class Input extends SettingItem {
     }
 
     @Override
-    public boolean set(MessageContext context, SettingRepository repository, MessageGeneric message) {
+    public boolean set(MessageContext context, MessageGeneric message) {
         String content = message.content().trim();
         if (!StringUtils.isEmpty(content)) {
-            setValue(repository, context.topic(), content.trim());
+            setValue(context, content.trim());
             return true;
         }
         return false;
     }
 
     @Override
-    public String getViewValue(SettingRepository repository, Topic topic) {
-        String value = getValue(repository, topic);
+    public String getViewValue(MessageContext context) {
+        String value = getValue(context);
         if (value != null) {
             if (password) {
                 value = "\\*\\*\\*\\*\\*\\*";
@@ -49,8 +46,8 @@ public class Input extends SettingItem {
     }
 
     @Override
-    public BlockComponent render(RenderContext context) {
-        String value = getViewValue(context.repository(), context.topic());
+    public BlockComponent render(MessageContext context) {
+        String value = getViewValue(context);
         Block<Component> block = MarkdownUI.block();
         if (value != null) {
             block.add(MarkdownUI.block(MarkdownUI.bold(value)));

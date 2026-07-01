@@ -58,8 +58,8 @@ public class SettingService {
         if (optional.isEmpty()) {
             return;
         }
-        SettingSession session = sessions.computeIfAbsent(optional.get(), (_) -> new SettingSession(context, root));
-        Message render = session.render();
+        SettingSession session = sessions.computeIfAbsent(optional.get(), (_) -> new SettingSession(root));
+        Message render = session.render(context);
         context.reply(render);
     }
 
@@ -88,7 +88,7 @@ public class SettingService {
             if (session == null) {
                 return;
             }
-            Message message = session.back();
+            Message message = session.back(context);
             if (message != null) {
                 context.reply(message);
             }
