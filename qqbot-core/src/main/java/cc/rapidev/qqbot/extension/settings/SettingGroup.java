@@ -54,14 +54,14 @@ public class SettingGroup extends Setting {
         } else if (context.use(ManagerService.class).isManager(context)) {
             items = this.topicVisible();
         } else {
-            return MarkdownUI.block(MarkdownUI.text("无权访问"));
+            items = List.of();
         }
         if (items.isEmpty()) {
             return MarkdownUI.block(MarkdownUI.text("无设置项"));
         }
         Block<Component> block = MarkdownUI.block();
         for (Setting item : items) {
-            block.add(MarkdownUI.block(MarkdownUI.bold(MarkdownUI.cmdEnter(item.name()))));
+            block.add(MarkdownUI.block(MarkdownUI.bold(MarkdownUI.cmd(context.topic(), item.name()))));
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
                 String value = settingItem.getViewValue(context);

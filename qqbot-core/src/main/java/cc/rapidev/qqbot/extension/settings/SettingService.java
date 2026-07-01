@@ -1,8 +1,10 @@
 package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.api.model.Message;
+import cc.rapidev.qqbot.extension.admin.AdminService;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
+import cc.rapidev.qqbot.extension.settings.manager.ManagerService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 import com.google.common.collect.Maps;
@@ -54,6 +56,10 @@ public class SettingService {
      * @param context 消息上下文
      */
     public void open(MessageContext context) {
+        if (!context.use(AdminService.class).isAdmin(context) && !context.use(ManagerService.class).isManager(context)) {
+            context.reply(Message.text("无权操作"));
+            return;
+        }
         Optional<String> optional = context.usid();
         if (optional.isEmpty()) {
             return;

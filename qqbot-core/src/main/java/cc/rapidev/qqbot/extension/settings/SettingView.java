@@ -16,9 +16,9 @@ public class SettingView extends MarkdownView {
         add(setting.render(context));
         add(MarkdownUI.separator());
         if (setting.parent() != null) {
-            add(MarkdownUI.block(MarkdownUI.cmdEnter("返回")));
+            add(MarkdownUI.block(MarkdownUI.cmd(context.topic(), "返回")));
         }
-        add(MarkdownUI.block(MarkdownUI.cmdEnter("退出设置")));
+        add(MarkdownUI.block(MarkdownUI.cmd(context.topic(), "退出设置")));
     }
 
 }

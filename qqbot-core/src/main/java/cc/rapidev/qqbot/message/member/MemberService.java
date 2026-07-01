@@ -5,6 +5,7 @@ import cc.rapidev.qqbot.common.Topic;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,6 +27,18 @@ public class MemberService {
                 .map(MemberEntity::toRecord)
                 .forEach((record) -> map.put(record.id(), record));
         this.cache.put(topic, map);
+    }
+
+    public Optional<Member> findById(Topic topic, String id) {
+        List<Member> list = list(topic);
+        Member member = list.stream().filter(record -> record.id().equals(id)).findFirst().orElse(null);
+        return Optional.ofNullable(member);
+    }
+
+    public Optional<Member> findByOpenid(Topic topic, String openid) {
+        List<Member> list = list(topic);
+        Member member = list.stream().filter(record -> record.openid().equals(openid)).findFirst().orElse(null);
+        return Optional.ofNullable(member);
     }
 
     public List<Member> list(Topic topic) {

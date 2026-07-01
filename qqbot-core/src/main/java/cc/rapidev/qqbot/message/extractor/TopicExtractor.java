@@ -56,4 +56,39 @@ public class TopicExtractor extends Extractor<Topic> {
         };
     }
 
+    @Override
+    protected Topic byFriendAdd(JsonNode data) {
+        return Topic.ofPrivate(data.get("openid").textValue());
+    }
+
+    @Override
+    protected Topic byFriendDel(JsonNode data) {
+        return Topic.ofPrivate(data.get("openid").textValue());
+    }
+
+    @Override
+    protected Topic byGroupAddRobot(JsonNode data) {
+        return Topic.ofGroup(data.get("group_openid").textValue());
+    }
+
+    @Override
+    protected Topic byGroupDelRobot(JsonNode data) {
+        return Topic.ofGroup(data.get("group_openid").textValue());
+    }
+
+    @Override
+    protected Topic byGuideCreate(JsonNode data) {
+        return Topic.ofGuild(data.get("id").textValue());
+    }
+
+    @Override
+    protected Topic byGuideDelete(JsonNode data) {
+        return Topic.ofGuild(data.get("id").textValue());
+    }
+
+    @Override
+    protected Topic byGuideUpdate(JsonNode data) {
+        return Topic.ofGuild(data.get("id").textValue());
+    }
+
 }

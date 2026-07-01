@@ -1,5 +1,6 @@
 package cc.rapidev.qqbot.common.markdown;
 
+import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.component.*;
 import cc.rapidev.qqbot.common.markdown.interactive.CmdEnter;
 import cc.rapidev.qqbot.common.markdown.interactive.CmdInput;
@@ -116,6 +117,14 @@ public class MarkdownUI {
 
     public static Item item(Text... components) {
         return new Item().add(components);
+    }
+
+    public static Text cmd(Topic topic, String text) {
+        if (topic.isPrivate()) {
+            return cmdEnter(text);
+        } else {
+            return cmdInput(text);
+        }
     }
 
     public static CmdEnter cmdEnter(String text) {

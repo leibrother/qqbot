@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.extension.settings.repository.entity;
+package cc.rapidev.qqbot.extension.settings.repository;
 
 import cc.rapidev.qqbot.database.entity.annotations.DBTable;
 import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
@@ -26,7 +26,7 @@ public class SettingEntity {
     @TBPrimaryKey
     private String scope;
 
-    @TBColumn(notnull = true)
+    @TBColumn
     private String value;
 
 }

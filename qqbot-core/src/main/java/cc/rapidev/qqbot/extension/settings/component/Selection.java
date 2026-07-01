@@ -42,7 +42,7 @@ public class Selection extends SettingItem {
             if (option.equals(value)) {
                 list.add(MarkdownUI.item(MarkdownUI.text(option), MarkdownUI.whitespace(), MarkdownUI.text("√")));
             } else {
-                list.add(MarkdownUI.item(MarkdownUI.cmdEnter(option)));
+                list.add(MarkdownUI.item(MarkdownUI.cmd(context.topic(), option)));
             }
         }
         return list;

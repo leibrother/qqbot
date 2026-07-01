@@ -2,7 +2,6 @@ package cc.rapidev.qqbot.extension.settings.repository;
 
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.entity.Table;
-import cc.rapidev.qqbot.extension.settings.repository.entity.SettingEntity;
 import com.google.common.collect.Maps;
 import org.jdbi.v3.core.result.ResultIterable;
 
