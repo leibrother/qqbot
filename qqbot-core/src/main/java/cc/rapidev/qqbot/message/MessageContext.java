@@ -9,6 +9,7 @@ import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Author;
 import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.feature.Feature;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Asserts;
 import cc.rapidev.qqbot.message.extractor.AuthorExtractor;
@@ -124,12 +125,13 @@ public final class MessageContext extends ServiceRegistrationCenter {
     }
 
     /**
-     * 是否支持原生markdown
-     * <p>通过配置项 {@code bot.markdown.supports} 配置</p>
+     * 是否支持指定特性
      *
+     * @param feature 特性
+     * @return true/false
      */
-    public boolean hasMarkdownSupport() {
-        return bot.markdownSupports().contains(topic.type());
+    public boolean hasFeature(Feature feature) {
+        return bot.features().has(feature, topic());
     }
 
     /**

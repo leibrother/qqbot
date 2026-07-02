@@ -8,6 +8,8 @@ import cc.rapidev.qqbot.api.request.MessageRequest;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
 import cc.rapidev.qqbot.api.response.MessageResponse;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.feature.Feature;
+import cc.rapidev.qqbot.common.feature.Features;
 import cc.rapidev.qqbot.common.service.ServiceRegistrationCenter;
 import cc.rapidev.qqbot.common.utils.Timer;
 import cc.rapidev.qqbot.common.utils.version.Version;
@@ -22,8 +24,6 @@ import cc.rapidev.qqbot.server.adapter.BotAdapter;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @author leibrother
@@ -41,9 +41,7 @@ public class Bot extends ServiceRegistrationCenter {
     private final BotDatabase database;
     private final MessageDispatcher dispatcher;
     private final ExtensionManager extensionManager;
-    private final List<Topic.Type> markdownSupports;
-
-    @Getter
+    private final Features features;
     private User info;
     private volatile boolean destroyed = false;
 
@@ -67,7 +65,8 @@ public class Bot extends ServiceRegistrationCenter {
         this.database = new BotDatabase(this);
         this.dispatcher = new MessageDispatcher(this);
         this.extensionManager = new ExtensionManager(this);
-        this.markdownSupports = this.config.getMarkdownSupports();
+        this.features = Features.parse(this.config.getFeatures());
+        this.features.add(Feature.SEND_NATIVE_MARKDOWN, Topic.Type.PRIVATE);
     }
 
     public BotServer server() {
@@ -86,14 +85,24 @@ public class Bot extends ServiceRegistrationCenter {
         return this.dispatcher;
     }
 
-    public List<Topic.Type> markdownSupports() {
-        return this.markdownSupports;
+    public Features features() {
+        return this.features;
+    }
+
+    public User info() {
+        if (!this.isRunning()) {
+            throw new BotException("bot is not running");
+        }
+        return this.info;
+    }
+
+    public String link() {
+        return this.request.link();
     }
 
     public ParameterRepository parameters() {
         return this.database.parameters();
     }
-
 
     /**
      * 初始化

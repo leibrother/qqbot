@@ -2,12 +2,8 @@ package cc.rapidev.qqbot;
 
 import cc.rapidev.qqbot.common.Config;
 import cc.rapidev.qqbot.common.Constant;
-import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.exception.PropertyException;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author leibrother
@@ -58,10 +54,8 @@ public final class BotConfig extends Config {
         return port;
     }
 
-    public List<Topic.Type> getMarkdownSupports() {
-        String property = getProperty(Constant.PROPERTY_MARKDOWN_SUPPORTS, Constant.DEFAULT_MARKDOWN_SUPPORTS);
-        List<Topic.Type> supports = Stream.of(property.toUpperCase().split(",")).map(Topic.Type::valueOf).toList();
-        return Stream.of(List.of(Topic.Type.PRIVATE), supports).flatMap(List::stream).toList();
+    public String getFeatures() {
+        return getProperty(Constant.PROPERTY_FEATURES, Constant.DEFAULT_FEATURES);
     }
 
 }
