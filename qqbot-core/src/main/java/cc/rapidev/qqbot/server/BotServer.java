@@ -8,6 +8,8 @@ import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.FaviconHandler;
+import io.vertx.ext.web.handler.StaticHandler;
 
 /**
  * @author leibrother
@@ -27,6 +29,8 @@ public class BotServer implements Disposable {
         this.vertx = Vertx.vertx();
         this.httpServer = vertx.createHttpServer();
         this.router = Router.router(vertx);
+        route("/favicon.ico").handler(FaviconHandler.create(vertx, "favicon.ico"));
+        route("/resources/*").handler(StaticHandler.create("webroot"));
     }
 
     public Route route(String path) {
