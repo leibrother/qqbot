@@ -240,7 +240,7 @@ public class Bot extends ServiceRegistrationCenter {
      * @param message 消息内容
      * @return 响应结果
      */
-    public MessageResponse sendMessage(Topic topic, Message message) {
+    public MessageResponse send(Topic topic, Message message) {
         MessageRequest request = use(MessageRequest.class);
         if (topic.isPrivate()) {
             return request.toUser(topic.id(), message);
@@ -251,7 +251,7 @@ public class Bot extends ServiceRegistrationCenter {
         } else if (topic.isDirect()) {
             return request.toDirect(topic.id(), message);
         } else {
-            throw new BotException("unable to send message to topic %s".formatted(topic));
+            throw new BotException("无法发送消息到主题: %s".formatted(topic));
         }
     }
 
@@ -262,14 +262,26 @@ public class Bot extends ServiceRegistrationCenter {
      * @param media 媒体消息内容
      * @return 响应结果
      */
-    public MessageMediaResponse sendMessage(Topic topic, MessageMedia media) {
+    public MessageMediaResponse send(Topic topic, MessageMedia media) {
+        if (media.isImage() && (topic.isGuild() || topic.isDirect())) {
+            MessageMediaResponse virtual = new MessageMediaResponse();
+            virtual.setFileType(media.getFileType());
+            virtual.setFileLink(media.getUrl());
+            virtual.setFileInfo("");
+            virtual.setFileUuid("");
+            return virtual;
+        }
         MessageRequest request = use(MessageRequest.class);
         if (topic.isPrivate()) {
-            return request.toUserMedia(topic.id(), media);
+            MessageMediaResponse response = request.toUserMedia(topic.id(), media);
+            response.setFileType(media.getFileType());
+            return response;
         } else if (topic.isGroup()) {
-            return request.toGroupMedia(topic.id(), media);
+            MessageMediaResponse response = request.toGroupMedia(topic.id(), media);
+            response.setFileType(media.getFileType());
+            return response;
         } else {
-            throw new BotException("unable to send media message to topic %s".formatted(topic));
+            throw new BotException("无法发送富媒体消息到主题: %s".formatted(topic));
         }
     }
 

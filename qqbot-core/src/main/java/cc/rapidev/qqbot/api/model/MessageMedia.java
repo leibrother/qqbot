@@ -32,6 +32,18 @@ public class MessageMedia implements Serializable {
         this.srvSendMsg = false;
     }
 
+    public boolean isImage() {
+        return this.fileType == 1;
+    }
+
+    public boolean isVideo() {
+        return this.fileType == 2;
+    }
+
+    public boolean isAudio() {
+        return this.fileType == 3;
+    }
+
     public static MessageMedia image(String url) {
         return new MessageMedia(1, url);
     }

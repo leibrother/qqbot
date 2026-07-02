@@ -61,7 +61,7 @@ public class Message implements Serializable {
     private Integer msgSeq = 1;
 
     public void keyboard(MessageKeyboard keyboard) {
-        if (this.msgType != msg_type_markdown){
+        if (this.msgType != msg_type_markdown) {
             throw new RuntimeException("keyboard can only be set on markdown messages");
         }
         this.keyboard = keyboard;

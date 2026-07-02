@@ -197,7 +197,7 @@ public final class MessageContext extends ServiceRegistrationCenter {
         JsonNode data = payload().data();
         String replyId = data.get("id").asText();
         message.reply(replyId, replySequence.incrementAndGet());
-        MessageResponse response = bot().sendMessage(topic, message);
+        MessageResponse response = bot().send(topic, message);
         runReplyHooks(message, response);
     }
 
@@ -209,8 +209,7 @@ public final class MessageContext extends ServiceRegistrationCenter {
     public void reply(MessageMedia media) {
         media.srvDontSend();
         Topic topic = topic();
-        MessageMediaResponse response = bot().sendMessage(topic, media);
-        response.setFileType(media.getFileType());
+        MessageMediaResponse response = bot().send(topic, media);
         Message message = Message.media(response);
         reply(message);
     }

@@ -1,6 +1,7 @@
 package cc.rapidev.qqbot.api.request;
 
 import cc.rapidev.qqbot.api.BotRequest;
+import cc.rapidev.qqbot.api.model.GuildMessage;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageMedia;
 import cc.rapidev.qqbot.api.response.MessageMediaResponse;
@@ -36,12 +37,20 @@ public class MessageRequest {
     }
 
     public MessageResponse toDirect(String id, Message message) {
+        return toDirect(id, GuildMessage.form(message));
+    }
+
+    public MessageResponse toDirect(String id, GuildMessage message) {
         HttpUrl url = ApiUrl.create(request.baseUrl()).path("/dms/{0}/messages", id).build();
         JsonNode node = request.wrap().post(url, message);
         return JsonUtils.convert(node, MessageResponse.class);
     }
 
     public MessageResponse toChannel(String id, Message message) {
+        return toChannel(id, GuildMessage.form(message));
+    }
+
+    public MessageResponse toChannel(String id, GuildMessage message) {
         HttpUrl url = ApiUrl.create(request.baseUrl()).path("/channels/{0}/messages", id).build();
         JsonNode node = request.wrap().post(url, message);
         return JsonUtils.convert(node, MessageResponse.class);
