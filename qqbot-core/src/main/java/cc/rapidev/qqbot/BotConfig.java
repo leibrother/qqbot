@@ -2,8 +2,12 @@ package cc.rapidev.qqbot;
 
 import cc.rapidev.qqbot.common.Config;
 import cc.rapidev.qqbot.common.Constant;
+import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.exception.PropertyException;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author leibrother
@@ -14,14 +18,14 @@ public final class BotConfig extends Config {
         return new BotConfig();
     }
 
-    public boolean isSandbox() {
+    public boolean sandbox() {
         return getPropertyAsBoolean(Constant.PROPERTY_SANDBOX_ENABLE, false);
     }
 
     public String getHost() {
         String property = getProperty(Constant.PROPERTY_HOST);
         if (property == null) {
-            if (isSandbox()) {
+            if (sandbox()) {
                 return Constant.DEFAULT_PROPERTY_SANDBOX_HOST;
             } else {
                 return Constant.DEFAULT_PROPERTY_HOST;
@@ -52,6 +56,12 @@ public final class BotConfig extends Config {
             throw new PropertyException(Constant.PROPERTY_SERVER_PORT, "server port must be between 1 and 65535");
         }
         return port;
+    }
+
+    public List<Topic.Type> getMarkdownSupports() {
+        String property = getProperty(Constant.PROPERTY_MARKDOWN_SUPPORTS, Constant.DEFAULT_MARKDOWN_SUPPORTS);
+        List<Topic.Type> supports = Stream.of(property.toUpperCase().split(",")).map(Topic.Type::valueOf).toList();
+        return Stream.of(List.of(Topic.Type.PRIVATE), supports).flatMap(List::stream).toList();
     }
 
 }

@@ -124,6 +124,15 @@ public final class MessageContext extends ServiceRegistrationCenter {
     }
 
     /**
+     * 是否支持原生markdown
+     * <p>通过配置项 {@code bot.markdown.supports} 配置</p>
+     *
+     */
+    public boolean hasMarkdownSupport() {
+        return bot.markdownSupports().contains(topic.type());
+    }
+
+    /**
      * 获取服务
      * <p>优先在本上下文查找，如果找不到则在机器人中查找</p>
      *

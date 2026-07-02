@@ -29,6 +29,7 @@ public class Constant {
     public static final String PROPERTY_SECRET = "bot.secret";
     public static final String PROPERTY_SERVER_PORT = "bot.server.port";
     public static final String PROPERTY_SANDBOX_ENABLE = "bot.sandbox.enable";
+    public static final String PROPERTY_MARKDOWN_SUPPORTS = "bot.markdown.supports";
 
     //---------------------------------------------------------
     // Properties Defaults
@@ -36,5 +37,6 @@ public class Constant {
     public static final String DEFAULT_PROPERTY_HOST = "api.sgroup.qq.com";
     public static final String DEFAULT_PROPERTY_SANDBOX_HOST = "sandbox.api.sgroup.qq.com";
     public static final int DEFAULT_SERVER_PORT = 8080;
+    public static final String DEFAULT_MARKDOWN_SUPPORTS = "GROUP";
 
 }

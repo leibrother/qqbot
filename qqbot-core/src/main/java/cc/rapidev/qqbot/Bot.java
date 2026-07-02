@@ -23,6 +23,8 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 /**
  * @author leibrother
  */
@@ -39,6 +41,8 @@ public class Bot extends ServiceRegistrationCenter {
     private final BotDatabase database;
     private final MessageDispatcher dispatcher;
     private final ExtensionManager extensionManager;
+    private final List<Topic.Type> markdownSupports;
+
     @Getter
     private User info;
     private volatile boolean destroyed = false;
@@ -63,7 +67,7 @@ public class Bot extends ServiceRegistrationCenter {
         this.database = new BotDatabase(this);
         this.dispatcher = new MessageDispatcher(this);
         this.extensionManager = new ExtensionManager(this);
-        init();
+        this.markdownSupports = this.config.getMarkdownSupports();
     }
 
     public BotServer server() {
@@ -78,13 +82,18 @@ public class Bot extends ServiceRegistrationCenter {
         return this.database;
     }
 
+    public MessageDispatcher dispatcher() {
+        return this.dispatcher;
+    }
+
+    public List<Topic.Type> markdownSupports() {
+        return this.markdownSupports;
+    }
+
     public ParameterRepository parameters() {
         return this.database.parameters();
     }
 
-    public MessageDispatcher dispatcher() {
-        return this.dispatcher;
-    }
 
     /**
      * 初始化
@@ -144,6 +153,7 @@ public class Bot extends ServiceRegistrationCenter {
         if (!adapter.isRunning()) {
             long take = Timer.take(() -> {
                 int port = config.getServerPort();
+                this.init();
                 this.server.run(port);
                 this.adapter.run(this);
                 this.extensionManager.init();
