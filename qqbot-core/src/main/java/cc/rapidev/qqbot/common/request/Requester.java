@@ -90,7 +90,9 @@ public class Requester {
             if (response.isSuccessful()) {
                 return response.body();
             } else {
-                throw new RuntimeException("request failed, code:" + response.code());
+                try (ResponseBody resp = response.body()) {
+                    throw new RuntimeException(resp.string());
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
