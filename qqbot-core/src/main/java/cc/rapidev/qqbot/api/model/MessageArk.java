@@ -1,30 +1,25 @@
 package cc.rapidev.qqbot.api.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leibrother
  */
-@Getter
-@Setter
-@ToString
-public class MessageArk implements Serializable {
+public record MessageArk(int templateId, List<KeyValue> kv) {
 
-    @Getter
-    @Setter
-    public static class MessageArkKV implements Serializable {
-        private String key;
-        private String value;
+    public record KeyValue(String key, String value, Map<String, List<KeyValue>> obj) {
+
+        public KeyValue(String key, String value) {
+            this(key, value, null);
+        }
+
+        public KeyValue(String key, List<KeyValue> kvList) {
+            Map<String, List<KeyValue>> obj = new HashMap<>();
+            obj.put("obj_kv", kvList);
+            this(key, null, obj);
+        }
     }
-
-    private String templateId;
-
-    private List<MessageArkKV> kv = new ArrayList<>();
 
 }
