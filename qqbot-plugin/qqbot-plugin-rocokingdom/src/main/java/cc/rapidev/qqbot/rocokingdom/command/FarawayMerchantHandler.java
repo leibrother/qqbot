@@ -1,6 +1,5 @@
 package cc.rapidev.qqbot.rocokingdom.command;
 
-import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.common.request.Requester;
 import cc.rapidev.qqbot.extension.command.Command;
@@ -19,7 +18,7 @@ public class FarawayMerchantHandler implements CommandHandler {
 
     private final Requester request;
 
-    public FarawayMerchantHandler(Bot bot) {
+    public FarawayMerchantHandler() {
         this.request = Requester.getInstance();
     }
 
