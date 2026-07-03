@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.extension;
 
 import cc.rapidev.qqbot.extension.admin.AdminExtension;
 import cc.rapidev.qqbot.extension.command.CommandExtension;
+import cc.rapidev.qqbot.extension.push.PushExtension;
 import cc.rapidev.qqbot.extension.settings.SettingsExtension;
 import cc.rapidev.qqbot.extension.template.TemplateExtension;
 
@@ -43,6 +44,8 @@ public class ExtensionDeclarer {
         declare(AdminExtension.class);
         // 设置中心扩展
         declare(SettingsExtension.class);
+        // 推送扩展
+        declare(PushExtension.class);
     }
 
 }
