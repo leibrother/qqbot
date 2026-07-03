@@ -4,7 +4,7 @@ import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
+import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
@@ -26,7 +26,12 @@ public class Button extends SettingItem {
     }
 
     @Override
-    protected void setValue(SettingRepository repository, Topic topic, String value) {
+    public void setValue(SettingPersistenceService persistence, Topic topic, String value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getValue(SettingPersistenceService persistence, Topic topic) {
         throw new UnsupportedOperationException();
     }
 

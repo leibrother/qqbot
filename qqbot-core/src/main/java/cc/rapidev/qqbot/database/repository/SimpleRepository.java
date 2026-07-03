@@ -82,7 +82,7 @@ public abstract class SimpleRepository<T> {
      * @param bean bean
      * @return 是否存在
      */
-    public boolean exists(Object bean) {
+    public boolean exists(T bean) {
         String statement = table.getSQL(SQL.EXISTS_BY_PRIMARY_KEYS);
         return this.database.execute((handle) -> {
             ResultIterable<Integer> result = handle.createQuery(statement).bindBean(bean).mapTo(Integer.class);
@@ -151,7 +151,7 @@ public abstract class SimpleRepository<T> {
      *
      * @param bean bean
      */
-    public void insert(Object bean) {
+    public void insert(T bean) {
         this.database.update(table.getSQL(SQL.INSERT), bean);
     }
 
@@ -160,7 +160,7 @@ public abstract class SimpleRepository<T> {
      *
      * @param bean bean
      */
-    public void update(Object bean) {
+    public void update(T bean) {
         this.database.update(table.getSQL(SQL.UPDATE_BY_PRIMARY_KEYS), bean);
     }
 
@@ -169,7 +169,7 @@ public abstract class SimpleRepository<T> {
      *
      * @param bean bean
      */
-    public void delete(Object bean) {
+    public void delete(T bean) {
         this.database.update(table.getSQL(SQL.DELETE_BY_PRIMARY_KEYS), bean);
     }
 

@@ -71,6 +71,22 @@ public abstract class Setting {
         protected String description;
         protected Scope scope = Scope.TOPIC;
 
+        public String key() {
+            return this.key;
+        }
+
+        public String name() {
+            return this.name;
+        }
+
+        public String description() {
+            return this.description;
+        }
+
+        public Scope scope() {
+            return this.scope;
+        }
+
         public B key(String key) {
             this.key = key;
             return CastUtils.cast(this);

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.extension.settings.repository;
+package cc.rapidev.qqbot.extension.settings.persistence.repository;
 
 import cc.rapidev.qqbot.database.entity.annotations.DBTable;
 import cc.rapidev.qqbot.database.entity.annotations.TBColumn;

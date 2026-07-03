@@ -10,7 +10,7 @@ import cc.rapidev.qqbot.message.MessageContext;
 public class SettingView extends MarkdownView {
 
     public SettingView(Setting setting, MessageContext context) {
-        add(MarkdownUI.h1("设置"));
+        add(MarkdownUI.h1(setting.path()));
         add(MarkdownUI.blockQuote(setting.description()));
         add(MarkdownUI.separator());
         add(setting.render(context));

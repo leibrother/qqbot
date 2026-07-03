@@ -2,7 +2,6 @@ package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.settings.component.SettingItem;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
 import cc.rapidev.qqbot.message.MessageContext;
 
 /**
@@ -22,7 +21,6 @@ public class SettingSession {
      * @return 消息体
      */
     public Message render(MessageContext context) {
-        SettingRepository repository = context.use(SettingRepository.class);
         SettingView view = new SettingView(setting, context);
         return view.render();
     }

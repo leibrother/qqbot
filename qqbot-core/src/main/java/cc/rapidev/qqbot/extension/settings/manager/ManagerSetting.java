@@ -39,7 +39,7 @@ public class ManagerSetting extends SettingItem {
     }
 
     @Override
-    public String getViewValue(MessageContext context) {
+    public String getShowValue(MessageContext context) {
         return null;
     }
 

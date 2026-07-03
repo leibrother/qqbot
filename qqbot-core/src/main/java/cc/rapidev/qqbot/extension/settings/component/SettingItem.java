@@ -3,7 +3,7 @@ package cc.rapidev.qqbot.extension.settings.component;
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.extension.settings.Setting;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
+import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
@@ -19,24 +19,59 @@ public abstract class SettingItem extends Setting {
         this.scope = scope == null ? Scope.GLOBAL : scope;
     }
 
-    public Scope scope() {
+    final public Scope scope() {
         return this.scope;
     }
 
-    private String scopeKey(Topic topic) {
-        return this.scope == Scope.GLOBAL ? "GLOBAL" : topic.code();
+    final public String scopeKey(Topic topic) {
+        if (this.scope == Scope.GLOBAL) {
+            return "GLOBAL";
+        }
+        return "TOPIC:" + topic.code();
+    }
+
+    /**
+     * 获取值
+     *
+     * @param persistence 持久化服务
+     * @param topic       topic
+     * @return value
+     */
+    public String getValue(SettingPersistenceService persistence, Topic topic) {
+        return persistence.getValue(this, scopeKey(topic));
+    }
+
+    /**
+     * 设置值
+     *
+     * @param persistence 持久化服务
+     * @param topic       topic
+     * @param value       value
+     */
+    public void setValue(SettingPersistenceService persistence, Topic topic, String value) {
+        persistence.setValue(this, scopeKey(topic), value);
     }
 
     /**
      * 获取值
      *
      * @param context 消息上下文
-     * @return 值
+     * @return value
      */
-    public String getValue(MessageContext context) {
-        SettingRepository repository = context.use(SettingRepository.class);
-        Topic topic = context.topic();
-        return repository.get(completedKey(), scopeKey(topic));
+    final public String getValue(MessageContext context) {
+        SettingPersistenceService persistence = context.use(SettingPersistenceService.class);
+        return getValue(persistence, context.topic());
+    }
+
+    /**
+     * 设置值
+     *
+     * @param context 消息上下文
+     * @param value   value
+     */
+    final public void setValue(MessageContext context, String value) {
+        SettingPersistenceService persistence = context.use(SettingPersistenceService.class);
+        setValue(persistence, context.topic(), value);
     }
 
     /**
@@ -45,37 +80,15 @@ public abstract class SettingItem extends Setting {
      * @param context 消息上下文
      * @return 在Markdown显示的值
      */
-    public String getViewValue(MessageContext context) {
+    public String getShowValue(MessageContext context) {
         return this.getValue(context);
-    }
-
-    /**
-     * 将值持久化
-     *
-     * @param context 消息上下文
-     * @param value   value
-     */
-    protected void setValue(MessageContext context, String value) {
-        SettingRepository repository = context.use(SettingRepository.class);
-        this.setValue(repository, context.topic(), value);
-    }
-
-    /**
-     * 将值持久化
-     *
-     * @param repository repository
-     * @param topic      topic
-     * @param value      value
-     */
-    protected void setValue(SettingRepository repository, Topic topic, String value) {
-        repository.set(completedKey(), scopeKey(topic), value);
     }
 
     /**
      * 用户设置值
      *
-     * @param context    消息上下文
-     * @param message    message
+     * @param context 消息上下文
+     * @param message message
      * @return 是否成功
      */
     public abstract boolean set(MessageContext context, MessageGeneric message);

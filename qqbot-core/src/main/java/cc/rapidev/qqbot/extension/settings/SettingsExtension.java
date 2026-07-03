@@ -1,12 +1,14 @@
 package cc.rapidev.qqbot.extension.settings;
 
 import cc.rapidev.qqbot.Bot;
+import cc.rapidev.qqbot.common.cache.CacheProxyFactory;
 import cc.rapidev.qqbot.extension.Extension;
 import cc.rapidev.qqbot.extension.command.CommandEntry;
 import cc.rapidev.qqbot.extension.command.Keyword;
 import cc.rapidev.qqbot.extension.settings.handler.SettingHandler;
 import cc.rapidev.qqbot.extension.settings.manager.ManagerService;
-import cc.rapidev.qqbot.extension.settings.repository.SettingRepository;
+import cc.rapidev.qqbot.extension.settings.persistence.CacheableSettingPersistenceService;
+import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 
 /**
  * @author leibrother
@@ -15,8 +17,10 @@ public class SettingsExtension implements Extension {
 
     @Override
     public void ready(Bot bot) {
-        SettingRepository repository = new SettingRepository(bot.database());
-        bot.add(repository);
+        // 持久化服务
+        SettingPersistenceService persistence = CacheProxyFactory.create(new CacheableSettingPersistenceService(bot));
+        bot.add(persistence);
+        // 设置服务
         SettingService service = new SettingService();
         bot.add(service);
         // 注册进入指令处理器

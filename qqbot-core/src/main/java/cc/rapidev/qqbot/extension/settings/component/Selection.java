@@ -1,10 +1,11 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
-import cc.rapidev.qqbot.common.Scope;
+import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.markdown.component.Listview;
 import cc.rapidev.qqbot.common.utils.StringUtils;
+import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
@@ -17,16 +18,18 @@ import java.util.List;
 public class Selection extends SettingItem {
 
     private final List<String> options;
+    private final String defaultValue;
 
-    public Selection(String key, String name, String description, List<String> options, Scope scope) {
-        super(key, name, description, scope);
-        this.options = options;
+    public Selection(Builder builder) {
+        super(builder.key(), builder.name(), builder.description(), builder.scope());
+        this.options = builder.options;
+        this.defaultValue = builder.defaultValue;
     }
 
-    public String getValue(MessageContext context) {
-        String value = super.getValue(context);
-        if (value != null && !options.contains(value)) {
-            return null;
+    public String getValue(SettingPersistenceService persistence, Topic topic) {
+        String value = super.getValue(persistence, topic);
+        if (value == null || !options.contains(value)) {
+            return this.defaultValue;
         }
         return value;
     }
@@ -64,7 +67,8 @@ public class Selection extends SettingItem {
 
     public static class Builder extends SettingBuilder<Builder> {
 
-        private List<String> options = new ArrayList<>();
+        protected List<String> options = new ArrayList<>();
+        protected String defaultValue = null;
 
         public Builder options(List<String> options) {
             this.options = options;
@@ -76,8 +80,19 @@ public class Selection extends SettingItem {
             return this;
         }
 
+        public Builder setDefault(String value) {
+            if (this.defaultValue != null) {
+                this.options.remove(this.defaultValue);
+            }
+            this.defaultValue = value;
+            if (!this.options.contains(value)) {
+                this.options.add(value);
+            }
+            return this;
+        }
+
         public Selection build() {
-            return new Selection(key, name, description, options, scope);
+            return new Selection(this);
         }
 
     }

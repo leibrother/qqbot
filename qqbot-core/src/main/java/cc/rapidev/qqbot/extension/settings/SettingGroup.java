@@ -64,7 +64,7 @@ public class SettingGroup extends Setting {
             block.add(MarkdownUI.block(MarkdownUI.bold(MarkdownUI.cmd(context.topic(), item.name()))));
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
-                String value = settingItem.getViewValue(context);
+                String value = settingItem.getShowValue(context);
                 if (value != null) {
                     description = value;
                 }

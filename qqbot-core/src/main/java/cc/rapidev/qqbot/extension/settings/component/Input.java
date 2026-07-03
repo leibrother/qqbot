@@ -35,7 +35,7 @@ public class Input extends SettingItem {
     }
 
     @Override
-    public String getViewValue(MessageContext context) {
+    public String getShowValue(MessageContext context) {
         String value = getValue(context);
         if (value != null) {
             if (password) {
@@ -47,7 +47,7 @@ public class Input extends SettingItem {
 
     @Override
     public BlockComponent render(MessageContext context) {
-        String value = getViewValue(context);
+        String value = getShowValue(context);
         Block<Component> block = MarkdownUI.block();
         if (value != null) {
             block.add(MarkdownUI.block(MarkdownUI.bold(value)));
