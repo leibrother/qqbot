@@ -5,10 +5,7 @@ import cc.rapidev.qqbot.message.MessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author leibrother
@@ -19,17 +16,16 @@ public class CommandHandlerSet implements CommandHandler {
     private final Map<Keyword, CommandHandler> mapping = new HashMap<>();
     private final Map<Keyword, List<Event>> keyEvents = new HashMap<>();
     private final CommandHandler defaultHandler;
-    private final CommandHelper helper;
 
     public CommandHandlerSet() {
         this(null);
     }
 
     public CommandHandlerSet(CommandHandler defaultHandler) {
-        this.defaultHandler = defaultHandler;
         // 默认注册帮助命令
-        this.helper = new CommandHelper();
-        this.helper.register(this);
+        CommandHelper helper = new CommandHelper();
+        helper.register(this);
+        this.defaultHandler = Objects.requireNonNullElse(defaultHandler, helper);
     }
 
     public void add(String key, CommandHandler handler, Event... events) {
@@ -56,8 +52,8 @@ public class CommandHandlerSet implements CommandHandler {
 
     @Override
     public void handle(MessageContext context, Command command) {
-        if (command.isEmpty()) {
-            this.helper.handle(context, command);
+        if (command.isEmpty() && defaultHandler != null) {
+            this.defaultHandler.handle(context, command);
             return;
         }
         Event event = context.event();

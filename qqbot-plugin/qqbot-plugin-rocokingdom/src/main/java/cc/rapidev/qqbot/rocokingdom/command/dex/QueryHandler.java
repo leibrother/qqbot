@@ -30,6 +30,7 @@ public class QueryHandler implements CommandHandler {
         String name = command.content().trim();
         if (StringUtils.isEmpty(name)) {
             context.reply(Message.text("发送精灵名称进行查询"));
+            return;
         }
         List<RocokingdomDex> list = service.findByFullnameLike(name);
         if (list.isEmpty()) {
