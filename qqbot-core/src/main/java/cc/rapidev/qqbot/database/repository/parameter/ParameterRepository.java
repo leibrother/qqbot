@@ -1,45 +1,37 @@
 package cc.rapidev.qqbot.database.repository.parameter;
 
 import cc.rapidev.qqbot.database.BotDatabase;
-import cc.rapidev.qqbot.database.entity.Table;
+import cc.rapidev.qqbot.database.repository.SimpleRepository;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author leibrother
  */
-public class ParameterRepository {
+public class ParameterRepository extends SimpleRepository<ParameterEntity> {
 
-    private final BotDatabase db;
-    private final Table table;
-
-    public ParameterRepository(BotDatabase db) {
-        this.db = db;
-        this.table = db.register(ParameterEntity.class);
+    public ParameterRepository(BotDatabase database) {
+        super(database, ParameterEntity.class);
     }
 
     public void set(String key, Object value) {
         ParameterEntity parameter = ParameterEntity.of(key, value);
-        db.update("""
+        this.database.update("""
                 INSERT INTO %s(key,value,type) VALUES(:key,:value,:type)
                 ON CONFLICT(key) DO UPDATE SET value = excluded.value,type = excluded.type
                 """.formatted(table.name()), parameter);
     }
 
     public Optional<Object> get(String key) {
-        Optional<Map<String, Object>> optional = db.one("SELECT * FROM %s WHERE key = ?".formatted(table.name()), key);
-        if (optional.isEmpty()) {
-            return Optional.empty();
-        }
-        Map<String, Object> map = optional.get();
-        String type = map.get("type").toString();
-        String value = map.get("value").toString();
-        return Optional.of(ParameterType.valueOf(type).getDecoder().apply(value));
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", key);
+        return findOne(map).map(ParameterEntity::resolve);
     }
 
     public void delete(String key) {
-        db.execute("DELETE FROM %s WHERE key = ?".formatted(table.name()), key);
+        this.database.execute("DELETE FROM %s WHERE key = ?".formatted(table.name()), key);
     }
 
     public Optional<Object> pop(String key) {

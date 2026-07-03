@@ -3,9 +3,7 @@ package cc.rapidev.qqbot.database.entity;
 import cc.rapidev.qqbot.common.utils.IdentityUtils;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,13 +14,14 @@ import java.util.stream.Stream;
 public class Table {
 
     private final String name;
+    private final List<TableColumn> pks;
     private final List<TableColumn> columns;
-    private final List<TableColumn> primaryKeys;
+    private final Map<SQL, String> sqls = new HashMap<>();
 
     public Table(String name, List<TableColumn> columns) {
         this.name = name;
+        this.pks = columns.stream().filter(TableColumn::primaryKey).toList();
         this.columns = columns;
-        this.primaryKeys = columns.stream().filter(TableColumn::primaryKey).toList();
     }
 
     /**
@@ -40,7 +39,7 @@ public class Table {
      * @return 'name'
      */
     public String safename() {
-        return StringUtils.packing("'", name);
+        return StringUtils.packing("`", name);
     }
 
     /**
@@ -52,10 +51,10 @@ public class Table {
         StringBuilder builder = new StringBuilder();
         builder.append("CREATE TABLE ").append(StringUtils.packing("'", name)).append(" (");
         builder.append(this.columns.stream().map(TableColumn::schema).collect(Collectors.joining(", ")));
-        if (!this.primaryKeys.isEmpty()) {
+        if (!this.pks.isEmpty()) {
             builder.append(", ");
             builder.append("PRIMARY KEY (");
-            builder.append(this.primaryKeys.stream().map(TableColumn::safename).collect(Collectors.joining(", ")));
+            builder.append(this.pks.stream().map(TableColumn::safename).collect(Collectors.joining(", ")));
             builder.append(")");
         }
         builder.append(");");
@@ -118,6 +117,80 @@ public class Table {
                     .toList();
         }
         return List.of();
+    }
+
+    public String getSQL(SQL SQL) {
+        if (!this.sqls.containsKey(SQL)) {
+            synchronized (this) {
+                if (!this.sqls.containsKey(SQL)) {
+                    String sql = SQL.getGenerator().apply(this);
+                    this.sqls.put(SQL, sql);
+                }
+            }
+        }
+        return sqls.get(SQL);
+    }
+
+    private String whereByPrimaryKeys() {
+        if (this.pks.isEmpty()) {
+            throw new IllegalStateException("没有主键字段，无法生成SQL语句");
+        }
+        StringBuilder where = new StringBuilder();
+        where.append(" WHERE ");
+        Iterator<TableColumn> pks = this.pks.iterator();
+        while (pks.hasNext()) {
+            TableColumn pk = pks.next();
+            where.append(pk.safename()).append(" = :").append(pk.name());
+            if (pks.hasNext()) {
+                where.append(" AND ");
+            }
+        }
+        return where.toString();
+    }
+
+    public String generateSelectSQL() {
+        return "SELECT * FROM " + safename();
+    }
+
+    public String generateCountSQL() {
+        return "SELECT COUNT(*) FROM " + safename();
+    }
+
+    public String generateExistsByPrimaryKeysSQL() {
+        return "SELECT COUNT(*) FROM " + safename() + whereByPrimaryKeys();
+    }
+
+    public String generateInsertSQL() {
+        StringBuilder cols = new StringBuilder();
+        StringBuilder bind = new StringBuilder();
+        Iterator<TableColumn> columns = this.columns.iterator();
+        while (columns.hasNext()) {
+            TableColumn column = columns.next();
+            cols.append(column.safename());
+            bind.append(":").append(column.name());
+            if (columns.hasNext()) {
+                cols.append(", ");
+                bind.append(", ");
+            }
+        }
+        return "INSERT INTO " + safename() + " (" + cols + " ) VALUES (" + bind + ");";
+    }
+
+    public String generateUpdateByPrimaryKeysSQL() {
+        StringBuilder set = new StringBuilder();
+        Iterator<TableColumn> columns = this.columns.stream().filter(col -> !col.primaryKey()).iterator();
+        while (columns.hasNext()) {
+            TableColumn column = columns.next();
+            set.append(column.safename()).append(" = :").append(column.name());
+            if (columns.hasNext()) {
+                set.append(", ");
+            }
+        }
+        return "UPDATE " + safename() + " SET " + set + whereByPrimaryKeys();
+    }
+
+    public String generateDeleteByPrimaryKeysSQL() {
+        return "DELETE FROM " + safename() + whereByPrimaryKeys();
     }
 
 }

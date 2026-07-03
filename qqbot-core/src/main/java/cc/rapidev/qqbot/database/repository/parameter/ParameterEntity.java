@@ -3,15 +3,16 @@ package cc.rapidev.qqbot.database.repository.parameter;
 import cc.rapidev.qqbot.database.entity.annotations.DBTable;
 import cc.rapidev.qqbot.database.entity.annotations.TBColumn;
 import cc.rapidev.qqbot.database.entity.annotations.TBPrimaryKey;
-import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * @author leibrother
  */
 @Getter
-@Setter(AccessLevel.PRIVATE)
+@Setter
+@NoArgsConstructor
 @DBTable(name = "bot_parameters")
 public class ParameterEntity {
 
@@ -33,6 +34,10 @@ public class ParameterEntity {
 
     public ParameterEntity(String key, ParameterType type, Object value) {
         this(key, type.name(), type.getEncoder().apply(value));
+    }
+
+    public Object resolve() {
+        return ParameterType.valueOf(type).getDecoder().apply(value);
     }
 
     public static ParameterEntity of(String key, Object value) {

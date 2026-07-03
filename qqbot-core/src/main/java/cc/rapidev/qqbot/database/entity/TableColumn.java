@@ -16,7 +16,7 @@ public record TableColumn(
 ) {
 
     public String safename(){
-        return StringUtils.packing("'", name);
+        return StringUtils.packing("`", name);
     }
 
     public String schema() {

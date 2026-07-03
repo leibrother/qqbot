@@ -46,17 +46,21 @@ public class BotDatabase {
         this.parameterRepository = new ParameterRepository(this);
     }
 
+    public ParameterRepository parameters() {
+        return this.parameterRepository;
+    }
+
     /**
      * 注册一个数据库表，自动生成其表结构
      *
-     * @param entity 数据库表对应的类，需被<code>@DBTable</code>注解
+     * @param clazz 数据库表对应的类，需被<code>@DBTable</code>注解
      */
-    public Table register(Class<?> entity) {
-        Table table = EntityAnalyzer.analyze(entity);
+    public synchronized Table register(Class<?> clazz) {
+        Table table = EntityAnalyzer.analyze(clazz);
         String name = table.name();
-        if (exist(name)) {
+        if (tableIfExists(name)) {
             // 表存在，进行差异更新
-            List<TableColumn> columns = getTableColumns(name);
+            List<TableColumn> columns = tableColumnsSchema(name);
             List<String> sqls = table.diffUpdate(columns);
             if (!sqls.isEmpty()) {
                 this.transaction(sqls);
@@ -66,6 +70,31 @@ public class BotDatabase {
             execute(table.schema());
         }
         return table;
+    }
+
+    /**
+     * 检查表是否存在
+     *
+     * @param name 表名称
+     * @return 存在为true，不存在为false
+     */
+    public boolean tableIfExists(String name) {
+        return one("SELECT 1 FROM sqlite_master WHERE type='table' AND name = ?", name).isPresent();
+    }
+
+    private List<TableColumn> tableColumnsSchema(String name) {
+        List<Map<String, Object>> res = select("PRAGMA table_info(%s)".formatted(name));
+        return res.stream()
+                .map(row -> {
+                    Object defaultValue = row.get("dflt_value");
+                    return new TableColumn(
+                            row.get("name").toString(),
+                            row.get("type").toString(),
+                            "1".equals(row.get("notnull").toString()),
+                            defaultValue == null ? "" : defaultValue.toString(),
+                            Integer.parseInt(row.get("pk").toString()) > 0
+                    );
+                }).toList();
     }
 
     /**
@@ -83,10 +112,9 @@ public class BotDatabase {
      *
      * @param sql  SQL
      * @param args 参数
-     * @return 受影响的行数
      */
-    public int execute(String sql, Object... args) {
-        return execute((handle) -> handle.execute(sql, args));
+    public void execute(String sql, Object... args) {
+        execute((handle) -> handle.execute(sql, args));
     }
 
     /**
@@ -135,39 +163,9 @@ public class BotDatabase {
      *
      * @param sql  INSERT/UPDATE/其他更新语句
      * @param bean 需绑定的对象，通过字段名绑定
-     * @return 受影响的行数
      */
-    public int update(String sql, Object bean) {
-        return execute((handle) -> handle.createUpdate(sql).bindBean(bean).execute());
-    }
-
-    /**
-     * 检查表是否存在
-     *
-     * @param name 表名称
-     * @return 存在为true，不存在为false
-     */
-    public boolean exist(String name) {
-        return one("SELECT 1 FROM sqlite_master WHERE type='table' AND name = ?", name).isPresent();
-    }
-
-    public List<TableColumn> getTableColumns(String name) {
-        List<Map<String, Object>> res = select("PRAGMA table_info(%s)".formatted(name));
-        return res.stream()
-                .map(row -> {
-                    Object defaultValue = row.get("dflt_value");
-                    return new TableColumn(
-                            row.get("name").toString(),
-                            row.get("type").toString(),
-                            "1".equals(row.get("notnull").toString()),
-                            defaultValue == null ? "" : defaultValue.toString(),
-                            Integer.parseInt(row.get("pk").toString()) > 0
-                    );
-                }).toList();
-    }
-
-    public ParameterRepository parameters() {
-        return this.parameterRepository;
+    public void update(String sql, Object bean) {
+        execute((handle) -> handle.createUpdate(sql).bindBean(bean).execute());
     }
 
 }
