@@ -84,7 +84,7 @@ public class MerchantService {
         if (passed < 0) {
             return -1;
         }
-        return (int) Math.ceil((double) passed / ROUND_HOUR);
+        return passed / ROUND_HOUR + 1;
     }
 
     public Optional<Merchant> nowadaysMerchant() {
