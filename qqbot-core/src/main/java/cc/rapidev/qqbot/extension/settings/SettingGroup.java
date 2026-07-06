@@ -65,7 +65,7 @@ public class SettingGroup extends Setting {
             String description = item.description();
             if (item instanceof SettingItem settingItem) {
                 String value = settingItem.getShowValue(context);
-                if (value != null) {
+                if (StringUtils.isNotEmpty(value)) {
                     description = value;
                 }
             }

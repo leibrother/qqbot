@@ -1,6 +1,5 @@
 package cc.rapidev.qqbot.extension.settings;
 
-import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
 import cc.rapidev.qqbot.common.utils.CastUtils;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -14,6 +13,10 @@ public abstract class Setting {
     private final String name;
     private final String description;
     private Setting parent;
+
+    public Setting(SettingBuilder<?> builder) {
+        this(builder.key, builder.name, builder.description);
+    }
 
     public Setting(String key, String name, String description) {
         this.key = key;
@@ -64,28 +67,11 @@ public abstract class Setting {
     /**
      * 通用构建器
      */
-    protected abstract static class SettingBuilder<B extends SettingBuilder<B>> {
+    public abstract static class SettingBuilder<B extends SettingBuilder<B>> {
 
         protected String key;
         protected String name;
         protected String description;
-        protected Scope scope = Scope.TOPIC;
-
-        public String key() {
-            return this.key;
-        }
-
-        public String name() {
-            return this.name;
-        }
-
-        public String description() {
-            return this.description;
-        }
-
-        public Scope scope() {
-            return this.scope;
-        }
 
         public B key(String key) {
             this.key = key;
@@ -99,11 +85,6 @@ public abstract class Setting {
 
         public B description(String description) {
             this.description = description;
-            return CastUtils.cast(this);
-        }
-
-        public B global() {
-            this.scope = Scope.GLOBAL;
             return CastUtils.cast(this);
         }
 

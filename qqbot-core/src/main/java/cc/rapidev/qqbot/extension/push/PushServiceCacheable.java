@@ -64,28 +64,41 @@ public class PushServiceCacheable implements PushService {
                 .toList();
     }
 
-    public void push(Message message) {
-        List<Topic> topicList = getOpenTopicList();
-        topicList.forEach(topic -> {
-            try {
-                bot.send(topic, message);
-            } catch (Exception e) {
-                logger.error("推送消息到{}失败", topic.code(), e);
-            }
-        });
+    @Override
+    public void push(Topic topic, Message message) {
+        try {
+            bot.send(topic, message);
+        } catch (Exception e) {
+            logger.error("推送消息到{}失败", topic.code(), e);
+        }
     }
 
-    public void push(MessageMedia media) {
-        List<Topic> topicList = getOpenTopicList();
-        topicList.forEach(topic -> {
-            try {
-                MessageMediaResponse response = bot.send(topic, media);
-                if (!media.getSrvSendMsg()) {
-                    bot.send(topic, Message.media(response));
-                }
-            } catch (Exception e) {
-                logger.error("推送消息到{}失败", topic.code(), e);
+    @Override
+    public void push(Topic topic, MessageMedia media) {
+        try {
+            MessageMediaResponse response = bot.send(topic, media);
+            if (!media.getSrvSendMsg()) {
+                bot.send(topic, Message.media(response));
             }
-        });
+        } catch (Exception e) {
+            logger.error("推送消息到{}失败", topic.code(), e);
+        }
     }
+
+    @Override
+    public void push(Message message) {
+        List<Topic> topics = getOpenTopicList();
+        for (Topic topic : topics) {
+            push(topic, message);
+        }
+    }
+
+    @Override
+    public void push(MessageMedia media) {
+        List<Topic> topics = getOpenTopicList();
+        for (Topic topic : topics) {
+            push(topic, media);
+        }
+    }
+
 }

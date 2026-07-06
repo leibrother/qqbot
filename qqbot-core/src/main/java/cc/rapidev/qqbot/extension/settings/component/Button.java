@@ -1,6 +1,5 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
-import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
@@ -15,14 +14,11 @@ import java.util.function.Function;
  */
 public class Button extends SettingItem {
 
-    private Function<MessageContext, String> onclick;
+    private final Function<MessageContext, String> onclick;
 
-    public Button(String key, String name, String description, Scope scope) {
-        super(key, name, description, scope);
-    }
-
-    public void onclick(Function<MessageContext, String> onclick) {
-        this.onclick = onclick;
+    public Button(Builder builder) {
+        super(builder);
+        this.onclick = builder.onclick;
     }
 
     @Override
@@ -55,7 +51,7 @@ public class Button extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingBuilder<Builder> {
+    public static class Builder extends SettingItemBuilder<Builder> {
 
         private Function<MessageContext, String> onclick;
 
@@ -65,9 +61,7 @@ public class Button extends SettingItem {
         }
 
         public Button build() {
-            Button button = new Button(key, name, description, scope);
-            button.onclick(onclick);
-            return button;
+            return new Button(this);
         }
 
     }

@@ -48,9 +48,10 @@ public class JobService implements JobController, Disposable {
                 .build();
     }
 
-    public JobHandle addJob(Class<? extends Job> jobClass, TriggerBuilder<?> triggerBuilder) {
+    public JobHandle addJob(Class<? extends Job> jobClass, JobDataMap data, TriggerBuilder<?> triggerBuilder) {
         JobDetail job = JobBuilder.newJob(jobClass)
                 .withIdentity(nextJobKey())
+                .setJobData(data == null ? new JobDataMap() : data)
                 .build();
         Trigger trigger = triggerBuilder.withIdentity(createTriggerKey(job.getKey())).build();
         try {
@@ -61,24 +62,24 @@ public class JobService implements JobController, Disposable {
         }
     }
 
-    public JobHandle addCronJob(Class<? extends Job> jobClass, String cron) {
+    public JobHandle addCronJob(Class<? extends Job> jobClass, JobDataMap data, String cron) {
         TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger()
                 .withSchedule(CronScheduleBuilder.cronSchedule(cron));
-        return addJob(jobClass, triggerBuilder);
+        return addJob(jobClass, data, triggerBuilder);
     }
 
-    public JobHandle addIntervalJob(Class<? extends Job> jobClass, int seconds) {
-        return addIntervalJob(jobClass, seconds, null);
+    public JobHandle addIntervalJob(Class<? extends Job> jobClass, JobDataMap data, int seconds) {
+        return addIntervalJob(jobClass, data, seconds, null);
     }
 
-    public JobHandle addIntervalJob(Class<? extends Job> jobClass, int seconds, Instant startAt) {
+    public JobHandle addIntervalJob(Class<? extends Job> jobClass, JobDataMap data, int seconds, Instant startAt) {
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         scheduleBuilder.withIntervalInSeconds(seconds);
         TriggerBuilder<SimpleTrigger> builder = TriggerBuilder.newTrigger().withSchedule(scheduleBuilder);
         if (startAt != null) {
             builder.startAt(startAt);
         }
-        return addJob(jobClass, builder);
+        return addJob(jobClass, data, builder);
     }
 
     @Override

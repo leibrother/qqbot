@@ -1,6 +1,5 @@
 package cc.rapidev.qqbot.extension.settings.component;
 
-import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.component.Block;
 import cc.rapidev.qqbot.common.markdown.component.BlockComponent;
@@ -14,14 +13,11 @@ import cc.rapidev.qqbot.message.model.MessageGeneric;
  */
 public class Input extends SettingItem {
 
-    private boolean password;
+    private final boolean password;
 
-    public Input(String key, String name, String description, Scope scope) {
-        super(key, name, description, scope);
-    }
-
-    public void password(boolean password) {
-        this.password = password;
+    public Input(Builder builder) {
+        super(builder);
+        this.password = builder.password;
     }
 
     @Override
@@ -62,7 +58,7 @@ public class Input extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingBuilder<Builder> {
+    public static class Builder extends SettingItemBuilder<Builder> {
 
         private boolean password = false;
 
@@ -72,9 +68,7 @@ public class Input extends SettingItem {
         }
 
         public Input build() {
-            Input input = new Input(key, name, description, scope);
-            input.password(password);
-            return input;
+            return new Input(this);
         }
 
     }

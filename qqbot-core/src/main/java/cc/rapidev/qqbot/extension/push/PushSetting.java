@@ -4,7 +4,7 @@ import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.extension.settings.component.Selection;
 import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author leibrother
@@ -21,7 +21,7 @@ public class PushSetting extends Selection {
                 .key("push")
                 .name("主动推送")
                 .description("是否开启主动推送")
-                .options(List.of(OPEN, CLOSE))
+                .options(Set.of(OPEN, CLOSE))
                 .setDefault(CLOSE);
         super(builder);
         this.service = service;

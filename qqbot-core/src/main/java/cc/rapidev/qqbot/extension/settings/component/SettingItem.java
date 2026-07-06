@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.extension.settings.component;
 
 import cc.rapidev.qqbot.common.Scope;
 import cc.rapidev.qqbot.common.Topic;
+import cc.rapidev.qqbot.common.utils.CastUtils;
 import cc.rapidev.qqbot.extension.settings.Setting;
 import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.message.MessageContext;
@@ -13,6 +14,11 @@ import cc.rapidev.qqbot.message.model.MessageGeneric;
 public abstract class SettingItem extends Setting {
 
     private final Scope scope;
+
+    public SettingItem(SettingItemBuilder<?> builder) {
+        super(builder);
+        this.scope = builder.scope == null ? Scope.GLOBAL : builder.scope;
+    }
 
     public SettingItem(String key, String name, String description, Scope scope) {
         super(key, name, description);
@@ -92,5 +98,16 @@ public abstract class SettingItem extends Setting {
      * @return 是否成功
      */
     public abstract boolean set(MessageContext context, MessageGeneric message);
+
+    public static class SettingItemBuilder<B extends SettingItemBuilder<B>> extends SettingBuilder<B> {
+
+        private Scope scope = Scope.TOPIC;
+
+        public B global() {
+            this.scope = Scope.GLOBAL;
+            return CastUtils.cast(this);
+        }
+
+    }
 
 }

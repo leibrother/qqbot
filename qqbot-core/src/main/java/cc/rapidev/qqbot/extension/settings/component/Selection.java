@@ -9,37 +9,40 @@ import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author leibrother
  */
 public class Selection extends SettingItem {
 
-    private final List<String> options;
-    private final String defaultValue;
+    private final Set<String> options;
+    private final String defaultOption;
 
     public Selection(Builder builder) {
-        super(builder.key(), builder.name(), builder.description(), builder.scope());
-        this.options = builder.options;
-        this.defaultValue = builder.defaultValue;
+        super(builder);
+        HashSet<String> options = new HashSet<>(builder.options);
+        options.add(builder.defaultOption);
+        this.options = Collections.unmodifiableSet(options);
+        this.defaultOption = builder.defaultOption;
     }
 
     public String getValue(SettingPersistenceService persistence, Topic topic) {
         String value = super.getValue(persistence, topic);
         if (value == null || !options.contains(value)) {
-            return this.defaultValue;
+            return this.defaultOption;
         }
         return value;
     }
 
     @Override
     public BlockComponent render(MessageContext context) {
-        String value = getValue(context);
         if (options.isEmpty()) {
             return MarkdownUI.block(MarkdownUI.text("暂无可选项"));
         }
+        String value = getValue(context);
         Listview list = MarkdownUI.list();
         for (String option : options) {
             if (option.equals(value)) {
@@ -65,12 +68,12 @@ public class Selection extends SettingItem {
         return new Builder();
     }
 
-    public static class Builder extends SettingBuilder<Builder> {
+    public static class Builder extends SettingItemBuilder<Builder> {
 
-        protected List<String> options = new ArrayList<>();
-        protected String defaultValue = null;
+        protected Set<String> options = new HashSet<>();
+        protected String defaultOption = null;
 
-        public Builder options(List<String> options) {
+        public Builder options(Set<String> options) {
             this.options = options;
             return this;
         }
@@ -81,13 +84,7 @@ public class Selection extends SettingItem {
         }
 
         public Builder setDefault(String value) {
-            if (this.defaultValue != null) {
-                this.options.remove(this.defaultValue);
-            }
-            this.defaultValue = value;
-            if (!this.options.contains(value)) {
-                this.options.add(value);
-            }
+            this.defaultOption = value;
             return this;
         }
 
