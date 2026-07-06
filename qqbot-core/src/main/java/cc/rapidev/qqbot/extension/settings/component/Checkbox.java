@@ -53,12 +53,12 @@ public class Checkbox extends SettingItem {
     }
 
     public void setValue(MessageContext context, Set<String> values) {
-        String value = String.join(separator, values);
+        String value = values == null || values.isEmpty() ? null : String.join(separator, values);
         setValue(context, value);
     }
 
     public void setValue(SettingPersistenceService persistence, Topic topic, Set<String> values) {
-        String value = String.join(separator, values);
+        String value = values == null || values.isEmpty() ? null : String.join(separator, values);
         setValue(persistence, topic, value);
     }
 
@@ -70,12 +70,13 @@ public class Checkbox extends SettingItem {
         Set<String> values = getValues(context);
         Listview view = MarkdownUI.list();
         for (String option : this.options) {
-            Item item = MarkdownUI.item(MarkdownUI.bold(option), MarkdownUI.whitespace());
+            Item item = MarkdownUI.item();
             if (values.contains(option)) {
                 item.add(MarkdownUI.cmdInput("取消 " + option, "取消", false));
             } else {
                 item.add(MarkdownUI.cmdInput("选择 " + option, "选择", false));
             }
+            item.add(MarkdownUI.whitespace(), MarkdownUI.bold(option));
             view.add(item);
         }
         return view;
@@ -115,16 +116,16 @@ public class Checkbox extends SettingItem {
 
     public static class Builder extends SettingItemBuilder<Builder> {
 
-        private Set<String> options = new HashSet<>();
-        private Set<String> defaultOptions = new HashSet<>();
+        private Set<String> options = new LinkedHashSet<>();
+        private Set<String> defaultOptions = new LinkedHashSet<>();
 
         public Builder options(Set<String> options) {
-            this.options = new HashSet<>(options);
+            this.options = new LinkedHashSet<>(options);
             return this;
         }
 
         public Builder defaultOptions(Set<String> defaultOptions) {
-            this.defaultOptions = new HashSet<>(defaultOptions);
+            this.defaultOptions = new LinkedHashSet<>(defaultOptions);
             return this;
         }
 

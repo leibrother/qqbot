@@ -9,6 +9,7 @@ import cc.rapidev.qqbot.rocokingdom.service.MerchantService;
 import cc.rapidev.qqbot.rocokingdom.view.MerchantView;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
 /**
  * @author leibrother
@@ -28,13 +29,13 @@ public class MerchantHandler implements CommandHandler {
             context.reply(Message.text("远行商人已经休息了哦，请早上%s点后再来吧~".formatted(MerchantService.START_HOUR)));
             return;
         }
-        Merchant merchant = service.nowadaysMerchant();
-        if (merchant != null) {
-            MerchantView view = new MerchantView(merchant);
+        Optional<Merchant> optional = service.nowadaysMerchant();
+        if (optional.isPresent()) {
+            MerchantView view = new MerchantView(optional.get());
             context.reply(view.render());
-            return;
+        } else {
+            context.reply(Message.text("远行商人数据未更新，请稍等片刻"));
         }
-        context.reply(Message.text("远行商人数据未更新，请稍等片刻"));
     }
 
 }

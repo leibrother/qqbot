@@ -11,6 +11,7 @@ import cc.rapidev.qqbot.message.model.MessageGeneric;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -70,11 +71,11 @@ public class Selection extends SettingItem {
 
     public static class Builder extends SettingItemBuilder<Builder> {
 
-        protected Set<String> options = new HashSet<>();
+        protected Set<String> options = new LinkedHashSet<>();
         protected String defaultOption = null;
 
         public Builder options(Set<String> options) {
-            this.options = options;
+            this.options = new LinkedHashSet<>(options);
             return this;
         }
 

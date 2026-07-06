@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@DBTable(name = "bot_rocokingdom_dex")
+@DBTable(name = "rocokingdom_dex")
 public class RocokingdomDex {
 
     @TBColumn

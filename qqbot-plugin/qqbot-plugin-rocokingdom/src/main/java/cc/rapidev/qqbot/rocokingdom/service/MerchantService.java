@@ -27,8 +27,9 @@ import org.quartz.JobExecutionContext;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -38,14 +39,14 @@ public class MerchantService {
 
     public final static int START_HOUR = 8;
     public final static int ROUND_HOUR = 4;
-    public final static Set<String> items = new HashSet<>();
+    public final static Set<String> items = new LinkedHashSet<>();
 
     static {
-        items.add("祝福项链");
+        items.add("棱镜球");
+        items.add("祝福项坠");
         items.add("炫彩精灵蛋");
-        items.add("神奇的蛋");
-        items.add("黑晶琉璃");
-        items.add("紫莲刚玉");
+        items.add("国王球");
+        items.add("首领血脉秘药");
     }
 
     private final Bot bot;
@@ -67,8 +68,7 @@ public class MerchantService {
         mainCommand.add(new Keyword("远行商人", "查询远行商人正在出售的物品"), new MerchantHandler(this));
         // 开启定时推送任务
         JobDataMap data = new JobDataMap();
-        data.put("bot", bot);
-        data.put("merchant_service", this);
+        data.put("service", this);
         bot.use(JobService.class).addIntervalJob(Pusher.class, data, 10 * 60);
     }
 
@@ -87,21 +87,24 @@ public class MerchantService {
         return (int) Math.ceil((double) passed / ROUND_HOUR);
     }
 
-    public Merchant nowadaysMerchant() {
+    public Optional<Merchant> nowadaysMerchant() {
         int round = nowadaysRound();
-        if (round < 0) {
-            return null;
+        if (round <= 0) {
+            return Optional.empty();
         }
         JsonNode data = data();
         JsonNode rounds = data.get("rounds");
         List<Merchant> merchants = new ObjectMapper().convertValue(rounds, new TypeReference<>() {
         });
-        return merchants.stream().filter(m -> m.round() == round).findFirst().orElse(null);
+        return merchants.stream().filter(m -> m.round() == round).findFirst();
     }
 
     public void pushNowadaysRound() {
-        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now());
         int round = nowadaysRound();
+        if (round <= 0) {
+            return;
+        }
+        String date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now());
         MerchantPushLog log = new MerchantPushLog(date, round);
         if (this.pushLogRepository.exists(log)) {
             return;
@@ -111,20 +114,19 @@ public class MerchantService {
         if (topics.isEmpty()) {
             return;
         }
-        Merchant merchant = this.nowadaysMerchant();
-        if (merchant == null) {
+        Optional<Merchant> optional = this.nowadaysMerchant();
+        if (optional.isEmpty()) {
             return;
         }
-        MerchantView view = new MerchantView(merchant);
-        Message message = view.render();
+        Merchant merchant = optional.get();
+        Message message = new MerchantView(merchant).render();
+        List<String> names = merchant.items().stream().map(Merchant.MerchantItem::name).toList();
         SettingPersistenceService persistence = this.bot.use(SettingPersistenceService.class);
         for (Topic topic : topics) {
             Set<String> values = this.setting.getValues(persistence, topic);
-            for (Merchant.MerchantItem item : merchant.items()) {
-                if (values.contains(item.name())) {
-                    pushService.push(topic, message);
-                    break;
-                }
+            if (!values.stream().filter(names::contains).toList().isEmpty()) {
+                pushService.push(topic, message);
+                pushService.push(topic, Message.text("远行商人刷新了订阅的物品，快去购买吧~"));
             }
         }
         this.pushLogRepository.insert(log);
@@ -138,7 +140,7 @@ public class MerchantService {
         @Override
         public void execute(JobExecutionContext context) {
             JobDataMap data = context.getJobDetail().getJobDataMap();
-            MerchantService service = (MerchantService) data.get("merchant_service");
+            MerchantService service = (MerchantService) data.get("service");
             service.pushNowadaysRound();
         }
 
