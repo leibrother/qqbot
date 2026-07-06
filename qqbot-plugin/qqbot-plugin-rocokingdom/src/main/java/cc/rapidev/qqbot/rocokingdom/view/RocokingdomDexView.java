@@ -4,7 +4,7 @@ import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.MarkdownView;
 import cc.rapidev.qqbot.common.markdown.component.Table;
 import cc.rapidev.qqbot.common.utils.StringUtils;
-import cc.rapidev.qqbot.rocokingdom.repository.RocokingdomDex;
+import cc.rapidev.qqbot.rocokingdom.repository.entity.RocokingdomDex;
 
 import java.util.List;
 

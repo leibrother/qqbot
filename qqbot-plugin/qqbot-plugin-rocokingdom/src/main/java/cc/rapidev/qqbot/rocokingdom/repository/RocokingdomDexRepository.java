@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.rocokingdom.repository;
 
 import cc.rapidev.qqbot.database.BotDatabase;
 import cc.rapidev.qqbot.database.repository.SimpleRepository;
+import cc.rapidev.qqbot.rocokingdom.repository.entity.RocokingdomDex;
 
 import java.util.List;
 

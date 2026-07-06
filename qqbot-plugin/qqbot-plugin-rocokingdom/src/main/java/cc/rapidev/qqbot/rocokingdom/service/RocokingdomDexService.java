@@ -2,8 +2,8 @@ package cc.rapidev.qqbot.rocokingdom.service;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.request.Requester;
-import cc.rapidev.qqbot.rocokingdom.repository.RocokingdomDex;
 import cc.rapidev.qqbot.rocokingdom.repository.RocokingdomDexRepository;
+import cc.rapidev.qqbot.rocokingdom.repository.entity.RocokingdomDex;
 import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.HttpUrl;
 import org.slf4j.Logger;

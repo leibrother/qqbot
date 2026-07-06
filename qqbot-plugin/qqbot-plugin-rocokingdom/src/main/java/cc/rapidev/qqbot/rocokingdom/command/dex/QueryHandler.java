@@ -5,7 +5,7 @@ import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.extension.command.Command;
 import cc.rapidev.qqbot.extension.command.CommandHandler;
 import cc.rapidev.qqbot.message.MessageContext;
-import cc.rapidev.qqbot.rocokingdom.repository.RocokingdomDex;
+import cc.rapidev.qqbot.rocokingdom.repository.entity.RocokingdomDex;
 import cc.rapidev.qqbot.rocokingdom.service.RocokingdomDexService;
 import cc.rapidev.qqbot.rocokingdom.view.RocokingdomDexListView;
 import cc.rapidev.qqbot.rocokingdom.view.RocokingdomDexView;

@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.rocokingdom.repository;
+package cc.rapidev.qqbot.rocokingdom.repository.entity;
 
 import cc.rapidev.qqbot.database.entity.annotations.DBTable;
 import cc.rapidev.qqbot.database.entity.annotations.TBColumn;

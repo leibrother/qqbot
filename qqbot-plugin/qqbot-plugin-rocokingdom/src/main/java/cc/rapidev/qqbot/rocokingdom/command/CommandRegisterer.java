@@ -24,7 +24,7 @@ public class CommandRegisterer implements KeywordRegisterer {
         CommandHandlerSet group = new CommandHandlerSet(dexHandler);
         entry.add(new Keyword("洛克", "洛克王国世界"), group);
         group.add(new Keyword("精灵图鉴", "查询精灵详细信息"), dexHandler);
-        group.add(new Keyword("远行商人", "查询远行商人正在出售的物品"), new FarawayMerchantHandler());
+//        group.add(new Keyword("远行商人", "查询远行商人正在出售的物品"), new FarawayMerchantHandler(bot));
     }
 
 }

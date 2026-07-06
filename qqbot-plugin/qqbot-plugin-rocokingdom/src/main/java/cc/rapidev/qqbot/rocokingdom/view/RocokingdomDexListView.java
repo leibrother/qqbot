@@ -3,7 +3,7 @@ package cc.rapidev.qqbot.rocokingdom.view;
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.MarkdownView;
 import cc.rapidev.qqbot.common.markdown.component.Listview;
-import cc.rapidev.qqbot.rocokingdom.repository.RocokingdomDex;
+import cc.rapidev.qqbot.rocokingdom.repository.entity.RocokingdomDex;
 
 import java.util.List;
 
