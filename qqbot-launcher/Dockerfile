@@ -2,7 +2,7 @@ FROM openjdk:25
 USER root
 WORKDIR /qqbot
 # 载入JAR
-ADD ./target/qqbot-launcher.jar ./qqbot-launcher.jar
+ADD ./target/qqbot-launcher-jar-with-dependencies.jar ./qqbot-launcher.jar
 # 载入默认配置
 RUN mkdir ./config
 ADD ./qqbot.properties ./config/qqbot.properties
