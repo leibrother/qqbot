@@ -117,6 +117,12 @@
                 <artifactId>HikariCP</artifactId>
                 <version>${hikari-cp.version}</version>
             </dependency>
+            <!-- Quartz -->
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>2.5.2</version>
+            </dependency>
             <!-- qqbot framework -->
             <dependency>
                 <groupId>cc.rapidev</groupId>

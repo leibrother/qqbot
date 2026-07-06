@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.extension;
 
 import cc.rapidev.qqbot.extension.admin.AdminExtension;
 import cc.rapidev.qqbot.extension.command.CommandExtension;
+import cc.rapidev.qqbot.extension.job.JobExtension;
 import cc.rapidev.qqbot.extension.push.PushExtension;
 import cc.rapidev.qqbot.extension.settings.SettingsExtension;
 import cc.rapidev.qqbot.extension.template.TemplateExtension;
@@ -36,6 +37,8 @@ public class ExtensionDeclarer {
 
     // 一些内置扩展
     static {
+        // 任务扩展
+        declare(JobExtension.class);
         // 模板渲染器扩展
         declare(TemplateExtension.class);
         // 指令消息处理扩展
