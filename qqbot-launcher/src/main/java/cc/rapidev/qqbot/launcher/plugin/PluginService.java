@@ -28,7 +28,7 @@ public class PluginService implements Extension {
     public void ready(Bot bot) {
         this.bot = bot;
         this.disabled = new ArrayList<>();
-        String[] paths = bot.getConfig().getProperty("plugins", "./plugins").split(",");
+        String[] paths = bot.config().getProperty("plugins", "./plugins").split(",");
         this.pluginManager = new PluginManager(bot, List.of(paths));
         this.bot.use(CommandEntry.class).register(new CommandRegisterer(this));
         this.init();

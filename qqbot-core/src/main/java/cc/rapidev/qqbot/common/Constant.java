@@ -27,16 +27,18 @@ public class Constant {
     public static final String PROPERTY_HOST = "bot.host";
     public static final String PROPERTY_APPID = "bot.appid";
     public static final String PROPERTY_SECRET = "bot.secret";
+    public static final String PROPERTY_DATADIR = "bot.datadir";
+    public static final String PROPERTY_FEATURES = "bot.features";
     public static final String PROPERTY_SERVER_PORT = "bot.server.port";
     public static final String PROPERTY_SANDBOX_ENABLE = "bot.sandbox.enable";
-    public static final String PROPERTY_FEATURES = "bot.features";
 
     //---------------------------------------------------------
     // Properties Defaults
     //---------------------------------------------------------
     public static final String DEFAULT_PROPERTY_HOST = "api.sgroup.qq.com";
     public static final String DEFAULT_PROPERTY_SANDBOX_HOST = "sandbox.api.sgroup.qq.com";
-    public static final int DEFAULT_SERVER_PORT = 8080;
+    public static final String DEFAULT_DATADIR = "data";
     public static final String DEFAULT_FEATURES = "send_native_markdown:private|group";
+    public static final String DEFAULT_SERVER_PORT = "8080";
 
 }

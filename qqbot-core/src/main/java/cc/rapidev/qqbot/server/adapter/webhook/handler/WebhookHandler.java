@@ -29,7 +29,7 @@ public abstract class WebhookHandler {
 
     protected BotConfig getConfig() {
         Bot bot = getBot();
-        return bot.getConfig();
+        return bot.config();
     }
 
     abstract public Object handle(Map<String, Object> headers, BotPayload payload);

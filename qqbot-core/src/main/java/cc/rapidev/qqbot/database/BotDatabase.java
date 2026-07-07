@@ -1,19 +1,17 @@
 package cc.rapidev.qqbot.database;
 
 import cc.rapidev.qqbot.Bot;
-import cc.rapidev.qqbot.common.utils.LogbackUtils;
 import cc.rapidev.qqbot.database.entity.EntityAnalyzer;
 import cc.rapidev.qqbot.database.entity.Table;
 import cc.rapidev.qqbot.database.entity.TableColumn;
 import cc.rapidev.qqbot.database.repository.parameter.ParameterRepository;
-import ch.qos.logback.classic.Level;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlite3.SQLitePlugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 import javax.sql.DataSource;
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,16 +27,9 @@ public class BotDatabase {
     private final ParameterRepository parameterRepository;
 
     public BotDatabase(Bot bot) {
-        LogbackUtils.setLogLevel("com.zaxxer.hikari", Level.INFO);
-        String appid = bot.getConfig().getAppid();
-        File directory = new File("./data");
-        if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                throw new IllegalStateException("Unable to create database directory");
-            }
-        }
-        String database = "./data/%s.db".formatted(appid);
-        DataSource dataSource = SQLiteDataSourceFactory.create(database);
+        Path datadir = bot.datadir();
+        String appid = bot.config().getAppid();
+        DataSource dataSource = SQLiteDataSourceFactory.create(datadir, appid);
         this.jdbi = Jdbi.create(dataSource)
                 .setSqlLogger(new SQLLogger())
                 .installPlugin(new SQLitePlugin())

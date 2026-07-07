@@ -21,9 +21,10 @@ import cc.rapidev.qqbot.extension.ExtensionManager;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.server.BotServer;
 import cc.rapidev.qqbot.server.adapter.BotAdapter;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
 
 /**
  * @author leibrother
@@ -31,17 +32,17 @@ import org.slf4j.LoggerFactory;
 public class Bot extends ServiceRegistrationCenter {
 
     public static final Version version = Version.parse("0.0.1");
-    private final Logger logger = LoggerFactory.getLogger(Bot.class);
 
-    @Getter
+    private final Logger logger = LoggerFactory.getLogger(Bot.class);
     private final BotConfig config;
+    private final Path datadir;
+    private final Features features;
     private final BotServer server;
     private final BotAdapter adapter;
     private final BotRequest request;
     private final BotDatabase database;
     private final MessageDispatcher dispatcher;
     private final ExtensionManager extensionManager;
-    private final Features features;
     private User info;
     private volatile boolean destroyed = false;
 
@@ -59,14 +60,23 @@ public class Bot extends ServiceRegistrationCenter {
 
     public Bot(BotConfig config, BotAdapter adapter) {
         this.config = config;
-        this.adapter = adapter;
+        this.datadir = config.getDatadir();
+        this.features = Features.parse(this.config.getFeatures());
+        this.features.add(Feature.SEND_NATIVE_MARKDOWN, Topic.Type.PRIVATE);
         this.server = new BotServer();
+        this.adapter = adapter;
         this.request = new BotRequest(this);
         this.database = new BotDatabase(this);
         this.dispatcher = new MessageDispatcher(this);
         this.extensionManager = new ExtensionManager(this);
-        this.features = Features.parse(this.config.getFeatures());
-        this.features.add(Feature.SEND_NATIVE_MARKDOWN, Topic.Type.PRIVATE);
+    }
+
+    public BotConfig config() {
+        return this.config;
+    }
+
+    public Path datadir() {
+        return this.datadir;
     }
 
     public BotServer server() {

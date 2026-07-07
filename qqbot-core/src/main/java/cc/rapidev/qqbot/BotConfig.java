@@ -5,6 +5,10 @@ import cc.rapidev.qqbot.common.Constant;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.exception.PropertyException;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author leibrother
  */
@@ -46,16 +50,33 @@ public final class BotConfig extends Config {
         return property;
     }
 
+    public String getFeatures() {
+        return getProperty(Constant.PROPERTY_FEATURES, Constant.DEFAULT_FEATURES);
+    }
+
+    public Path getDatadir() {
+        String dataDir = getProperty(Constant.PROPERTY_DATADIR, Constant.DEFAULT_DATADIR);
+        Path path = Paths.get(dataDir);
+        File file = path.toFile();
+        if (file.exists()) {
+            if (!file.isDirectory()) {
+                throw new PropertyException(Constant.PROPERTY_DATADIR, "data directory exists and is not a directory");
+            }
+            return path;
+        } else if (!file.mkdirs()) {
+            throw new PropertyException(Constant.PROPERTY_DATADIR, "create data directory failed");
+        }
+        return path;
+    }
+
+
     public int getServerPort() {
-        int port = getPropertyAsInt(Constant.PROPERTY_SERVER_PORT, Constant.DEFAULT_SERVER_PORT);
+        int port = getPropertyAsInt(Constant.PROPERTY_SERVER_PORT, Integer.parseInt(Constant.DEFAULT_SERVER_PORT));
         if (port < 1 || port > 65535) {
             throw new PropertyException(Constant.PROPERTY_SERVER_PORT, "server port must be between 1 and 65535");
         }
         return port;
     }
 
-    public String getFeatures() {
-        return getProperty(Constant.PROPERTY_FEATURES, Constant.DEFAULT_FEATURES);
-    }
 
 }

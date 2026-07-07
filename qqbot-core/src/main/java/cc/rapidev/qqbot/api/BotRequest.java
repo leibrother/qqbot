@@ -51,7 +51,7 @@ public class BotRequest {
     }
 
     public String host() {
-        return this.bot.getConfig().getHost();
+        return this.bot.config().getHost();
     }
 
     public String baseUrl() {
@@ -68,8 +68,8 @@ public class BotRequest {
         }
         HttpUrl url = requester.https("bots.qq.com", "/app/getAppAccessToken");
         Map<String, Object> map = new HashMap<>();
-        map.put("appId", bot.getConfig().getAppid());
-        map.put("clientSecret", bot.getConfig().getSecret());
+        map.put("appId", bot.config().getAppid());
+        map.put("clientSecret", bot.config().getSecret());
         JsonNode response = wrap().post(url, map);
         this.tokenResponse = JsonUtils.convert(response, AccessTokenResponse.class);
         return this.tokenResponse.getAccessToken();
