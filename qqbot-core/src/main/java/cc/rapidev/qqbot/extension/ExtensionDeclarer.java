@@ -39,12 +39,12 @@ public class ExtensionDeclarer {
     static {
         // 任务扩展
         declare(JobExtension.class);
+        // 管理员扩展
+        declare(AdminExtension.class);
         // 模板渲染器扩展
         declare(TemplateExtension.class);
         // 指令消息处理扩展
         declare(CommandExtension.class);
-        // 管理员扩展
-        declare(AdminExtension.class);
         // 设置中心扩展
         declare(SettingsExtension.class);
         // 推送扩展

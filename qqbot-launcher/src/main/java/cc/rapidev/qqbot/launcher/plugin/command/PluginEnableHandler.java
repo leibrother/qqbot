@@ -2,7 +2,7 @@ package cc.rapidev.qqbot.launcher.plugin.command;
 
 import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.extension.command.Command;
-import cc.rapidev.qqbot.extension.command.CommandHandler;
+import cc.rapidev.qqbot.extension.command.admin.AdminCommandHandler;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
 import cc.rapidev.qqbot.launcher.plugin.view.PluginEnableResultView;
@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * @author leibrother
  */
-public class PluginEnableHandler implements CommandHandler {
+public class PluginEnableHandler implements AdminCommandHandler {
 
     public final PluginService pluginService;
 

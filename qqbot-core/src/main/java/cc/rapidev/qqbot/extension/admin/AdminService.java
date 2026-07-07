@@ -48,8 +48,7 @@ public class AdminService {
     public boolean become(Author author, String passwd) {
         if (isAdmin(author)) {
             return true;
-        }
-        if (this.passwd.equals(passwd) && author != null) {
+        } else if (this.passwd.equals(passwd)) {
             this.addAdministrator(author);
             return true;
         }

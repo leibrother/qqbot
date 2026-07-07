@@ -4,7 +4,7 @@ import cc.rapidev.qqbot.api.model.Message;
 import cc.rapidev.qqbot.api.model.MessageKeyboard;
 import cc.rapidev.qqbot.api.model.MessageKeyboardButton;
 import cc.rapidev.qqbot.extension.command.Command;
-import cc.rapidev.qqbot.extension.command.CommandHandler;
+import cc.rapidev.qqbot.extension.command.admin.AdminCommandHandler;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
 import cc.rapidev.qqbot.launcher.plugin.view.PluginView;
@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * @author leibrother
  */
-public class PluginDetailHandler implements CommandHandler {
+public class PluginDetailHandler implements AdminCommandHandler {
 
     private final PluginService pluginService;
 

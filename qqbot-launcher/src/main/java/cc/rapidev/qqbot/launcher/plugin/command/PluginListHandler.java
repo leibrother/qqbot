@@ -1,7 +1,7 @@
 package cc.rapidev.qqbot.launcher.plugin.command;
 
 import cc.rapidev.qqbot.extension.command.Command;
-import cc.rapidev.qqbot.extension.command.CommandHandler;
+import cc.rapidev.qqbot.extension.command.admin.AdminCommandHandler;
 import cc.rapidev.qqbot.launcher.plugin.Plugin;
 import cc.rapidev.qqbot.launcher.plugin.PluginService;
 import cc.rapidev.qqbot.launcher.plugin.view.PluginListView;
@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @author leibrother
  */
-public class PluginListHandler implements CommandHandler {
+public class PluginListHandler implements AdminCommandHandler {
 
     private final PluginService pluginService;
 

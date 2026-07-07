@@ -1,4 +1,4 @@
-package cc.rapidev.qqbot.extension.command.view;
+package cc.rapidev.qqbot.extension.command.helper;
 
 import cc.rapidev.qqbot.common.markdown.MarkdownUI;
 import cc.rapidev.qqbot.common.markdown.MarkdownView;

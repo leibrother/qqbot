@@ -3,6 +3,7 @@ package cc.rapidev.qqbot.extension.command;
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.common.Event;
 import cc.rapidev.qqbot.extension.Extension;
+import cc.rapidev.qqbot.extension.command.admin.AuthHandler;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 
 /**
@@ -18,6 +19,8 @@ public class CommandExtension implements Extension {
         bot.add(entry);
         MessageDispatcher dispatcher = bot.dispatcher();
         Event.messageCreateEvents.forEach(e -> dispatcher.register(e, entry));
+        // 管理员认证指令
+        entry.register(new AuthHandler());
     }
 
     @Override

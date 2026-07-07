@@ -1,8 +1,7 @@
-package cc.rapidev.qqbot.extension.command;
+package cc.rapidev.qqbot.extension.command.helper;
 
 import cc.rapidev.qqbot.api.model.Message;
-import cc.rapidev.qqbot.common.Event;
-import cc.rapidev.qqbot.extension.command.view.HelpView;
+import cc.rapidev.qqbot.extension.command.*;
 import cc.rapidev.qqbot.message.MessageContext;
 
 import java.util.List;
@@ -10,12 +9,12 @@ import java.util.List;
 /**
  * @author leibrother
  */
-public class CommandHelper implements CommandHandler, KeywordRegisterer {
+public class HelperHandler implements CommandHandler, KeywordRegisterer {
 
     private final Keyword keyword;
     private CommandHandlerSet root;
 
-    public CommandHelper() {
+    public HelperHandler() {
         this.keyword = new Keyword("帮助");
     }
 
@@ -30,8 +29,7 @@ public class CommandHelper implements CommandHandler, KeywordRegisterer {
         if (this.root == null) {
             return;
         }
-        Event event = context.event();
-        List<Keyword> all = root.keywords(event);
+        List<Keyword> all = root.keywords(context);
         List<Keyword> keywords = all.stream().filter(keyword -> !keyword.equals(this.keyword)).toList();
         HelpView view = new HelpView(keywords);
         Message message = view.render();
