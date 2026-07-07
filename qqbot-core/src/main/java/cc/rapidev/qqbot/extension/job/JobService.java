@@ -75,6 +75,7 @@ public class JobService implements JobController, Disposable {
     public JobHandle addIntervalJob(Class<? extends Job> jobClass, JobDataMap data, int seconds, Instant startAt) {
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule();
         scheduleBuilder.withIntervalInSeconds(seconds);
+        scheduleBuilder.repeatForever();
         TriggerBuilder<SimpleTrigger> builder = TriggerBuilder.newTrigger().withSchedule(scheduleBuilder);
         if (startAt != null) {
             builder.startAt(startAt);
