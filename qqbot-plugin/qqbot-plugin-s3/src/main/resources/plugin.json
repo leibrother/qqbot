@@ -1,0 +1,15 @@
+{
+  "id": "s3",
+  "name": "AWS S3",
+  "description": "使用兼容AWS S3的对象存储作为存储服务",
+  "author": "leibrother@foxmail.com",
+  "version": "0.0.1",
+  "framework": "^0.0.1",
+  "dependencies": {
+  },
+  "hooks": {
+  },
+  "extensions": [
+    "cc.rapidev.qqbot.plugin.s3.S3Extension"
+  ]
+}
