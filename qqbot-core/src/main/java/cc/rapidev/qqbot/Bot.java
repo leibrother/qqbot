@@ -21,9 +21,11 @@ import cc.rapidev.qqbot.extension.ExtensionManager;
 import cc.rapidev.qqbot.message.MessageDispatcher;
 import cc.rapidev.qqbot.server.BotServer;
 import cc.rapidev.qqbot.server.adapter.BotAdapter;
+import cc.rapidev.qqbot.storage.BotStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.nio.file.Path;
 
 /**
@@ -38,12 +40,14 @@ public class Bot extends ServiceRegistrationCenter {
     private final Path datadir;
     private final Features features;
     private final BotServer server;
-    private final BotAdapter adapter;
     private final BotRequest request;
+    private final BotAdapter adapter;
+    private final BotStorage storage;
     private final BotDatabase database;
     private final MessageDispatcher dispatcher;
     private final ExtensionManager extensionManager;
     private User info;
+    private volatile URI qrcode;
     private volatile boolean destroyed = false;
 
     public Bot() {
@@ -63,9 +67,10 @@ public class Bot extends ServiceRegistrationCenter {
         this.datadir = config.getDatadir();
         this.features = Features.parse(this.config.getFeatures());
         this.features.add(Feature.SEND_NATIVE_MARKDOWN, Topic.Type.PRIVATE);
-        this.server = new BotServer();
-        this.adapter = adapter;
+        this.server = new BotServer(this);
         this.request = new BotRequest(this);
+        this.adapter = adapter;
+        this.storage = new BotStorage(this);
         this.database = new BotDatabase(this);
         this.dispatcher = new MessageDispatcher(this);
         this.extensionManager = new ExtensionManager(this);
@@ -81,6 +86,10 @@ public class Bot extends ServiceRegistrationCenter {
 
     public BotServer server() {
         return this.server;
+    }
+
+    public BotStorage storage() {
+        return this.storage;
     }
 
     public BotRequest request() {
@@ -293,6 +302,23 @@ public class Bot extends ServiceRegistrationCenter {
         } else {
             throw new BotException("无法发送富媒体消息到主题: %s".formatted(topic));
         }
+    }
+
+    /**
+     * 机器人分析链接二维码
+     *
+     * @return 访问路径，可发送给用户
+     */
+    public URI qrcode() {
+        if (this.qrcode == null) {
+            synchronized (this) {
+                if (this.qrcode == null) {
+                    String link = link();
+                    this.qrcode = this.storage.createQRCode(link);
+                }
+            }
+        }
+        return this.qrcode;
     }
 
 }

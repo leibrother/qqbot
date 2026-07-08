@@ -7,6 +7,7 @@ import cc.rapidev.qqbot.extension.settings.Setting;
 import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.message.MessageContext;
 import cc.rapidev.qqbot.message.model.MessageGeneric;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author leibrother
@@ -29,11 +30,14 @@ public abstract class SettingItem extends Setting {
         return this.scope;
     }
 
-    final public String scopeKey(Topic topic) {
+    final public String scopeKey(@Nullable Topic topic) {
         if (this.scope == Scope.GLOBAL) {
-            return "GLOBAL";
+            return Scope.GLOBAL.name();
+        } else if (topic == null) {
+            throw new IllegalArgumentException("setting item is not global, topic cannot be null");
+        } else {
+            return "TOPIC:" + topic.code();
         }
-        return "TOPIC:" + topic.code();
     }
 
     /**
@@ -43,7 +47,7 @@ public abstract class SettingItem extends Setting {
      * @param topic       topic
      * @return value
      */
-    public String getValue(SettingPersistenceService persistence, Topic topic) {
+    public String getValue(SettingPersistenceService persistence, @Nullable Topic topic) {
         return persistence.getValue(this, scopeKey(topic));
     }
 
@@ -54,7 +58,7 @@ public abstract class SettingItem extends Setting {
      * @param topic       topic
      * @param value       value
      */
-    public void setValue(SettingPersistenceService persistence, Topic topic, String value) {
+    public void setValue(SettingPersistenceService persistence, @Nullable Topic topic, String value) {
         persistence.setValue(this, scopeKey(topic), value);
     }
 

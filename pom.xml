@@ -36,6 +36,9 @@
         <sqlite.version>3.53.1.0</sqlite.version>
         <jdbi.version>3.27.0</jdbi.version>
         <hikari-cp.version>7.0.2</hikari-cp.version>
+        <quartz.version>2.5.2</quartz.version>
+        <tika.version>3.3.1</tika.version>
+        <zxing.version>3.5.2</zxing.version>
         <slf4j.version>2.0.16</slf4j.version>
         <logback.version>1.5.12</logback.version>
         <jspecify.version>1.0.0</jspecify.version>
@@ -121,7 +124,24 @@
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
-                <version>2.5.2</version>
+                <version>${quartz.version}</version>
+            </dependency>
+            <!-- Tika -->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+            <!-- qrcode generator -->
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${zxing.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>javase</artifactId>
+                <version>${zxing.version}</version>
             </dependency>
             <!-- qqbot framework -->
             <dependency>

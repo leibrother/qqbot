@@ -30,6 +30,7 @@ public class Constant {
     public static final String PROPERTY_DATADIR = "bot.datadir";
     public static final String PROPERTY_FEATURES = "bot.features";
     public static final String PROPERTY_SERVER_PORT = "bot.server.port";
+    public static final String PROPERTY_SERVER_ACCESSIBLE_URI = "bot.server.accessible_uri";
     public static final String PROPERTY_SANDBOX_ENABLE = "bot.sandbox.enable";
 
     //---------------------------------------------------------

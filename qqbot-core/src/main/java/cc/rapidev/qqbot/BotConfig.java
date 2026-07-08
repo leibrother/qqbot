@@ -5,7 +5,9 @@ import cc.rapidev.qqbot.common.Constant;
 import cc.rapidev.qqbot.common.utils.StringUtils;
 import cc.rapidev.qqbot.exception.PropertyException;
 
-import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -55,20 +57,14 @@ public final class BotConfig extends Config {
     }
 
     public Path getDatadir() {
-        String dataDir = getProperty(Constant.PROPERTY_DATADIR, Constant.DEFAULT_DATADIR);
-        Path path = Paths.get(dataDir);
-        File file = path.toFile();
-        if (file.exists()) {
-            if (!file.isDirectory()) {
-                throw new PropertyException(Constant.PROPERTY_DATADIR, "data directory exists and is not a directory");
-            }
-            return path;
-        } else if (!file.mkdirs()) {
-            throw new PropertyException(Constant.PROPERTY_DATADIR, "create data directory failed");
+        String property = getProperty(Constant.PROPERTY_DATADIR, Constant.DEFAULT_DATADIR);
+        try {
+            Path path = Paths.get(property);
+            return Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new PropertyException(Constant.PROPERTY_DATADIR, e.getMessage());
         }
-        return path;
     }
-
 
     public int getServerPort() {
         int port = getPropertyAsInt(Constant.PROPERTY_SERVER_PORT, Integer.parseInt(Constant.DEFAULT_SERVER_PORT));
@@ -78,5 +74,12 @@ public final class BotConfig extends Config {
         return port;
     }
 
+    public URI getServerAccessibleUri() {
+        String property = getProperty(Constant.PROPERTY_SERVER_ACCESSIBLE_URI);
+        if (StringUtils.isEmpty(property)) {
+            return null;
+        }
+        return URI.create(property);
+    }
 
 }
