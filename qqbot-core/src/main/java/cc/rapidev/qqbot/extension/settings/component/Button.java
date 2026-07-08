@@ -28,7 +28,7 @@ public class Button extends SettingItem {
 
     @Override
     public String getValue(SettingPersistenceService persistence, Topic topic) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
