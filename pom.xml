@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 https://maven.apache.org/xsd/maven-4.1.0.xsd"
+         root="true">
     <groupId>cc.rapidev</groupId>
     <artifactId>qqbot</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
-
-    <modules>
-        <module>qqbot-core</module>
-        <module>qqbot-launcher</module>
-        <module>qqbot-plugin</module>
-    </modules>
 
     <properties>
         <!-- project version -->
@@ -142,12 +134,6 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>javase</artifactId>
                 <version>${zxing.version}</version>
-            </dependency>
-            <!-- qqbot framework -->
-            <dependency>
-                <groupId>cc.rapidev</groupId>
-                <artifactId>qqbot-core</artifactId>
-                <version>${revision}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
