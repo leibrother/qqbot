@@ -36,6 +36,6 @@ build/
 
 ### project ###
 dependency-reduced-pom.xml
-/data
-/plugins
-/logs
+data/
+plugins/
+logs/
