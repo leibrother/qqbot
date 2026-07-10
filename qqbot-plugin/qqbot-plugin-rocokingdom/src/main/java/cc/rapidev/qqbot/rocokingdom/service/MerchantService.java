@@ -93,6 +93,14 @@ public class MerchantService {
             return Optional.empty();
         }
         JsonNode data = data();
+        String lastUpdate = data.get("lastUpdate").textValue();
+        // 如果更新时间早于当前轮开始时间则代表数据未更新
+        LocalTime updateTime = LocalTime.parse(lastUpdate, DateTimeFormatter.ISO_DATE_TIME);
+        LocalTime shouldTime = LocalTime.of(START_HOUR + (round - 1) * ROUND_HOUR, 0);
+        if (updateTime.isBefore(shouldTime)) {
+            return Optional.empty();
+        }
+        // 筛选当前轮的数据并返回
         JsonNode rounds = data.get("rounds");
         List<Merchant> merchants = new ObjectMapper().convertValue(rounds, new TypeReference<>() {
         });
