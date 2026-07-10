@@ -6,12 +6,14 @@ import cc.rapidev.qqbot.common.Topic;
 import cc.rapidev.qqbot.common.request.Requester;
 import cc.rapidev.qqbot.extension.command.CommandHandlerSet;
 import cc.rapidev.qqbot.extension.command.Keyword;
-import cc.rapidev.qqbot.extension.job.JobService;
+import cc.rapidev.qqbot.extension.job.JobTrigger;
+import cc.rapidev.qqbot.extension.job.service.JobService;
 import cc.rapidev.qqbot.extension.push.PushService;
 import cc.rapidev.qqbot.extension.settings.SettingGroup;
 import cc.rapidev.qqbot.extension.settings.component.Checkbox;
 import cc.rapidev.qqbot.extension.settings.persistence.SettingPersistenceService;
 import cc.rapidev.qqbot.rocokingdom.command.MerchantHandler;
+import cc.rapidev.qqbot.rocokingdom.job.MerchantPushJob;
 import cc.rapidev.qqbot.rocokingdom.model.Merchant;
 import cc.rapidev.qqbot.rocokingdom.repository.MerchantPushLogRepository;
 import cc.rapidev.qqbot.rocokingdom.repository.entity.MerchantPushLog;
@@ -20,9 +22,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
-import org.quartz.Job;
 import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -66,10 +66,10 @@ public class MerchantService {
         mainSetting.append(setting);
         // 注册命令处理器
         mainCommand.add(new Keyword("远行商人", "查询远行商人正在出售的物品"), new MerchantHandler(this));
-        // 开启定时推送任务
+        // 开启定时推送任务, 每10分钟执行一次
         JobDataMap data = new JobDataMap();
         data.put("service", this);
-        bot.use(JobService.class).addIntervalJob(Pusher.class, data, 10 * 60);
+        bot.use(JobService.class).addJob(MerchantPushJob.class, data, JobTrigger.cron("0 0/10 * * * ?"));
     }
 
     private JsonNode data() {
@@ -138,20 +138,6 @@ public class MerchantService {
             }
         }
         this.pushLogRepository.insert(log);
-    }
-
-    /**
-     * 推送任务
-     */
-    public static class Pusher implements Job {
-
-        @Override
-        public void execute(JobExecutionContext context) {
-            JobDataMap data = context.getJobDetail().getJobDataMap();
-            MerchantService service = (MerchantService) data.get("service");
-            service.pushNowadaysRound();
-        }
-
     }
 
 }

@@ -2,6 +2,7 @@ package cc.rapidev.qqbot.extension.job;
 
 import cc.rapidev.qqbot.Bot;
 import cc.rapidev.qqbot.extension.Extension;
+import cc.rapidev.qqbot.extension.job.service.JobService;
 
 import java.util.Properties;
 
